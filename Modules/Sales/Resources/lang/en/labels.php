@@ -1,0 +1,27 @@
+<?php
+return  [
+    'module_name'       => 'Sales',
+    'lbl_administration'      => 'Administration',
+    'petty_cash' => 'small box',
+    'cant_continue' => 'cant continue',
+    'report' => 'Reporte',
+    'voucher' => 'Voucher',
+    'series' => 'Series',
+    'sales_notes' => 'Sales Notes',
+    'sale_note' => 'Sale Note',
+    'payment_methods' => 'Payment methods',
+    'destination' => 'Destination',
+    'reference' => 'Reference',
+    'generate' => 'Generate',
+    'sunat_answer' => 'Sunat Answer',
+    'summary_and_cancellations' => 'Summary and Cancellations',
+    'summaries' => 'Summaries',
+    'cancellations' => 'Cancellations',
+    'lbl_success'       => 'Success',
+    'lbl_excellent'     => 'Excellent',
+    'lbl_error'     => 'Error',
+    'cannot_continue_process' => 'Cannot continue the process',
+    'expenses' => 'Expenses',
+    'expense' => 'Expense',
+    'add_detail' => 'Add Detail'
+];

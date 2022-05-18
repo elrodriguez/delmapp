@@ -1,0 +1,36 @@
+.{
+    background: #f7f9fa;
+}
+.invalid-feedback-2{
+    font-size: 0.6875rem;
+    margin-top: 0.325rem;
+    width: 100%;
+    color: #fd3995;
+}
+.tdw-50{
+    width: 50px;
+}
+.code-kbd{
+	display: block;
+    overflow-x: auto;
+    padding: 0.5em;
+    background: #333;
+    color: white;
+}
+.select2-container--open {
+    z-index: 9999999;
+}
+.valid-feedback-2{
+    font-size: .6875rem;
+    margin-top: 0.325rem;
+    color: #1dc9b7;
+}
+.my-custom-scrollbar {
+    position: relative;
+    height: 270px;
+    overflow: auto;
+}
+.table-wrapper-scroll-y {
+    display: block;
+}
+
