@@ -13,11 +13,14 @@ class RestOrderCommand extends Model
         'order_id',
         'command_id',
         'command_type',
+        'description',
         'quantity',
         'price',
         'discount',
         'total',
-        'details'
+        'details',
+        'command_local',
+        'state'
     ];
 
     protected static function newFactory()

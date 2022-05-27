@@ -71,5 +71,35 @@
             b.setAttribute("href", "#tab_default-3");
             @this.emit('showFormReOrder', id);
         }
+        document.addEventListener('restaurant-set-free-table', event => {
+
+            initApp.playSound('{{ url('themes/smart-admin/media/sound') }}', 'bigbox')
+            let box = bootbox.confirm({
+                title: "<i class='{{ env('BOOTBOX_WARNING_ICON') }} text-danger mr-2'></i> ¿Desea liberar mesa?",
+                message: "<span><strong>Advertencia: </strong> ¡Ya no puede agregar más pedidos a la mesa!</span>",
+                centerVertical: true,
+                swapButtonOrder: true,
+                buttons: {
+                    confirm: {
+                        label: 'Si',
+                        className: 'btn-danger shadow-0'
+                    },
+                    cancel: {
+                        label: 'No',
+                        className: 'btn-default'
+                    }
+                },
+                className: "modal-alert",
+                closeButton: false,
+                callback: function(result) {
+                    if (result) {
+                        @this.updateStateTable(event.detail.orderId)
+                    }
+                }
+            });
+            box.find('.modal-content').css({
+                'background-color': "{{ env('BOOTBOX_WARNING_COLOR') }}"
+            });
+        });
     </script>
 </div>

@@ -10,7 +10,7 @@ class RestOrder extends Model
     use HasFactory;
 
     protected $fillable = [
-        'waiter_person_id', 'customer_person_id', 'discount', 'total'
+        'waiter_person_id', 'customer_person_name', 'discount', 'total', 'state'
     ];
 
     protected static function newFactory()

@@ -40,11 +40,9 @@ $path[4] = array_key_exists(4, $path) > 0 ? $path[4] : '';
                         @can('restaurante_administracion_categorias')
                             <li
                                 class="{{ $path[0] == 'restaurant' && $path[1] == 'administration' && $path[2] == 'categories' ? 'active' : '' }}">
-                                <a href="{{ route('restaurant_categories_list') }}"
-                                    title="@lang('restaurant::labels.categories')"
+                                <a href="{{ route('restaurant_categories_list') }}" title="@lang('restaurant::labels.categories')"
                                     data-filter-tags="@lang('restaurant::labels.categories')">
-                                    <span class="nav-link-text"
-                                        data-i18n="nav.@lang('restaurant::labels.categories')">@lang('restaurant::labels.categories')</span>
+                                    <span class="nav-link-text" data-i18n="nav.@lang('restaurant::labels.categories')">@lang('restaurant::labels.categories')</span>
                                 </a>
                             </li>
                         @endcan
@@ -53,8 +51,7 @@ $path[4] = array_key_exists(4, $path) > 0 ? $path[4] : '';
                                 class="{{ $path[0] == 'restaurant' && $path[1] == 'administration' && $path[2] == 'floors' ? 'active' : '' }}">
                                 <a href="{{ route('restaurant_floors_list') }}" title="@lang('restaurant::labels.floor')"
                                     data-filter-tags="@lang('restaurant::labels.floor')">
-                                    <span class="nav-link-text"
-                                        data-i18n="nav.@lang('restaurant::labels.floor')">@lang('restaurant::labels.floor')</span>
+                                    <span class="nav-link-text" data-i18n="nav.@lang('restaurant::labels.floor')">@lang('restaurant::labels.floor')</span>
                                 </a>
                             </li>
                         @endcan
@@ -63,19 +60,16 @@ $path[4] = array_key_exists(4, $path) > 0 ? $path[4] : '';
                                 class="{{ $path[0] == 'restaurant' && $path[1] == 'administration' && $path[2] == 'tables' ? 'active' : '' }}">
                                 <a href="{{ route('restaurant_tables_list') }}" title="@lang('restaurant::labels.tables')"
                                     data-filter-tags="@lang('restaurant::labels.tables')">
-                                    <span class="nav-link-text"
-                                        data-i18n="nav.@lang('restaurant::labels.tables')">@lang('restaurant::labels.tables')</span>
+                                    <span class="nav-link-text" data-i18n="nav.@lang('restaurant::labels.tables')">@lang('restaurant::labels.tables')</span>
                                 </a>
                             </li>
                         @endcan
                         @can('restaurante_administracion_comandas')
                             <li
                                 class="{{ $path[0] == 'restaurant' && $path[1] == 'administration' && $path[2] == 'commands' ? 'active' : '' }}">
-                                <a href="{{ route('restaurant_commands_list') }}"
-                                    title="@lang('restaurant::labels.commands')"
+                                <a href="{{ route('restaurant_commands_list') }}" title="@lang('restaurant::labels.commands')"
                                     data-filter-tags="@lang('restaurant::labels.commands')">
-                                    <span class="nav-link-text"
-                                        data-i18n="nav.@lang('restaurant::labels.commands')">@lang('restaurant::labels.commands')</span>
+                                    <span class="nav-link-text" data-i18n="nav.@lang('restaurant::labels.commands')">@lang('restaurant::labels.commands')</span>
                                 </a>
                             </li>
                         @endcan
@@ -95,8 +89,25 @@ $path[4] = array_key_exists(4, $path) > 0 ? $path[4] : '';
                                 class="{{ $path[0] == 'restaurant' && $path[1] == 'panels' && $path[2] == 'tables' ? 'active' : '' }}">
                                 <a href="{{ route('restaurant_panels_tables') }}" title="@lang('restaurant::labels.attend')"
                                     data-filter-tags="@lang('restaurant::labels.attend')">
-                                    <span class="nav-link-text"
-                                        data-i18n="nav.@lang('restaurant::labels.attend')">@lang('restaurant::labels.attend')</span>
+                                    <span class="nav-link-text" data-i18n="nav.@lang('restaurant::labels.attend')">@lang('restaurant::labels.attend')</span>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('restaurante_panel_pedidos')
+                            <li
+                                class="{{ $path[0] == 'restaurant' && $path[1] == 'panels' && $path[2] == 'orders' ? 'active' : '' }}">
+                                <a href="{{ route('restaurant_panels_orders') }}" title="@lang('restaurant::labels.list_orders')"
+                                    data-filter-tags="@lang('restaurant::labels.list_orders')">
+                                    <span class="nav-link-text" data-i18n="nav.@lang('restaurant::labels.list_orders')">@lang('restaurant::labels.list_orders')</span>
+                                </a>
+                            </li>
+                        @endcan
+                        @can('restaurante_panel_cobrar')
+                            <li
+                                class="{{ $path[0] == 'restaurant' && $path[1] == 'panels' && $path[2] == 'charge' ? 'active' : '' }}">
+                                <a href="{{ route('restaurant_panels_charge') }}" title="@lang('restaurant::labels.orders_receivable')"
+                                    data-filter-tags="@lang('restaurant::labels.orders_receivable')">
+                                    <span class="nav-link-text" data-i18n="nav.@lang('restaurant::labels.orders_receivable')">@lang('restaurant::labels.orders_receivable')</span>
                                 </a>
                             </li>
                         @endcan

@@ -12,7 +12,9 @@
 */
 
 Route::middleware(['auth:sanctum', 'verified'])->prefix('restaurant')->group(function () {
+
     Route::get('dashboard', 'RestaurantController@index')->name('restaurant_dashboard');
+    Route::get('notes/print/{external_id}/{format?}', 'ChargeController@printSaleNote');
 
     Route::group(['prefix' => 'administration'], function () {
         Route::middleware(['middleware' => 'role_or_permission:restaurante_administracion_categorias'])->get('categories/list', 'CategoriesController@index')->name('restaurant_categories_list');
@@ -35,8 +37,12 @@ Route::middleware(['auth:sanctum', 'verified'])->prefix('restaurant')->group(fun
         Route::middleware(['middleware' => 'role_or_permission:restaurante_administracion_pisos_nuevo'])->get('floors/create', 'FloorsController@create')->name('restaurant_floors_create');
         Route::middleware(['middleware' => 'role_or_permission:restaurante_administracion_pisos_editar'])->get('floors/edit/{id}', 'FloorsController@edit')->name('restaurant_floors_edit');
     });
+
     Route::group(['prefix' => 'panels'], function () {
         Route::middleware(['middleware' => 'role_or_permission:restaurante_panel_atender'])->get('tables', 'AttendController@index')->name('restaurant_panels_tables');
         Route::middleware(['middleware' => 'role_or_permission:restaurante_panel_atender'])->get('tables/attend', 'AttendController@attend')->name('restaurant_panels_attend');
+        Route::middleware(['middleware' => 'role_or_permission:restaurante_panel_pedidos'])->get('orders/list', 'OrdersController@index')->name('restaurant_panels_orders');
+        Route::middleware(['middleware' => 'role_or_permission:restaurante_panel_cobrar'])->get('charge/list', 'ChargeController@index')->name('restaurant_panels_charge');
+        Route::middleware(['middleware' => 'role_or_permission:restaurante_panel_cobrar'])->get('charge/sale_note/{id}', 'ChargeController@sale_note')->name('restaurant_panels_charge_sale_note');
     });
 });

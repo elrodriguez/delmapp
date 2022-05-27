@@ -71,11 +71,11 @@ class Billing
 
     public function __construct()
     {
-        $this->sunat_alternate_server = Parameter::where('id_parameter','PRT004SRS')->first()->value_default;
-        $this->base_pdf_template = Parameter::where('id_parameter','PRT003THM')->first()->value_default;
-        $this->company = SetCompany::where('main',true)->first();
-        $this->isDemo = ($this->company->soap_type_id === '01')?true:false;
-        $this->isOse = ($this->company->soap_send_id === '02')?true:false;
+        $this->sunat_alternate_server = Parameter::where('id_parameter', 'PRT004SRS')->first()->value_default;
+        $this->base_pdf_template = Parameter::where('id_parameter', 'PRT003THM')->first()->value_default;
+        $this->company = SetCompany::where('main', true)->first();
+        $this->isDemo = ($this->company->soap_type_id === '01') ? true : false;
+        $this->isOse = ($this->company->soap_send_id === '02') ? true : false;
         $this->signer = new XmlSigned();
         $this->wsClient = new WsClient();
         $this->warehouse_id = 1; #InvLocation::where('establishment_id',Auth::user()->establishment_id)->first()->id;
@@ -120,15 +120,15 @@ class Billing
                 break;
             case 'invoice':
                 $document = SalDocument::create($inputs);
-                $this->warehouse_id = InvLocation::where('establishment_id',$inputs['establishment_id'])->where('state',true)->first()->id;
+                $this->warehouse_id = InvLocation::where('establishment_id', $inputs['establishment_id'])->where('state', true)->first()->id;
                 $this->savePayments($document, $inputs['payments']);
                 //$this->saveFee($document, $inputs['fee']);
                 foreach ($inputs['items'] as $row) {
                     $document->items()->create($row);
-                    InvAsset::where('item_id',$row['item_id'])
-                        ->where('location_id',$this->warehouse_id)
-                        ->decrement('stock',$row['quantity']);
-                    InvItem::where('id',$row['item_id'])->decrement('stock', $row['quantity']);
+                    InvAsset::where('item_id', $row['item_id'])
+                        ->where('location_id', $this->warehouse_id)
+                        ->decrement('stock', $row['quantity']);
+                    InvItem::where('id', $row['item_id'])->decrement('stock', $row['quantity']);
                     InvKardex::create([
                         'date_of_issue' => Carbon::now()->format('Y-m-d'),
                         'establishment_id' => $document->establishment_id,
@@ -136,7 +136,7 @@ class Billing
                         'kardexable_id' => $document->id,
                         'kardexable_type' => SalDocument::class,
                         'location_id' => $this->warehouse_id,
-                        'quantity'=> (-$row['quantity']),
+                        'quantity' => (-$row['quantity']),
                         'detail' => 'Venta'
                     ]);
                 }
@@ -144,7 +144,7 @@ class Billing
                 //if($inputs['hotel']) $document->hotel()->create($inputs['hotel']);
                 //if($inputs['transport']) $document->transport()->create($inputs['transport']);
                 $document->invoice()->create($inputs['invoice']);
-                $this->saveCashDocument($document->id,'invoice');
+                $this->saveCashDocument($document->id, 'invoice');
                 $this->document = SalDocument::find($document->id);
                 break;
             case 'summary':
@@ -192,7 +192,7 @@ class Billing
     {
         $send_email = ($this->actions['send_email'] === true) ? true : false;
 
-        if($send_email){
+        if ($send_email) {
 
             $company = $this->company;
             $document = $this->document;
@@ -238,7 +238,6 @@ class Billing
             'state_type_id' => $state_type_id,
             'soap_shipping_response' => isset($this->response['sent']) ? $this->response : null
         ]);
-
     }
 
     public function updateSoap($soap_type_id, $type)
@@ -246,7 +245,7 @@ class Billing
         $this->document->update([
             'soap_type_id' => $soap_type_id
         ]);
-        if($type === 'invoice') {
+        if ($type === 'invoice') {
             $invoice = SalInvoice::where('document_id', $this->document->id)->first();
             $invoice->date_of_due = $this->document->date_of_issue;
             $invoice->save();
@@ -255,8 +254,7 @@ class Billing
 
     public function updateStateDocuments($state_type_id)
     {
-        foreach ($this->document->documents as $doc)
-        {
+        foreach ($this->document->documents as $doc) {
             $doc->document->update([
                 'state_type_id' => $state_type_id
             ]);
@@ -290,7 +288,8 @@ class Billing
         return $qr;
     }
 
-    public function createPdf($document = null, $type = null, $format = null, $route = null) {
+    public function createPdf($document = null, $type = null, $format = null, $route = null)
+    {
 
         ini_set("pcre.backtrack_limit", "5000000");
         $template = new Template();
@@ -304,15 +303,15 @@ class Billing
 
         $html = $template->pdf($base_pdf_template, $this->type, $this->company, $this->document, $format_pdf);
 
-        if (($format_pdf === 'ticket') OR
-            ($format_pdf === 'ticket_58') OR
-            ($format_pdf === 'ticket_50'))
-        {
+        if (($format_pdf === 'ticket') or
+            ($format_pdf === 'ticket_58') or
+            ($format_pdf === 'ticket_50')
+        ) {
 
-            $width = ($format_pdf === 'ticket_58') ? 56 : 78 ;
-            if(env('ENABLED_TEMPLATE_TICKET_80')) $width = 76;
-            if(env('ENABLED_TEMPLATE_TICKET_70')) $width = 70;
-            if($format_pdf === 'ticket_50') $width = 45;
+            $width = ($format_pdf === 'ticket_58') ? 56 : 78;
+            if (env('ENABLED_TEMPLATE_TICKET_80')) $width = 76;
+            if (env('ENABLED_TEMPLATE_TICKET_70')) $width = 70;
+            if ($format_pdf === 'ticket_50') $width = 45;
 
             $establishment = json_decode($this->document->establishment);
             $customer = json_decode($this->document->customer);
@@ -322,7 +321,7 @@ class Billing
             $company_number    = $establishment->phone != '' ? '10' : '0';
             $customer_name     = strlen($customer->names) > '25' ? '10' : '0';
             $customer_address  = (strlen($customer->address) / 200) * 10;
-            $customer_department_id  = ($customer->department_id == 16) ? 20:0;
+            $customer_department_id  = ($customer->department_id == 16) ? 20 : 0;
             $p_order           = $this->document->purchase_order != '' ? '10' : '0';
 
             $total_prepayment = $this->document->total_prepayment != '' ? '10' : '0';
@@ -349,56 +348,56 @@ class Billing
             $extra_by_item_description = 0;
             $discount_global = 0;
             foreach ($this->document->items as $it) {
-                if(strlen($it->description)>100){
-                    $extra_by_item_description +=24;
+                if (strlen($it->description) > 100) {
+                    $extra_by_item_description += 24;
                 }
                 if ($it->discounts) {
                     $discount_global = $discount_global + 1;
                 }
-                if($it->additional_information){
+                if ($it->additional_information) {
                     $extra_by_item_additional_information += count($it->additional_information) * 5;
                 }
             }
             $legends = $this->document->legends != '' ? '10' : '0';
 
-            $quotation_id = ($this->document->quotation_id) ? 15:0;
+            $quotation_id = ($this->document->quotation_id) ? 15 : 0;
 
             $pdf = new Mpdf([
                 'mode' => 'utf-8',
                 'format' => [
                     $width,
                     130 +
-                    (($quantity_rows * 8) + $extra_by_item_description) +
-                    ($document_payments * 8) +
-                    ($discount_global * 8) +
-                    $company_name +
-                    $company_address +
-                    $company_number +
-                    $customer_name +
-                    $customer_address +
-                    $p_order +
-                    $legends +
-                    $total_exportation +
-                    $total_free +
-                    $total_unaffected +
-                    $total_exonerated +
-                    $perception +
-                    $total_taxed+
-                    $total_prepayment +
-                    $total_discount +
-                    $was_deducted_prepayment +
-                    $customer_department_id+
-                    $detraction+
-                    $total_plastic_bag_taxes+
-                    $quotation_id+
-                    $extra_by_item_additional_information
+                        (($quantity_rows * 8) + $extra_by_item_description) +
+                        ($document_payments * 8) +
+                        ($discount_global * 8) +
+                        $company_name +
+                        $company_address +
+                        $company_number +
+                        $customer_name +
+                        $customer_address +
+                        $p_order +
+                        $legends +
+                        $total_exportation +
+                        $total_free +
+                        $total_unaffected +
+                        $total_exonerated +
+                        $perception +
+                        $total_taxed +
+                        $total_prepayment +
+                        $total_discount +
+                        $was_deducted_prepayment +
+                        $customer_department_id +
+                        $detraction +
+                        $total_plastic_bag_taxes +
+                        $quotation_id +
+                        $extra_by_item_additional_information
                 ],
                 'margin_top' => 0,
                 'margin_right' => 1,
                 'margin_bottom' => 0,
                 'margin_left' => 1
             ]);
-        }else if($format_pdf === 'a5'){
+        } else if ($format_pdf === 'a5') {
 
             $company_name      = (strlen($this->company->name) / 20) * 10;
             $company_address   = (strlen($this->document->establishment->address) / 30) * 10;
@@ -418,8 +417,8 @@ class Billing
             $extra_by_item_description = 0;
             $discount_global = 0;
             foreach ($this->document->items as $it) {
-                if(strlen($it->item->description)>100){
-                    $extra_by_item_description +=24;
+                if (strlen($it->item->description) > 100) {
+                    $extra_by_item_description += 24;
                 }
                 if ($it->discounts) {
                     $discount_global = $discount_global + 1;
@@ -429,32 +428,30 @@ class Billing
 
 
             $height = ($quantity_rows * 8) +
-                    ($discount_global * 3) +
-                    $company_name +
-                    $company_address +
-                    $company_number +
-                    $customer_name +
-                    $customer_address +
-                    $p_order +
-                    $legends +
-                    $total_exportation +
-                    $total_free +
-                    $total_unaffected +
-                    $total_exonerated +
-                    $total_taxed;
+                ($discount_global * 3) +
+                $company_name +
+                $company_address +
+                $company_number +
+                $customer_name +
+                $customer_address +
+                $p_order +
+                $legends +
+                $total_exportation +
+                $total_free +
+                $total_unaffected +
+                $total_exonerated +
+                $total_taxed;
             $diferencia = 148 - (float)$height;
 
             $pdf = new Mpdf([
                 'mode' => 'utf-8',
-                'format' => [210,$diferencia + $height],
+                'format' => [210, $diferencia + $height],
                 'margin_top' => 2,
                 'margin_right' => 5,
                 'margin_bottom' => 0,
                 'margin_left' => 5
             ]);
-
-
-       } else {
+        } else {
 
             $pdf_font_regular = env('PDF_NAME_REGULAR');
             $pdf_font_bold = env('PDF_NAME_BOLD');
@@ -468,35 +465,35 @@ class Billing
 
                 $pdf = new Mpdf([
                     'fontDir' => array_merge($fontDirs, [
-                        app_path('CoreBilling'.DIRECTORY_SEPARATOR.'Templates'.
-                                                 DIRECTORY_SEPARATOR.'pdf'.
-                                                 DIRECTORY_SEPARATOR.$base_pdf_template.
-                                                 DIRECTORY_SEPARATOR.'font')
+                        app_path('CoreBilling' . DIRECTORY_SEPARATOR . 'Templates' .
+                            DIRECTORY_SEPARATOR . 'pdf' .
+                            DIRECTORY_SEPARATOR . $base_pdf_template .
+                            DIRECTORY_SEPARATOR . 'font')
                     ]),
                     'fontdata' => $fontData + [
                         'custom_bold' => [
-                            'R' => $pdf_font_bold.'.ttf',
+                            'R' => $pdf_font_bold . '.ttf',
                         ],
                         'custom_regular' => [
-                            'R' => $pdf_font_regular.'.ttf',
+                            'R' => $pdf_font_regular . '.ttf',
                         ],
                     ]
                 ]);
             }
         }
 
-        $path_css = app_path('CoreBilling'.DIRECTORY_SEPARATOR.'Templates'.
-                                             DIRECTORY_SEPARATOR.'pdf'.
-                                             DIRECTORY_SEPARATOR.$base_pdf_template.
-                                             DIRECTORY_SEPARATOR.'style.css');
+        $path_css = app_path('CoreBilling' . DIRECTORY_SEPARATOR . 'Templates' .
+            DIRECTORY_SEPARATOR . 'pdf' .
+            DIRECTORY_SEPARATOR . $base_pdf_template .
+            DIRECTORY_SEPARATOR . 'style.css');
 
         $stylesheet = file_get_contents($path_css);
 
         $pdf->WriteHTML($stylesheet, HTMLParserMode::HEADER_CSS);
         $pdf->WriteHTML($html, HTMLParserMode::HTML_BODY);
 
-        if (($format_pdf != 'ticket') AND ($format_pdf != 'ticket_58')) {
-            if(env('PDF_TEMPLATE_FOOTER')) {
+        if (($format_pdf != 'ticket') and ($format_pdf != 'ticket_58')) {
+            if (env('PDF_TEMPLATE_FOOTER')) {
                 $html_footer = $template->pdfFooter($base_pdf_template);
                 $pdf->SetHTMLFooter($html_footer);
             }
@@ -504,7 +501,7 @@ class Billing
             $pdf->SetHTMLFooter($html_footer);
         }
 
-        $this->uploadFile($pdf->output('', 'S'), 'pdf',$route);
+        $this->uploadFile($pdf->output('', 'S'), 'pdf', $route);
     }
 
     public function uploadFile($file_content, $file_type, $route = null)
@@ -516,13 +513,13 @@ class Billing
     public function loadXmlSigned()
     {
         $this->xmlSigned = $this->getStorage($this->document->filename, 'signed');
-//        dd($this->xmlSigned);
+        //        dd($this->xmlSigned);
     }
 
     private function senderXmlSigned()
     {
         $this->setDataSoapType();
-        $sender = in_array($this->type, ['summary', 'voided'])?new SummarySender():new BillSender();
+        $sender = in_array($this->type, ['summary', 'voided']) ? new SummarySender() : new BillSender();
         $sender->setClient($this->wsClient);
         $sender->setCodeProvider(new XmlErrorCodeProvider());
 
@@ -531,21 +528,20 @@ class Billing
 
     public function senderXmlSignedBill()
     {
-        if(!$this->actions['send_xml_signed']) {
+        if (!$this->actions['send_xml_signed']) {
             $this->response = [
                 'sent' => false,
             ];
             return;
         }
         $this->onlySenderXmlSignedBill();
-
     }
 
     public function onlySenderXmlSignedBill()
     {
         $res = $this->senderXmlSigned();
 
-        if($res->isSuccess()) {
+        if ($res->isSuccess()) {
             $cdrResponse = $res->getCdrResponse();
             $this->uploadFile($res->getCdrZip(), 'cdr');
 
@@ -560,7 +556,6 @@ class Billing
             ];
 
             $this->validationCodeResponse($code, $description);
-
         } else {
             $code = $res->getError()->getCode();
             $message = $res->getError()->getMessage();
@@ -571,25 +566,24 @@ class Billing
             ];
 
             $this->validationCodeResponse($code, $message);
-
         }
     }
 
     public function validationCodeResponse($code, $message)
     {
         //Errors
-        if($code === 'ERROR_CDR') {
+        if ($code === 'ERROR_CDR') {
             return;
         }
-        if($code === 'HTTP') {
-//            $message = 'La SUNAT no responde a su solicitud, vuelva a intentarlo.';
+        if ($code === 'HTTP') {
+            //            $message = 'La SUNAT no responde a su solicitud, vuelva a intentarlo.';
             throw new Exception("Code: {$code}; Description: {$message}");
         }
-        if((int)$code === 0) {
+        if ((int)$code === 0) {
             $this->updateState(self::ACCEPTED);
             return;
         }
-        if((int)$code < 2000) {
+        if ((int)$code < 2000) {
             //Excepciones
             throw new Exception("Code: {$code}; Description: {$message}");
         } elseif ((int)$code < 4000) {
@@ -605,12 +599,12 @@ class Billing
     public function senderXmlSignedSummary()
     {
         $res = $this->senderXmlSigned();
-        if($res->isSuccess()) {
+        if ($res->isSuccess()) {
             $ticket = $res->getTicket();
             $this->updateTicket($ticket);
             $this->updateState(self::SENT);
-            if($this->type === 'summary') {
-                if($this->document->summary_status_type_id === '1') {
+            if ($this->type === 'summary') {
+                if ($this->document->summary_status_type_id === '1') {
                     $this->updateStateDocuments(self::SENT);
                 } else {
                     $this->updateStateDocuments(self::CANCELING);
@@ -635,20 +629,20 @@ class Billing
 
     public function statusSummary($ticket)
     {
-        
+
         $extService = new ExtService();
         $extService->setClient($this->wsClient);
         $extService->setCodeProvider(new XmlErrorCodeProvider());
         $res = $extService->getStatus($ticket);
 
-        if(!$res->isSuccess()) {
+        if (!$res->isSuccess()) {
             throw new Exception("Code: {$res->getError()->getCode()}; Description: {$res->getError()->getMessage()}");
         } else {
             $cdrResponse = $res->getCdrResponse();
             $this->uploadFile($res->getCdrZip(), 'cdr');
             $this->updateState(self::ACCEPTED);
-            if($this->type === 'summary') {
-                if($this->document->summary_status_type_id === '1') {
+            if ($this->type === 'summary') {
+                if ($this->document->summary_status_type_id === '1') {
                     $this->updateStateDocuments(self::ACCEPTED);
                 } else {
                     $this->updateStateDocuments(self::VOIDED);
@@ -669,10 +663,14 @@ class Billing
         $consultCdrService = new ConsultCdrService();
         $consultCdrService->setClient($this->wsClient);
         $consultCdrService->setCodeProvider(new XmlErrorCodeProvider());
-        $res = $consultCdrService->getStatusCdr($this->company->number, $this->document->document_type_id,
-                                                $this->document->series, $this->document->number);
+        $res = $consultCdrService->getStatusCdr(
+            $this->company->number,
+            $this->document->document_type_id,
+            $this->document->series,
+            $this->document->number
+        );
 
-        if(!$res->isSuccess()) {
+        if (!$res->isSuccess()) {
             throw new Exception("Code: {$res->getError()->getCode()}; Description: {$res->getError()->getMessage()}");
         } else {
             $cdrResponse = $res->getCdrResponse();
@@ -698,19 +696,19 @@ class Billing
 
     private function setPathCertificate()
     {
-        if($this->isOse) {
-            $this->pathCertificate = storage_path('app'.DIRECTORY_SEPARATOR.
-                'certificates'.DIRECTORY_SEPARATOR.$this->company->certificate);
+        if ($this->isOse) {
+            $this->pathCertificate = storage_path('app' . DIRECTORY_SEPARATOR .
+                'certificates' . DIRECTORY_SEPARATOR . $this->company->certificate);
         } else {
-            if($this->isDemo) {
-                $this->pathCertificate = app_path('CoreBilling'.DIRECTORY_SEPARATOR.
-                    'WS'.DIRECTORY_SEPARATOR.
-                    'Signed'.DIRECTORY_SEPARATOR.
-                    'Resources'.DIRECTORY_SEPARATOR.
+            if ($this->isDemo) {
+                $this->pathCertificate = app_path('CoreBilling' . DIRECTORY_SEPARATOR .
+                    'WS' . DIRECTORY_SEPARATOR .
+                    'Signed' . DIRECTORY_SEPARATOR .
+                    'Resources' . DIRECTORY_SEPARATOR .
                     'certificate.pem');
             } else {
-                $this->pathCertificate = storage_path('app'.DIRECTORY_SEPARATOR.
-                    'certificates'.DIRECTORY_SEPARATOR.$this->company->certificate);
+                $this->pathCertificate = storage_path('app' . DIRECTORY_SEPARATOR .
+                    'certificates' . DIRECTORY_SEPARATOR . $this->company->certificate);
             }
         }
 
@@ -728,42 +726,42 @@ class Billing
 
     private function setSoapCredentials()
     {
-        if($this->isDemo) {
-            $this->soapUsername = $this->company->number.'MODDATOS';
+        if ($this->isDemo) {
+            $this->soapUsername = $this->company->number . 'MODDATOS';
             $this->soapPassword = 'moddatos';
         } else {
             $this->soapUsername = $this->company->soap_username;
             $this->soapPassword = $this->company->soap_password;
         }
 
-//        $this->soapUsername = ($this->isDemo)?$this->company->number.'MODDATOS':$this->company->soap_username;
-//        $this->soapPassword = ($this->isDemo)?'moddatos':$this->company->soap_password;
+        //        $this->soapUsername = ($this->isDemo)?$this->company->number.'MODDATOS':$this->company->soap_username;
+        //        $this->soapPassword = ($this->isDemo)?'moddatos':$this->company->soap_password;
 
-        if($this->isOse) {
+        if ($this->isOse) {
             $this->endpoint = $this->company->soap_url;
-//            dd($this->soapPassword);
+            //            dd($this->soapPassword);
         } else {
             switch ($this->type) {
                 case 'perception':
                 case 'retention':
-                    $this->endpoint = ($this->isDemo)?SunatEndpoints::RETENCION_BETA:SunatEndpoints::RETENCION_PRODUCCION;
+                    $this->endpoint = ($this->isDemo) ? SunatEndpoints::RETENCION_BETA : SunatEndpoints::RETENCION_PRODUCCION;
                     break;
                 case 'dispatch':
-                    $this->endpoint = ($this->isDemo)?SunatEndpoints::GUIA_BETA:SunatEndpoints::GUIA_PRODUCCION;
+                    $this->endpoint = ($this->isDemo) ? SunatEndpoints::GUIA_BETA : SunatEndpoints::GUIA_PRODUCCION;
                     break;
                 default:
                     // $this->endpoint = ($this->isDemo)?SunatEndpoints::FE_BETA:SunatEndpoints::FE_PRODUCCION;
-                    $this->endpoint = ($this->isDemo)?SunatEndpoints::FE_BETA : ($this->sunat_alternate_server ? SunatEndpoints::FE_PRODUCCION_ALTERNATE : SunatEndpoints::FE_PRODUCCION);
+                    $this->endpoint = ($this->isDemo) ? SunatEndpoints::FE_BETA : ($this->sunat_alternate_server ? SunatEndpoints::FE_PRODUCCION_ALTERNATE : SunatEndpoints::FE_PRODUCCION);
                     break;
             }
         }
-
     }
 
-    private function updatePrepaymentDocuments($inputs){
+    private function updatePrepaymentDocuments($inputs)
+    {
         // dd($inputs);
 
-        if(isset($inputs['prepayments'])) {
+        if (isset($inputs['prepayments'])) {
 
             foreach ($inputs['prepayments'] as $row) {
 
@@ -771,8 +769,8 @@ class Billing
                 $series = $fullnumber[0];
                 $number = $fullnumber[1];
 
-                $doc = SalDocument::where([['series',$series],['number',$number]])->first();
-                if($doc){
+                $doc = SalDocument::where([['series', $series], ['number', $number]])->first();
+                if ($doc) {
                     $doc->was_deducted_prepayment = true;
                     $doc->save();
                 }
@@ -780,7 +778,8 @@ class Billing
         }
     }
 
-    public function updateResponse(){
+    public function updateResponse()
+    {
 
         // if($this->response['sent']) {
         //     return
@@ -793,7 +792,8 @@ class Billing
 
     }
 
-    private function savePayments($document, $payments){
+    private function savePayments($document, $payments)
+    {
 
         $total = $document->total;
         $balance = $total - collect($payments)->sum('payment');
@@ -802,19 +802,18 @@ class Billing
 
         $this->apply_change = false;
 
-        if($balance < 0 && $search_cash){
+        if ($balance < 0 && $search_cash) {
 
-            $payments = collect($payments)->map(function($row) use($balance){
+            $payments = collect($payments)->map(function ($row) use ($balance) {
 
                 $change = null;
                 $payment = $row['payment'];
 
-                if($row['payment_method_type_id'] == '01' && !$this->apply_change){
+                if ($row['payment_method_type_id'] == '01' && !$this->apply_change) {
 
                     $change = abs($balance);
                     $payment = $row['payment'] - abs($balance);
                     $this->apply_change = true;
-
                 }
 
                 return [
@@ -828,13 +827,12 @@ class Billing
                     "change" => $change,
                     "payment" => $payment
                 ];
-
             });
         }
 
         foreach ($payments as $row) {
 
-            if($balance < 0 && !$this->apply_change){
+            if ($balance < 0 && !$this->apply_change) {
                 $row['change'] = abs($balance);
                 $row['payment'] = $row['payment'] - abs($balance);
                 $this->apply_change = true;
@@ -843,20 +841,22 @@ class Billing
             $record = $document->payments()->create($row);
 
             //considerar la creacion de una caja chica cuando recien se crea el cliente
-            if(isset($row['payment_destination_id'])){
+            if (isset($row['payment_destination_id'])) {
                 $this->createGlobalPayment($record, $row);
             }
-
         }
     }
 
-    public function saveCashDocument($id,$type){
-        $cash =  SalCash::where([['user_id',Auth::id()],['state',true]])->first();
+    public function saveCashDocument($id, $type)
+    {
+        $cash =  SalCash::where([['user_id', Auth::id()], ['state', true]])->first();
+
         SalCashDocument::create([
             'cash_id' => $cash->id,
-            'document_id' => ($type=='invoice'?$id:null),
-            'sale_note_id' => ($type=='sale_note'?$id:null),
-            'expense_id' => null
+            'document_id' => ($type == 'invoice' ? $id : null),
+            'sale_note_id' => ($type == 'sale_note' ? $id : null),
+            'expense_id' => null,
+            'rest_sale_note_id' => ($type == 'rest_sale_note' ? $id : null)
         ]);
     }
 
@@ -867,10 +867,11 @@ class Billing
         }
     }
 
-    public function createGlobalPayment($model, $row){
+    public function createGlobalPayment($model, $row)
+    {
 
         $destination = $this->getDestinationRecord($row);
-        $company = SetCompany::where('main',true)->first();
+        $company = SetCompany::where('main', true)->first();
 
         $model->global_payment()->create([
             'user_id' => auth()->id(),
@@ -878,21 +879,19 @@ class Billing
             'destination_id' => $destination['destination_id'],
             'destination_type' => $destination['destination_type'],
         ]);
-
     }
 
-    public function getDestinationRecord($row){
+    public function getDestinationRecord($row)
+    {
 
-        if($row['payment_destination_id'] === 'cash'){
+        if ($row['payment_destination_id'] === 'cash') {
 
             $destination_id = $this->getCash()['cash_id'];
             $destination_type = SalCash::class;
-
-        }else{
+        } else {
 
             $destination_id = $row['payment_destination_id'];
             $destination_type = BankAccount::class;
-
         }
 
         return [
@@ -901,36 +900,37 @@ class Billing
         ];
     }
 
-    public function getPaymentDestinations(){
+    public function getPaymentDestinations()
+    {
 
         $bank_accounts = self::getBankAccounts();
         $cash = $this->getCash();
 
-        if($cash){
+        if ($cash) {
             return collect($bank_accounts)->push($cash);
         }
 
         return $bank_accounts;
-
     }
 
-    private static function getBankAccounts(){
+    private static function getBankAccounts()
+    {
 
-        return BankAccount::get()->transform(function($row) {
+        return BankAccount::get()->transform(function ($row) {
             return [
                 'id' => $row->id,
                 'cash_id' => null,
                 'description' => "{$row->bank->description} - {$row->currency_type_id} - {$row->description}",
             ];
         });
-
     }
 
-    public function getCash(){
+    public function getCash()
+    {
 
-        $cash =  SalCash::where([['user_id',Auth::id()],['state',true]])->first();
+        $cash =  SalCash::where([['user_id', Auth::id()], ['state', true]])->first();
 
-        if($cash){
+        if ($cash) {
 
             return [
                 'id' => 'cash',
@@ -938,17 +938,16 @@ class Billing
                 //'description' => ($cash->reference_number) ? "CAJA GENERAL - {$cash->reference_number}" : "CAJA GENERAL",
                 'description' => ($cash->reference_number) ? "CAJA CHICA - {$cash->reference_number}" : "CAJA CHICA"
             ];
-
         }
 
         return null;
-
     }
 
-    public function updateResponseSunat(){
+    public function updateResponseSunat()
+    {
         $result_invoice = $this->getResponse();
         $document_old_id = $this->document->id;
-        
+
         SalDocument::where('id', $document_old_id)->update([
             'has_xml' => '1',
             'has_pdf' => '1',

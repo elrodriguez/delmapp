@@ -237,6 +237,28 @@
         function returnTables() {
             $('a[href="#tab_default-1"]').click();
         }
+
+        window.addEventListener('restaurant-add-items-tray', event => {
+            Command: toastr["success"]("Agregado correctamente")
+
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": true,
+                "progressBar": true,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": 300,
+                "hideDuration": 100,
+                "timeOut": 5000,
+                "extendedTimeOut": 1000,
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+        });
     </script>
 
 </div>

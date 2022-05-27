@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.0",
         "barryvdh/laravel-dompdf": "^1.0",
+        "beyondcode/laravel-websockets": "^1.13",
         "elibyy/tcpdf-laravel": "^9.0.0",
         "elrod/user-activity": "^1.1",
         "fruitcake/laravel-cors": "^2.0",
@@ -23,6 +24,7 @@
         "mpdf/mpdf": "^8.0.17",
         "mpdf/qrcode": "^1.2.0",
         "nwidart/laravel-modules": "^8.2",
+        "pusher/pusher-php-server": "^7.0",
         "rap2hpoutre/laravel-log-viewer": "^2.2",
         "robrichards/xmlseclibs": "^3.1",
         "spatie/laravel-permission": "^5.1"

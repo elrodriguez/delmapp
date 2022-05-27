@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Modules\Restaurant\Entities\RestFloor;
 use Modules\Restaurant\Entities\RestTable;
+use Modules\Restaurant\Entities\RestTableOrder;
 
 class AttendTables extends Component
 {
@@ -16,7 +17,7 @@ class AttendTables extends Component
     public $tables = [];
     public $user_establishment;
 
-    protected $listeners = ['getTablesRefresh' => 'getTables'];
+    protected $listeners = ['getTablesRefresh' => 'getTables', 'setFreeTableAlert' => 'setFreeTable'];
 
     public function mount()
     {
@@ -41,5 +42,22 @@ class AttendTables extends Component
     {
         $this->floor_id = $this->floors[0]->id;
         $this->tables = RestTable::where('floor_id', $this->floor_id)->get();
+    }
+
+    public function setFreeTable($id)
+    {
+        $this->dispatchBrowserEvent('restaurant-set-free-table', ['orderId' => $id]);
+    }
+
+    public function updateStateTable($id)
+    {
+        $tables = RestTableOrder::where('order_id', $id)->get();
+        foreach ($tables as $table) {
+            RestTable::find($table->table_id)->update(['occupied' => false]);
+        }
+
+        RestTableOrder::where('order_id', $id)->update([
+            'state' => false
+        ]);
     }
 }

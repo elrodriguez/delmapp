@@ -4,6 +4,8 @@
         href="{{ url('themes/smart-admin/css/datagrid/datatables/datatables.bundle.css') }}">
     <link rel="stylesheet" media="screen, print"
         href="{{ url('themes/smart-admin/css/formplugins/select2/select2.bundle.css') }}">
+    <link rel="stylesheet" media="screen, print"
+        href="{{ url('themes/smart-admin/css/notifications/toastr/toastr.css') }}">
 @endsection
 @section('breadcrumb')
     <x-company-name></x-company-name>
@@ -80,5 +82,6 @@
     </div>
 @endsection
 @section('script')
+    <script src="{{ url('themes/smart-admin/js/notifications/toastr/toastr.js') }}"></script>
     <script src="{{ url('themes/smart-admin/js/formplugins/select2/select2.bundle.js') }}"></script>
 @stop

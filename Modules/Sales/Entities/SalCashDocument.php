@@ -13,9 +13,10 @@ class SalCashDocument extends Model
         'cash_id',
         'document_id',
         'sale_note_id',
-        'expense_id'
+        'expense_id',
+        'rest_sale_note_id'
     ];
-    
+
     protected static function newFactory()
     {
         return \Modules\Sales\Database\factories\SalCashDocumentFactory::new();
@@ -23,7 +24,7 @@ class SalCashDocument extends Model
 
     public function cash()
     {
-        return $this->belongsTo(SalCash::class,'cash_id');
+        return $this->belongsTo(SalCash::class, 'cash_id');
     }
 
     public function document()

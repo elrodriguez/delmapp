@@ -19,5 +19,12 @@ return  [
     'attend'                    => 'Attend',
     'fullscreen'                => 'Fullscreen',
     'waiter'                    => 'Waiter',
-    'order'                     => 'Order'
+    'order'                     => 'Order',
+    'list_orders'                     => 'Orders',
+    'local'                     => 'Local',
+    'to_carry_out'              => 'To carry out',
+    'charge'                    => 'Charge',
+    'orders_receivable'         => 'Orders Receivable',
+    'sales_notes'               => 'Sale Notes',
+    'sale_note'               => 'Sale Note'
 ];

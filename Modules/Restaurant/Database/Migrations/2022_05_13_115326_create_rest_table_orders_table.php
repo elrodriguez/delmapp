@@ -17,7 +17,7 @@ class CreateRestTableOrdersTable extends Migration
             $table->id();
             $table->unsignedBigInteger('table_id');
             $table->unsignedBigInteger('order_id');
-            $table->boolean('state')->default(true);
+            $table->boolean('state')->default(true)->comment('cuando es 1 la mesa esta ocupada,0 la mesa esta libre');
             $table->timestamps();
         });
     }

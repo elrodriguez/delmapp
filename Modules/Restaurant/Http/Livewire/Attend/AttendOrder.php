@@ -2,6 +2,7 @@
 
 namespace Modules\Restaurant\Http\Livewire\Attend;
 
+use App\Events\Restaurant\OrderCommand as RestaurantOrderCommand;
 use App\Models\UserEstablishment;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +16,7 @@ use Modules\Restaurant\Entities\RestOrder;
 use Modules\Restaurant\Entities\RestOrderCommand;
 use Modules\Restaurant\Entities\RestTable;
 use Modules\Restaurant\Entities\RestTableOrder;
+
 
 class AttendOrder extends Component
 {
@@ -64,6 +66,7 @@ class AttendOrder extends Component
 
     public function tableId($id)
     {
+        $this->order_items = [];
         $this->table_id = $id;
         $table = RestTable::find($id);
         $this->table = array('id' => $table->id, 'name' => $table->name, 'total' => 0, 'order' => []);
@@ -136,7 +139,16 @@ class AttendOrder extends Component
         $array_key = session('rest_table_id');
 
         if ($array_key) {
-            $key = array_search($id, array_column($this->order_items, 'id'));
+            //$key = array_search($id, array_column($this->order_items, 'id'));
+
+            $key = false;
+
+            foreach ($this->order_items as $item) {
+                if ($item['id'] == $id && $item['type'] == RestCommand::class) {
+                    $key = true;
+                }
+            }
+
             if ($key === false) {
                 array_push($this->order_items, array(
                     'id' => $id,
@@ -154,6 +166,8 @@ class AttendOrder extends Component
                 $this->total = $this->total + $price;
                 $this->table['total'] = $this->total;
                 session([$array_key => $this->table]);
+
+                $this->dispatchBrowserEvent('restaurant-add-items-tray', ['success' => true]);
             }
         } else {
             $this->dispatchBrowserEvent('restaurant-active-tables', ['success' => true]);
@@ -162,7 +176,17 @@ class AttendOrder extends Component
     public function addProducts($id, $name, $price)
     {
         $array_key = session('rest_table_id');
-        $key = array_search($id, array_column($this->order_items, 'id'));
+
+        $key = false;
+
+        foreach ($this->order_items as $item) {
+            if ($item['id'] == $id && $item['type'] == InvItem::class) {
+                $key = true;
+            }
+        }
+
+        //$key = array_search($id, array_column($this->order_items, 'id'));
+
         if ($array_key) {
             if ($key === false) {
                 array_push($this->order_items, array(
@@ -181,6 +205,8 @@ class AttendOrder extends Component
                 $this->total = $this->total + $price;
                 $this->table['total'] = $this->total;
                 session([$array_key => $this->table]);
+
+                $this->dispatchBrowserEvent('restaurant-add-items-tray', ['success' => true]);
             }
         } else {
             $this->dispatchBrowserEvent('restaurant-active-tables', ['success' => true]);
@@ -243,6 +269,7 @@ class AttendOrder extends Component
                     'order_id' => $order->id,
                     'command_id' => $val['id'],
                     'command_type' => $val['type'],
+                    'description' => $val['name'],
                     'quantity' => $val['quantity'],
                     'price' => $val['price'],
                     'discount' => $val['discount'],
@@ -252,6 +279,9 @@ class AttendOrder extends Component
             }
 
             $this->clearForm();
+
+            event(new RestaurantOrderCommand());
+
             $this->dispatchBrowserEvent('rest-order-save', ['msg' => Lang::get('labels.successfully_registered')]);
         }
     }

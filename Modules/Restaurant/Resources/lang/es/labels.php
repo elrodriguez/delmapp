@@ -19,5 +19,12 @@ return  [
     'attend'                    => 'Atender',
     'fullscreen'                => 'Pantalla completa',
     'waiter'                    => 'Mesero',
-    'order'                     => 'Orden'
+    'order'                     => 'Pedido',
+    'list_orders'                     => 'Lista de Pedidos',
+    'local'                     => 'Local',
+    'to_carry_out'              => 'Para llevar',
+    'charge'                    => 'Cobrar',
+    'orders_receivable'         => 'Pedidos por Cobrar',
+    'sales_notes'               => 'Notas de Venta',
+    'sale_note'               => 'Nota de Venta'
 ];
