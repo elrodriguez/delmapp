@@ -112,4 +112,33 @@ class RestSaleNote extends Model
     {
         return $this->hasMany(\Modules\Restaurant\Entities\RestSaleNotePayment::class, 'sale_note_id');
     }
+
+    public function getEstablishmentAttribute($value)
+    {
+        return (is_null($value))?null:(object) json_decode($value);
+    }
+
+    public function setEstablishmentAttribute($value)
+    {
+        $this->attributes['establishment'] = (is_null($value))?null:json_encode($value);
+    }
+
+    public function getCustomerAttribute($value)
+    {
+        return (is_null($value))?null:(object) json_decode($value);
+    }
+
+    public function setCustomerAttribute($value)
+    {
+        $this->attributes['customer'] = (is_null($value))?null:json_encode($value);
+    }
+    public function getLegendsAttribute($value)
+    {
+        return (is_null($value))?null:(object) json_decode($value);
+    }
+
+    public function setLegendsAttribute($value)
+    {
+        $this->attributes['legends'] = (is_null($value))?null:json_encode($value);
+    }
 }

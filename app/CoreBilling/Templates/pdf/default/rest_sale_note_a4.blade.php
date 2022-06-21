@@ -13,7 +13,8 @@ $department = \Illuminate\Support\Facades\DB::table('departments')
     ->where('id', $establishment->department_id)
     ->first();
 //dd($document);
-$customer = json_decode($document->customer);
+$customer = \App\Models\Person::find($document->customer_id);
+
 $identity_document_type = \App\Models\IdentityDocumentType::find($customer->identity_document_type_id);
 $customer_district = \Illuminate\Support\Facades\DB::table('districts')
     ->where('id', $customer->district_id)

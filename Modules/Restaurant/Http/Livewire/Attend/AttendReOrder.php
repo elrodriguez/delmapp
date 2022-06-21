@@ -68,7 +68,7 @@ class AttendReOrder extends Component
 
         $this->order = RestOrder::where('id', $this->table_order->order_id)->first();
 
-        if ($this->order->state == 'X') {
+        if ($this->order->state == 'X' || $this->order->state == 'Z') {
             $this->emit('setFreeTableAlert', $this->order->id);
         } else {
             $this->client = $this->order->customer_person_name;

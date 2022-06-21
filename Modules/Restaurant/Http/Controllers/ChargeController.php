@@ -99,12 +99,17 @@ class ChargeController extends Controller
             $discount_global = 0;
 
             foreach ($document->items as $it) {
-                if (strlen(json_decode($it->item)->name) > 100) {
-                    $extra_by_item_description += 24;
+                if($it->item_type == 'Modules\Restaurant\Entities\RestCommand'){
+
+                }else{
+                    if (strlen(json_decode($it->item)->name) > 100) {
+                        $extra_by_item_description += 24;
+                    }
+                    if ($it->discounts) {
+                        $discount_global = $discount_global + 1;
+                    }
                 }
-                if ($it->discounts) {
-                    $discount_global = $discount_global + 1;
-                }
+                
             }
             $legends = $document->legends != '' ? '10' : '0';
 
@@ -234,8 +239,6 @@ class ChargeController extends Controller
             $html_footer = $template->pdfFooter($base_template);
             $pdf->SetHTMLFooter($html_footer);
         }
-        //dd($html);
-        //dd($document->filename);
         $this->uploadStorage($document->filename, $pdf->output('', 'S'), 'rest_sale_note');
     }
 }

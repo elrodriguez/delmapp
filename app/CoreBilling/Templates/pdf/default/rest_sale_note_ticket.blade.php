@@ -6,7 +6,7 @@
     $province = \Illuminate\Support\Facades\DB::table('provinces')->where('id',$establishment->province_id)->first();
     $department = \Illuminate\Support\Facades\DB::table('departments')->where('id',$establishment->department_id)->first();
     //dd($document);
-    $customer = $document->customer;
+    $customer = \App\Models\Person::find($document->customer_id);
     $identity_document_type = \App\Models\IdentityDocumentType::find($customer->identity_document_type_id);
     $customer_district = \Illuminate\Support\Facades\DB::table('districts')->where('id',$customer->district_id)->first();
     $customer_province = \Illuminate\Support\Facades\DB::table('provinces')->where('id',$customer->province_id)->first();
@@ -68,7 +68,7 @@
 <table class="full-width">
     <tr>
         <td width="" class="pt-3"><p class="desc">F. Emisión:</p></td>
-        <td width="" class="pt-3"><p class="desc">{{ $document->date_of_issue->format('Y-m-d') }}</p></td>
+        <td width="" class="pt-3"><p class="desc">{{ \Carbon\Carbon::parse($document->date_of_issue)->format('Y-m-d') }}</p></td>
     </tr>
 
 
@@ -129,9 +129,22 @@
                     {{ number_format($row->quantity, 0) }}
                 @endif
             </td>
-            <td class="text-center desc-9 align-top">{{ json_decode($row->item)->unit_measure_id }}</td>
+            <td class="text-center desc-9 align-top">
+                @if ($row->item_type == 'Modules\Restaurant\Entities\RestCommand')
+                    NIU
+                @else
+                    {{ json_decode($row->item)->unit_measure_id }}
+                @endif
+            </td>
             <td class="text-left desc-9 align-top">
-                {!! json_decode($row->item)->description !!} @if (!empty($row->item->presentation)) {!!$row->item->presentation->description!!} @endif
+                @if ($row->item_type == 'Modules\Restaurant\Entities\RestCommand')
+                    {{ json_decode($row->item)->description }}
+                @else
+                    {{ json_decode($row->item)->name }}
+                @endif
+                @if (!empty($row->item->presentation)) 
+                {!!$row->item->presentation->description!!} 
+                @endif
                 @if($row->attributes)
                     @foreach($row->attributes as $attr)
                         <br/>{!! $attr->description !!} : {{ $attr->value }}
@@ -202,6 +215,7 @@
         {{-- @foreach(array_reverse((array) $document->legends) as $row) --}}
             @php
                 $legend = $document->legends;
+                //dd($legend);
             @endphp
             <tr>
                 @if ($legend->code == "1000")

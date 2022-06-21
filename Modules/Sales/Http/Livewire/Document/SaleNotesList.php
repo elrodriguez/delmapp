@@ -25,7 +25,7 @@ class SaleNotesList extends Component
 
     use WithPagination;
     protected $paginationTheme = 'bootstrap';
-    protected $listeners = ['refreshlistSaleNotes' => 'updatingSearchSaleNote'];
+    protected $listeners = ['refreshlistSaleNotes' => 'searchSaleNote'];
 
     public function mount(){
         $this->show = 10;
@@ -37,10 +37,11 @@ class SaleNotesList extends Component
         return view('sales::livewire.document.sale-notes-list',['notes' => $this->getData()]);
     }
 
-    public function updatingSearchSaleNote()
+    public function searchSaleNote()
     {
         $this->resetPage();
     }
+
 
     public function getData(){
         return SalSaleNote::join('state_types','state_type_id','state_types.id')

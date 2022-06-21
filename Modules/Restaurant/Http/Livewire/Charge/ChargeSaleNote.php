@@ -738,7 +738,7 @@ class ChargeSaleNote extends Component
             'user_id' => Auth::id(),
             'external_id' => $this->external_id,
             'establishment_id' => $this->establishment_id,
-            'establishment' => json_encode($establishment_json),
+            'establishment' => $establishment_json,
             'soap_type_id' => $this->soap_type_id,
             'state_type_id' => '01',
             'prefix' => 'NV',
@@ -747,7 +747,7 @@ class ChargeSaleNote extends Component
             'date_of_issue' => $date_of_issue,
             'time_of_issue' => Carbon::now()->toDateTimeString(),
             'customer_id' => $this->customer_id,
-            'customer' => json_encode($customer_json),
+            'customer' => $customer_json,
             'currency_type_id' => $this->currencyTypeIdActive,
             'exchange_rate_sale' => $this->exchangeRateSale,
             'total_prepayment' => 0,
@@ -766,12 +766,12 @@ class ChargeSaleNote extends Component
             'total_taxes' => $this->total_taxes,
             'total_value' => $this->total_taxed,
             'total' => $this->total,
-            'legends' => json_encode($legends),
+            'legends' => $legends,
             'total_canceled' => true,
             'paid' => ($paid == $this->total ? true : false),
             'observation' => $this->additional_information
         ]);
-        //dd($this->box_items);
+        $xxto = 0;
         foreach ($this->box_items as $row) {
 
             RestSaleNoteItem::create([
@@ -820,6 +820,7 @@ class ChargeSaleNote extends Component
                     ]);
                 }
             }
+            $xxto = $xxto + $row['total'];
         }
 
         $billing = new Billing();
@@ -833,6 +834,13 @@ class ChargeSaleNote extends Component
 
         $this->setFilename($sale_note);
         $this->createPdf($sale_note, "a4");
+
+        $xoto = $this->order->total; 
+        if($xxto == $xoto){
+            $this->order->update([
+                'state' => 'Z'
+            ]);
+        }
 
         $user = Auth::user();
         $activity = new Activity;

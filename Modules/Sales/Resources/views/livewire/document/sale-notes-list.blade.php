@@ -24,9 +24,9 @@
                         </span>
                     @endif
                 </div>
-                <input wire:keydown.enter="updatingSearchSaleNote" wire:model.defer="search" type="text" class="form-control border-left-0 bg-transparent pl-0" placeholder="Escriba aquí...">
+                <input wire:keydown.enter="searchSaleNote" wire:model.defer="search" type="text" class="form-control border-left-0 bg-transparent pl-0" placeholder="Escriba aquí...">
                 <div class="input-group-append">
-                    <button wire:click="updatingSearchSaleNote" class="btn btn-default waves-effect waves-themed" type="button">Buscar</button>
+                    <button wire:click="searchSaleNote" class="btn btn-default waves-effect waves-themed" type="button">Buscar</button>
                     <a href="{{ route('sales_documents_sale_notes_create') }}" class="btn btn-success waves-effect waves-themed" type="button">{{ __('labels.new') }}</a>
                 </div>
             </div>
