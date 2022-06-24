@@ -1,5 +1,6 @@
 <?php
-
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,7 +14,13 @@
 
 use Modules\Sales\Entities\SalCash;
 
-Route::middleware(['auth:sanctum', 'verified'])->prefix('sales')->group(function() {
+Route::middleware([
+    'auth:sanctum',
+    'verified',
+    'web',
+    InitializeTenancyByDomain::class,
+    PreventAccessFromCentralDomains::class,
+    ])->prefix('sales')->group(function() {
     Route::get('dashboard', 'SalesController@index')->name('sales_dashboard');
 
     Route::group(['prefix' => 'administration'], function() {

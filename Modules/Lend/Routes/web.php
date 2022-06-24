@@ -1,5 +1,6 @@
 <?php
-
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,7 +12,13 @@
 |
 */
 
-Route::middleware(['auth:sanctum', 'verified'])->prefix('lend')->group(function() {
+Route::middleware([
+    'auth:sanctum',
+    'verified',
+    'web',
+    InitializeTenancyByDomain::class,
+    PreventAccessFromCentralDomains::class,
+    ])->prefix('lend')->group(function() {
     Route::get('dashboard', 'LendController@index')->name('lend_dashboard');
 
     Route::group(['prefix' => 'interest'], function() {

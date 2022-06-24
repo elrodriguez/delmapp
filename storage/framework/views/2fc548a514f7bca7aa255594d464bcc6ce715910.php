@@ -11,15 +11,15 @@
         <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('inventory::sidebar')->html();
-} elseif ($_instance->childHasBeenRendered('ar12UTj')) {
-    $componentId = $_instance->getRenderedChildComponentId('ar12UTj');
-    $componentTag = $_instance->getRenderedChildComponentTagName('ar12UTj');
+} elseif ($_instance->childHasBeenRendered('bmaPCCp')) {
+    $componentId = $_instance->getRenderedChildComponentId('bmaPCCp');
+    $componentTag = $_instance->getRenderedChildComponentTagName('bmaPCCp');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('ar12UTj');
+    $_instance->preserveRenderedChild('bmaPCCp');
 } else {
     $response = \Livewire\Livewire::mount('inventory::sidebar');
     $html = $response->html();
-    $_instance->logRenderedChild('ar12UTj', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('bmaPCCp', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>

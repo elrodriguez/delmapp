@@ -1,5 +1,6 @@
 <?php
-
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,7 +12,13 @@
 |
 */
 
-Route::middleware(['auth:sanctum', 'verified'])->prefix('setting')->group(function () {
+Route::middleware([
+    'auth:sanctum',
+    'verified',
+    'web',
+    InitializeTenancyByDomain::class,
+    PreventAccessFromCentralDomains::class,
+    ])->prefix('setting')->group(function () {
     Route::get('dashboard', 'SettingController@index')->name('setting_dashboard');
     Route::get('parameters', 'ParametersController@index')->name('parameters');
     Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);

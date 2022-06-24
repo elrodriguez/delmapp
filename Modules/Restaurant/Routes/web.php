@@ -1,5 +1,6 @@
 <?php
-
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,7 +12,13 @@
 |
 */
 
-Route::middleware(['auth:sanctum', 'verified'])->prefix('restaurant')->group(function () {
+Route::middleware([
+    'auth:sanctum',
+    'verified',
+    'web',
+    InitializeTenancyByDomain::class,
+    PreventAccessFromCentralDomains::class,
+    ])->prefix('restaurant')->group(function () {
 
     Route::get('dashboard', 'RestaurantController@index')->name('restaurant_dashboard');
     Route::get('notes/print/{external_id}/{format?}', 'ChargeController@printSaleNote');

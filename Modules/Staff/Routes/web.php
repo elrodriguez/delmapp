@@ -1,6 +1,14 @@
 <?php
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 
-Route::middleware(['auth:sanctum', 'verified'])->prefix('staff')->group(function() {
+Route::middleware([
+    'auth:sanctum',
+    'verified',
+    'web',
+    InitializeTenancyByDomain::class,
+    PreventAccessFromCentralDomains::class,
+    ])->prefix('staff')->group(function() {
     Route::get('dashboard', 'StaffController@index')->name('staff_dashboard');
 
     Route::group(['prefix' => 'employees_type'], function() {

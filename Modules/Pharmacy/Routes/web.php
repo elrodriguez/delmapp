@@ -1,5 +1,6 @@
 <?php
-
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,7 +12,13 @@
 |
 */
 
-Route::middleware(['auth:sanctum', 'verified'])->prefix('pharmacy')->group(function() {
+Route::middleware([
+    'auth:sanctum',
+    'verified',
+    'web',
+    InitializeTenancyByDomain::class,
+    PreventAccessFromCentralDomains::class,
+    ])->prefix('pharmacy')->group(function() {
     Route::get('dashboard', 'PharmacyController@index')->name('pharmacy_dashboard');
     Route::get('products_search', 'ProductController@searchItems')->name('pharmacy_products_search');
     Route::get('search_customers','SalesController@searchCustomers')->name('pharmacy_customers_search');

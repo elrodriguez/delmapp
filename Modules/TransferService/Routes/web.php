@@ -1,5 +1,6 @@
 <?php
-
+use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
+use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,7 +12,13 @@
 |
 */
 
-Route::middleware(['auth:sanctum', 'verified'])->prefix('transferservice')->group(function() {
+Route::middleware([
+    'auth:sanctum',
+    'verified',
+    'web',
+    InitializeTenancyByDomain::class,
+    PreventAccessFromCentralDomains::class,
+    ])->prefix('transferservice')->group(function() {
     Route::get('dashboard', 'TransferServiceController@index')->name('transferservice_dashboard');
 
     Route::group(['prefix' => 'customers'], function() {
