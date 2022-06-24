@@ -11,26 +11,26 @@
     <meta name="robots" content="noindex">
 
     <!-- Perfect Scrollbar -->
-    <link type="text/css" href="<?php echo e(asset('themes/tutorio/vendor/perfect-scrollbar.css')); ?>" rel="stylesheet">
+    <link type="text/css" href="{{ asset('themes/tutorio/vendor/perfect-scrollbar.css') }}" rel="stylesheet">
 
     <!-- Fix Footer CSS -->
-    <link type="text/css" href="<?php echo e(asset('themes/tutorio/vendor/fix-footer.css')); ?>" rel="stylesheet">
+    <link type="text/css" href="{{ asset('themes/tutorio/vendor/fix-footer.css') }}" rel="stylesheet">
 
     <!-- Material Design Icons -->
-    <link type="text/css" href="<?php echo e(asset('themes/tutorio/css/material-icons.css')); ?>" rel="stylesheet">
-    <link type="text/css" href="<?php echo e(asset('themes/tutorio/css/material-icons.rtl.css')); ?>" rel="stylesheet">
+    <link type="text/css" href="{{ asset('themes/tutorio/css/material-icons.css') }}" rel="stylesheet">
+    <link type="text/css" href="{{ asset('themes/tutorio/css/material-icons.rtl.css') }}" rel="stylesheet">
 
     <!-- Font Awesome Icons -->
-    <link type="text/css" href="<?php echo e(asset('themes/tutorio/css/fontawesome.css')); ?>" rel="stylesheet">
-    <link type="text/css" href="<?php echo e(asset('themes/tutorio/css/fontawesome.rtl.css')); ?>" rel="stylesheet">
+    <link type="text/css" href="{{ asset('themes/tutorio/css/fontawesome.css') }}" rel="stylesheet">
+    <link type="text/css" href="{{ asset('themes/tutorio/css/fontawesome.rtl.css') }}" rel="stylesheet">
 
     <!-- Preloader -->
-    <link type="text/css" href="<?php echo e(asset('themes/tutorio/css/preloader.css')); ?>" rel="stylesheet">
-    <link type="text/css" href="<?php echo e(asset('themes/tutorio/css/preloader.rtl.css')); ?>" rel="stylesheet">
+    <link type="text/css" href="{{ asset('themes/tutorio/css/preloader.css') }}" rel="stylesheet">
+    <link type="text/css" href="{{ asset('themes/tutorio/css/preloader.rtl.css') }}" rel="stylesheet">
 
     <!-- App CSS -->
-    <link type="text/css" href="<?php echo e(asset('themes/tutorio/css/app.css')); ?>" rel="stylesheet">
-    <link type="text/css" href="<?php echo e(asset('themes/tutorio/css/app.rtl.css')); ?>" rel="stylesheet">
+    <link type="text/css" href="{{ asset('themes/tutorio/css/app.css') }}" rel="stylesheet">
+    <link type="text/css" href="{{ asset('themes/tutorio/css/app.rtl.css') }}" rel="stylesheet">
 
 
 
@@ -63,8 +63,8 @@
 
                     <!-- Navbar Brand -->
                     <a href="index.html" class="navbar-brand">
-                        
-                        <span class="d-none d-md-block"><?php echo e(env('APP_NAME')); ?></span>
+                        {{-- <img class="navbar-brand-icon mr-0 mr-md-8pt" src="{{ asset('themes/tutorio/images/logo/logo.png') }}" width="30"> --}}
+                        <span class="d-none d-md-block">{{ env('APP_NAME') }}</span>
                     </a>
 
                     <!-- Main Navigation -->
@@ -72,18 +72,18 @@
                     <nav class="nav navbar-nav ml-auto flex-nowrap">
                         <div class="nav-item dropdown d-none d-sm-flex ml-16pt">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                                <img width="32" height="32" class="rounded-circle" src="<?php echo e(asset('themes/tutorio/images/people/50/guy-3.jpg')); ?>" alt="<?php echo e(auth()->user()->email); ?>" />
+                                <img width="32" height="32" class="rounded-circle" src="{{ asset('themes/tutorio/images/people/50/guy-3.jpg') }}" alt="{{ auth()->user()->email }}" />
                             </a>
                             <div class="dropdown-menu dropdown-menu-right">
 
 
-                                <div class="dropdown-header"><strong><?php echo e(auth()->user()->name); ?></strong></div>
-                                <a class="dropdown-item" href="<?php echo e(route('landlord_dashboard')); ?>">Dashboard</a>
+                                <div class="dropdown-header"><strong>{{ auth()->user()->name }}</strong></div>
+                                <a class="dropdown-item" href="{{ route('landlord_dashboard') }}">Dashboard</a>
                                 <div class="dropdown-divider"></div>
                                 <div class="dropdown-header"><strong>Account</strong></div>
                                 <a class="dropdown-item" href="student-edit-account.html">Edit Account</a>
-                                <a class="dropdown-item" href="<?php echo e(route('administrator_logout')); ?>" type="button" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
-                                <form id="logout-form" method="POST" action="<?php echo e(route('administrator_logout')); ?>" style="display:none"><?php echo csrf_field(); ?></form>
+                                <a class="dropdown-item" href="{{ route('administrator_logout') }}" type="button" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                                <form id="logout-form" method="POST" action="{{ route('administrator_logout') }}" style="display:none">@csrf</form>
                             </div>
                         </div>
 
@@ -216,32 +216,18 @@
 
             <div class="bg-gradient-primary border-bottom-white py-32pt">
                 <div class="container d-flex flex-column flex-md-row align-items-center text-center text-md-left">
-                    <img src="<?php echo e(URL('themes/tutorio/images/illustration/achievement/128/white.svg')); ?>" width="104" class="mr-md-32pt mb-32pt mb-md-0" alt="instructor">
+                    <img src="{{ URL('themes/tutorio/images/illustration/achievement/128/white.svg') }}" width="104" class="mr-md-32pt mb-32pt mb-md-0" alt="instructor">
                     <div class="flex mb-32pt mb-md-0">
-                        <h2 class="text-white mb-0"><?php echo e(auth()->user()->name); ?></h2>
-                        <p class="lead text-white-50 d-flex align-items-center"><?php echo e(auth()->user()->email); ?> <span class="ml-16pt d-flex align-items-center"><i class="material-icons icon-16pt mr-4pt">opacity</i> 2,300 IQ</span></p>
+                        <h2 class="text-white mb-0">{{ auth()->user()->name }}</h2>
+                        <p class="lead text-white-50 d-flex align-items-center">{{ auth()->user()->email }} <span class="ml-16pt d-flex align-items-center"><i class="material-icons icon-16pt mr-4pt">opacity</i> 2,300 IQ</span></p>
                     </div>
                     <a href="student-edit-account.html" class="btn btn-outline-white">Edit account</a>
                 </div>
             </div>
 
-            <?php
-if (! isset($_instance)) {
-    $html = \Livewire\Livewire::mount('landlord.nav', [])->html();
-} elseif ($_instance->childHasBeenRendered('ftlgDL4')) {
-    $componentId = $_instance->getRenderedChildComponentId('ftlgDL4');
-    $componentTag = $_instance->getRenderedChildComponentTagName('ftlgDL4');
-    $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('ftlgDL4');
-} else {
-    $response = \Livewire\Livewire::mount('landlord.nav', []);
-    $html = $response->html();
-    $_instance->logRenderedChild('ftlgDL4', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
-}
-echo $html;
-?> 
+            <livewire:landlord.nav> 
             
-            <?php echo $__env->yieldContent('content'); ?>
+            @yield('content')
         </div>
         <!-- // END Header Layout Content -->
 
@@ -251,10 +237,10 @@ echo $html;
                     <div class="col-md-2 col-sm-4 mb-24pt mb-md-0">
                         <p class="text-white-70 mb-8pt"><strong>Follow us</strong></p>
                         <nav class="nav nav-links nav--flush">
-                            <a href="#" class="nav-link mr-8pt"><img src="<?php echo e(URL('themes/tutorio/images/icon/footer/facebook-square@2x.png')); ?>" width="24" height="24" alt="Facebook"></a>
-                            <a href="#" class="nav-link mr-8pt"><img src="<?php echo e(URL('themes/tutorio/images/icon/footer/twitter-square@2x.png')); ?>" width="24" height="24" alt="Twitter"></a>
-                            <a href="#" class="nav-link mr-8pt"><img src="<?php echo e(URL('themes/tutorio/images/icon/footer/vimeo-square@2x.png')); ?>" width="24" height="24" alt="Vimeo"></a>
-                            <a href="https://www.youtube.com/channel/UCstzfs_sSsdQGH1WoZuCtTQ" class="nav-link"><img src="<?php echo e(URL('themes/tutorio/images/icon/footer/youtube-square@2x.png')); ?>" width="24" height="24" alt="YouTube"></a>
+                            <a href="#" class="nav-link mr-8pt"><img src="{{ URL('themes/tutorio/images/icon/footer/facebook-square@2x.png') }}" width="24" height="24" alt="Facebook"></a>
+                            <a href="#" class="nav-link mr-8pt"><img src="{{ URL('themes/tutorio/images/icon/footer/twitter-square@2x.png') }}" width="24" height="24" alt="Twitter"></a>
+                            <a href="#" class="nav-link mr-8pt"><img src="{{ URL('themes/tutorio/images/icon/footer/vimeo-square@2x.png') }}" width="24" height="24" alt="Vimeo"></a>
+                            <a href="https://www.youtube.com/channel/UCstzfs_sSsdQGH1WoZuCtTQ" class="nav-link"><img src="{{ URL('themes/tutorio/images/icon/footer/youtube-square@2x.png') }}" width="24" height="24" alt="YouTube"></a>
                         </nav>
                     </div>
                     <div class="col-md-6 col-sm-4 mb-24pt mb-md-0 d-flex align-items-center">
@@ -265,7 +251,7 @@ echo $html;
                             <a href="" class="text-white-70 text-underline mr-16pt">Terms</a>
                             <a href="" class="text-white-70 text-underline">Privacy policy</a>
                         </p>
-                        <p class="text-white-50 mb-0">Copyright <?php echo e(date('Y')); ?> &copy; All rights reserved.</p>
+                        <p class="text-white-50 mb-0">Copyright {{ date('Y') }} &copy; All rights reserved.</p>
                     </div>
                 </div>
             </div>
@@ -274,58 +260,58 @@ echo $html;
     <!-- // END Header Layout -->
 
     <!-- jQuery -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/jquery.min.js')); ?>"></script>
+    <script src="{{ asset('themes/tutorio/vendor/jquery.min.js') }}"></script>
 
     <!-- Bootstrap -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/popper.min.js')); ?>"></script>
-    <script src="<?php echo e(asset('themes/tutorio/vendor/bootstrap.min.js')); ?>"></script>
+    <script src="{{ asset('themes/tutorio/vendor/popper.min.js') }}"></script>
+    <script src="{{ asset('themes/tutorio/vendor/bootstrap.min.js') }}"></script>
 
     <!-- Perfect Scrollbar -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/perfect-scrollbar.min.js')); ?>"></script>
+    <script src="{{ asset('themes/tutorio/vendor/perfect-scrollbar.min.js') }}"></script>
 
     <!-- DOM Factory -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/dom-factory.js')); ?>"></script>
+    <script src="{{ asset('themes/tutorio/vendor/dom-factory.js') }}"></script>
 
     <!-- MDK -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/material-design-kit.js')); ?>"></script>
+    <script src="{{ asset('themes/tutorio/vendor/material-design-kit.js') }}"></script>
 
     <!-- Fix Footer -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/fix-footer.js')); ?>"></script>
+    <script src="{{ asset('themes/tutorio/vendor/fix-footer.js') }}"></script>
 
     <!-- Chart.js -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/Chart.min.js')); ?>"></script>
+    <script src="{{ asset('themes/tutorio/vendor/Chart.min.js') }}"></script>
 
     <!-- App JS -->
-    <script src="<?php echo e(asset('themes/tutorio/js/app.js')); ?>"></script>
+    <script src="{{ asset('themes/tutorio/js/app.js') }}"></script>
 
     <!-- Highlight.js -->
-    <script src="<?php echo e(asset('themes/tutorio/js/hljs.js')); ?>"></script>
+    <script src="{{ asset('themes/tutorio/js/hljs.js') }}"></script>
 
     <!-- App Settings (safe to remove) -->
-    <script src="<?php echo e(asset('themes/tutorio/js/app-settings.js')); ?>"></script>
+    <script src="{{ asset('themes/tutorio/js/app-settings.js') }}"></script>
 
 
     <!-- Global Settings -->
-    <script src="<?php echo e(asset('themes/tutorio/js/settings.js')); ?>"></script>
+    <script src="{{ asset('themes/tutorio/js/settings.js') }}"></script>
 
     <!-- Moment.js -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/moment.min.js')); ?>"></script>
-    <script src="<?php echo e(asset('themes/tutorio/vendor/moment-range.min.js')); ?>"></script>
+    <script src="{{ asset('themes/tutorio/vendor/moment.min.js') }}"></script>
+    <script src="{{ asset('themes/tutorio/vendor/moment-range.min.js') }}"></script>
 
     <!-- Chart.js -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/Chart.min.js')); ?>"></script>
+    <script src="{{ asset('themes/tutorio/vendor/Chart.min.js') }}"></script>
 
     <!-- UI Charts Page JS -->
-    <script src="<?php echo e(asset('themes/tutorio/js/chartjs-rounded-bar.js')); ?>"></script>
-    <script src="<?php echo e(asset('themes/tutorio/js/chartjs.js')); ?>"></script>
+    <script src="{{ asset('themes/tutorio/js/chartjs-rounded-bar.js') }}"></script>
+    <script src="{{ asset('themes/tutorio/js/chartjs.js') }}"></script>
 
     <!-- Chart.js Samples -->
-    <script src="<?php echo e(asset('themes/tutorio/js/page.instructor-dashboard.js')); ?>"></script>
+    <script src="{{ asset('themes/tutorio/js/page.instructor-dashboard.js') }}"></script>
 
     <!-- List.js -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/list.min.js')); ?>"></script>
-    <script src="<?php echo e(asset('themes/tutorio/js/list.js')); ?>"></script>
+    <script src="{{ asset('themes/tutorio/vendor/list.min.js') }}"></script>
+    <script src="{{ asset('themes/tutorio/js/list.js') }}"></script>
 
 </body>
 
-</html><?php /**PATH C:\laragon\www\delmapp\resources\views/components/base-landlord.blade.php ENDPATH**/ ?>
+</html>
