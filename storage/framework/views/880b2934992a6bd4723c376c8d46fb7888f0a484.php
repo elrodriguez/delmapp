@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Dashboard</title>
+    <title><?php echo e(env('APP_NAME')); ?></title>
 
     <!-- Prevent the demo from appearing in search engines -->
     <meta name="robots" content="noindex">
@@ -82,8 +82,8 @@
                                 <div class="dropdown-divider"></div>
                                 <div class="dropdown-header"><strong>Account</strong></div>
                                 <a class="dropdown-item" href="student-edit-account.html">Edit Account</a>
-                                <a class="dropdown-item" href="<?php echo e(route('administrator_logout')); ?>" type="button" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
-                                <form id="logout-form" method="POST" action="<?php echo e(route('administrator_logout')); ?>" style="display:none"><?php echo csrf_field(); ?></form>
+                                <a class="dropdown-item" href="<?php echo e(route('landlord_logout')); ?>" type="button" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                                <form id="logout-form" method="POST" action="<?php echo e(route('landlord_logout')); ?>" style="display:none"><?php echo csrf_field(); ?></form>
                             </div>
                         </div>
 
@@ -221,22 +221,22 @@
                         <h2 class="text-white mb-0"><?php echo e(auth()->user()->name); ?></h2>
                         <p class="lead text-white-50 d-flex align-items-center"><?php echo e(auth()->user()->email); ?> <span class="ml-16pt d-flex align-items-center"><i class="material-icons icon-16pt mr-4pt">opacity</i> 2,300 IQ</span></p>
                     </div>
-                    <a href="student-edit-account.html" class="btn btn-outline-white">Edit account</a>
+                    <a href="student-edit-account.html" class="btn btn-outline-white">Crear cliente</a>
                 </div>
             </div>
 
             <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('landlord.nav', [])->html();
-} elseif ($_instance->childHasBeenRendered('ftlgDL4')) {
-    $componentId = $_instance->getRenderedChildComponentId('ftlgDL4');
-    $componentTag = $_instance->getRenderedChildComponentTagName('ftlgDL4');
+} elseif ($_instance->childHasBeenRendered('FjEoqIR')) {
+    $componentId = $_instance->getRenderedChildComponentId('FjEoqIR');
+    $componentTag = $_instance->getRenderedChildComponentTagName('FjEoqIR');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('ftlgDL4');
+    $_instance->preserveRenderedChild('FjEoqIR');
 } else {
     $response = \Livewire\Livewire::mount('landlord.nav', []);
     $html = $response->html();
-    $_instance->logRenderedChild('ftlgDL4', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('FjEoqIR', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?> 

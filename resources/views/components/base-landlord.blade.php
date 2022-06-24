@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Dashboard</title>
+    <title>{{ env('APP_NAME') }}</title>
 
     <!-- Prevent the demo from appearing in search engines -->
     <meta name="robots" content="noindex">
@@ -82,8 +82,8 @@
                                 <div class="dropdown-divider"></div>
                                 <div class="dropdown-header"><strong>Account</strong></div>
                                 <a class="dropdown-item" href="student-edit-account.html">Edit Account</a>
-                                <a class="dropdown-item" href="{{ route('administrator_logout') }}" type="button" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
-                                <form id="logout-form" method="POST" action="{{ route('administrator_logout') }}" style="display:none">@csrf</form>
+                                <a class="dropdown-item" href="{{ route('landlord_logout') }}" type="button" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                                <form id="logout-form" method="POST" action="{{ route('landlord_logout') }}" style="display:none">@csrf</form>
                             </div>
                         </div>
 
@@ -221,7 +221,7 @@
                         <h2 class="text-white mb-0">{{ auth()->user()->name }}</h2>
                         <p class="lead text-white-50 d-flex align-items-center">{{ auth()->user()->email }} <span class="ml-16pt d-flex align-items-center"><i class="material-icons icon-16pt mr-4pt">opacity</i> 2,300 IQ</span></p>
                     </div>
-                    <a href="student-edit-account.html" class="btn btn-outline-white">Edit account</a>
+                    <a href="student-edit-account.html" class="btn btn-outline-white">Crear cliente</a>
                 </div>
             </div>
 

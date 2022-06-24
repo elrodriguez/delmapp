@@ -19,11 +19,14 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [LoginController::class, 'index'])->name('home');
 
-Route::group(['prefix' => 'administrator'], function () {
+Route::group(['prefix' => 'system'], function () {
     Route::get('login', [LoginController::class, 'index'])->name('login');
     Route::get('dashboard', [DashboardController::class, 'index'])->middleware('auth:admins')->name('landlord_dashboard');
+    Route::get('customers', [CustomerController::class, 'index'])->middleware('auth:admins')->name('landlord_customer');
+    Route::get('customers/create', [CustomerController::class, 'create'])->middleware('auth:admins')->name('landlord_customer_create');
+    Route::get('customers/edit', [CustomerController::class, 'edit'])->middleware('auth:admins')->name('landlord_customer_edit');
 });
 
-Route::post('administrator/logout', function () {
-    return redirect('administrator/login')->with(Auth::logout());
-})->name('administrator_logout');
+Route::post('system/logout', function () {
+    return redirect('system/login')->with(Auth::logout());
+})->name('landlord_logout');

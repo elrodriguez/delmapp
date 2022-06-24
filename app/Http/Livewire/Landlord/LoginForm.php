@@ -29,7 +29,7 @@ class LoginForm extends Component
 
         if (Auth::guard('admins')->attempt(array('email' => $this->email, 'password' => $this->password))) {
             request()->session()->regenerate();
-            return redirect()->intended('administrator/dashboard');
+            return redirect()->intended('system/dashboard');
         } else {
             session()->flash('error', 'email and password are wrong.');
         }
