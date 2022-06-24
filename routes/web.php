@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Landlord\HomeController;
+use App\Http\Controllers\Landlord\LoginController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return 'este es el landlord';
-});
+Route::get('/', [LoginController::class, 'index'])->name('home');
