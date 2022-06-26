@@ -110,7 +110,7 @@
                                             </span>
                                             <span class="d-flex">
                                                 <span class="avatar avatar-xs mr-2">
-                                                    <img src="assets/images/people/110/woman-5.jpg" alt="people" class="avatar-img rounded-circle">
+                                                    <img src="<?php echo e(asset('themes/tutorio/images/people/110/woman-5.jpg')); ?>" alt="people" class="avatar-img rounded-circle">
                                                 </span>
                                                 <span class="flex d-flex flex-column">
                                                     <strong>Michelle</strong>
@@ -128,7 +128,7 @@
                                             </span>
                                             <span class="d-flex">
                                                 <span class="avatar avatar-xs mr-2">
-                                                    <img src="assets/images/people/110/woman-5.jpg" alt="people" class="avatar-img rounded-circle">
+                                                    <img src="<?php echo e(asset('themes/tutorio/images/people/110/woman-5.jpg')); ?>" alt="people" class="avatar-img rounded-circle">
                                                 </span>
                                                 <span class="flex d-flex flex-column">
                                                     <strong>Michelle</strong>
@@ -221,22 +221,22 @@
                         <h2 class="text-white mb-0"><?php echo e(auth()->user()->name); ?></h2>
                         <p class="lead text-white-50 d-flex align-items-center"><?php echo e(auth()->user()->email); ?> <span class="ml-16pt d-flex align-items-center"><i class="material-icons icon-16pt mr-4pt">opacity</i> 2,300 IQ</span></p>
                     </div>
-                    <a href="student-edit-account.html" class="btn btn-outline-white">Crear cliente</a>
+                    <a href="<?php echo e(route('landlord_customer')); ?>" class="btn btn-outline-white">Crear cliente</a>
                 </div>
             </div>
 
             <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('landlord.nav', [])->html();
-} elseif ($_instance->childHasBeenRendered('FjEoqIR')) {
-    $componentId = $_instance->getRenderedChildComponentId('FjEoqIR');
-    $componentTag = $_instance->getRenderedChildComponentTagName('FjEoqIR');
+} elseif ($_instance->childHasBeenRendered('8gmeQ05')) {
+    $componentId = $_instance->getRenderedChildComponentId('8gmeQ05');
+    $componentTag = $_instance->getRenderedChildComponentTagName('8gmeQ05');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('FjEoqIR');
+    $_instance->preserveRenderedChild('8gmeQ05');
 } else {
     $response = \Livewire\Livewire::mount('landlord.nav', []);
     $html = $response->html();
-    $_instance->logRenderedChild('FjEoqIR', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('8gmeQ05', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?> 
@@ -272,59 +272,29 @@ echo $html;
         </div>
     </div>
     <!-- // END Header Layout -->
+    <?php echo \Livewire\Livewire::scripts(); ?>
 
     <!-- jQuery -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/jquery.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('themes/tutorio/vendor/jquery.min.js')); ?>" defer></script>
 
     <!-- Bootstrap -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/popper.min.js')); ?>"></script>
-    <script src="<?php echo e(asset('themes/tutorio/vendor/bootstrap.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('themes/tutorio/vendor/popper.min.js')); ?>" defer></script>
+    <script src="<?php echo e(asset('themes/tutorio/vendor/bootstrap.min.js')); ?>" defer></script>
 
     <!-- Perfect Scrollbar -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/perfect-scrollbar.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('themes/tutorio/vendor/perfect-scrollbar.min.js')); ?>" defer></script>
 
     <!-- DOM Factory -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/dom-factory.js')); ?>"></script>
+    <script src="<?php echo e(asset('themes/tutorio/vendor/dom-factory.js')); ?>" defer></script>
 
     <!-- MDK -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/material-design-kit.js')); ?>"></script>
+    <script src="<?php echo e(asset('themes/tutorio/vendor/material-design-kit.js')); ?>" defer></script>
 
     <!-- Fix Footer -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/fix-footer.js')); ?>"></script>
-
-    <!-- Chart.js -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/Chart.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('themes/tutorio/vendor/fix-footer.js')); ?>" defer></script>
 
     <!-- App JS -->
-    <script src="<?php echo e(asset('themes/tutorio/js/app.js')); ?>"></script>
-
-    <!-- Highlight.js -->
-    <script src="<?php echo e(asset('themes/tutorio/js/hljs.js')); ?>"></script>
-
-    <!-- App Settings (safe to remove) -->
-    <script src="<?php echo e(asset('themes/tutorio/js/app-settings.js')); ?>"></script>
-
-
-    <!-- Global Settings -->
-    <script src="<?php echo e(asset('themes/tutorio/js/settings.js')); ?>"></script>
-
-    <!-- Moment.js -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/moment.min.js')); ?>"></script>
-    <script src="<?php echo e(asset('themes/tutorio/vendor/moment-range.min.js')); ?>"></script>
-
-    <!-- Chart.js -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/Chart.min.js')); ?>"></script>
-
-    <!-- UI Charts Page JS -->
-    <script src="<?php echo e(asset('themes/tutorio/js/chartjs-rounded-bar.js')); ?>"></script>
-    <script src="<?php echo e(asset('themes/tutorio/js/chartjs.js')); ?>"></script>
-
-    <!-- Chart.js Samples -->
-    <script src="<?php echo e(asset('themes/tutorio/js/page.instructor-dashboard.js')); ?>"></script>
-
-    <!-- List.js -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/list.min.js')); ?>"></script>
-    <script src="<?php echo e(asset('themes/tutorio/js/list.js')); ?>"></script>
+    <script src="<?php echo e(asset('themes/tutorio/js/app.js')); ?>" defer></script>
 
 </body>
 

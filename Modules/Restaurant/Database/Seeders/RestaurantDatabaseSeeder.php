@@ -18,6 +18,7 @@ class RestaurantDatabaseSeeder extends Seeder
 
         $this->call([
             ModulePermissionsTableSeeder::class,
+            FloorsTableSeeder::class,
         ]);
     }
 }

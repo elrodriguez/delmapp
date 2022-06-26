@@ -24,15 +24,6 @@ class CreateRestTablesTable extends Migration
             $table->boolean('active')->default(true);
             $table->timestamps();
         });
-
-        DB::table('rest_tables')->insert([
-            ['floor_id' => 1, 'name' => 'M1', 'description' => 'Cerca a la entrada'],
-            ['floor_id' => 1, 'name' => 'M2', 'description' => 'En el centro del salon'],
-            ['floor_id' => 1, 'name' => 'M3', 'description' => 'En el centro del salon'],
-            ['floor_id' => 1, 'name' => 'M4', 'description' => 'Cerca a la entrada'],
-            ['floor_id' => 1, 'name' => 'M5', 'description' => 'Cerca a la baño'],
-            ['floor_id' => 1, 'name' => 'M6', 'description' => 'Cerca a la escaleras']
-        ]);
     }
 
     /**

@@ -18,7 +18,7 @@
                     <div class="container">
 
                         <!-- Navbar Brand -->
-                        <a href="<?php echo e(route('home')); ?>" class="navbar-brand">
+                        <a href="<?php echo e(route('landlord_home')); ?>" class="navbar-brand">
                             
                             <span class="d-none d-md-block"><?php echo e(env('APP_NAME')); ?></span>
                         </a>
@@ -27,7 +27,7 @@
                         <ul class="nav navbar-nav ml-auto d-none d-sm-flex">
                             
                             <li class="nav-item active">
-                                <a href="<?php echo e(route('home')); ?>" class="nav-link">Iniciar sesión</a>
+                                <a href="<?php echo e(route('landlord_home')); ?>" class="nav-link">Iniciar sesión</a>
                             </li>
                         </ul>
                         <!-- // END Main Navigation -->

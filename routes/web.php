@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Landlord\CustomerController;
 use App\Http\Controllers\Landlord\DashboardController;
 use App\Http\Controllers\Landlord\LoginController;
 use Illuminate\Support\Facades\Auth;
@@ -17,10 +18,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::get('/', [LoginController::class, 'index'])->name('home');
+Route::get('/', [LoginController::class, 'index'])->name('landlord_home');
 
 Route::group(['prefix' => 'system'], function () {
-    Route::get('login', [LoginController::class, 'index'])->name('login');
+    Route::get('login', [LoginController::class, 'index'])->name('landlord_login');
     Route::get('dashboard', [DashboardController::class, 'index'])->middleware('auth:admins')->name('landlord_dashboard');
     Route::get('customers', [CustomerController::class, 'index'])->middleware('auth:admins')->name('landlord_customer');
     Route::get('customers/create', [CustomerController::class, 'create'])->middleware('auth:admins')->name('landlord_customer_create');
@@ -28,5 +29,11 @@ Route::group(['prefix' => 'system'], function () {
 });
 
 Route::post('system/logout', function () {
-    return redirect('system/login')->with(Auth::logout());
+    Auth::logout();
+
+    session()->invalidate();
+
+    session()->regenerateToken();
+
+    return redirect('system/login');
 })->name('landlord_logout');

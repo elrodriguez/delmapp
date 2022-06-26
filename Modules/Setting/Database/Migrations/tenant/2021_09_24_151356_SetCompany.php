@@ -31,19 +31,19 @@ class SetCompany extends Migration
             $table->softDeletes();
         });
 
-        DB::table('set_companies')->insert([
-            'name' => 'nueve 12',
-            'number' => '12345678901',
-            'email' => 'nueve@gmail.com',
-            'tradename' => 'nueve 12',
-            'logo' => 'company/logos/logo.jpg',
-            'logo_store' => 'company/logos/logo_store.jpg',
-            'phone' => '123456',
-            'phone_mobile' => '123456789',
-            'representative_name' => 'Ivan Gerente',
-            'representative_number' => '12345678',
-            'main' => true
-        ]);
+        // DB::table('set_companies')->insert([
+        //     'name' => 'nueve 12',
+        //     'number' => '12345678901',
+        //     'email' => 'nueve@gmail.com',
+        //     'tradename' => 'nueve 12',
+        //     'logo' => 'company/logos/logo.jpg',
+        //     'logo_store' => 'company/logos/logo_store.jpg',
+        //     'phone' => '123456',
+        //     'phone_mobile' => '123456789',
+        //     'representative_name' => 'Ivan Gerente',
+        //     'representative_number' => '12345678',
+        //     'main' => true
+        // ]);
     }
 
     /**

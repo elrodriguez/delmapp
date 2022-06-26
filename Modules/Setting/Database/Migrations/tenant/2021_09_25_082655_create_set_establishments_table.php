@@ -22,10 +22,10 @@ class CreateSetEstablishmentsTable extends Migration
             $table->string('observation')->nullable();
             $table->boolean('state')->default(true);
             $table->unsignedBigInteger('company_id')->nullable();
-            $table->char('country_id',2)->nullable();
-            $table->char('department_id',2)->nullable();
-            $table->char('province_id',4)->nullable();
-            $table->char('district_id',6)->nullable();
+            $table->char('country_id', 2)->nullable();
+            $table->char('department_id', 2)->nullable();
+            $table->char('province_id', 4)->nullable();
+            $table->char('district_id', 6)->nullable();
             $table->string('web_page')->nullable();
             $table->string('email')->nullable();
             $table->string('latitude')->nullable();
@@ -40,19 +40,19 @@ class CreateSetEstablishmentsTable extends Migration
             $table->foreign('district_id')->references('id')->on('districts');
         });
 
-        DB::table('set_establishments')->insert([
-            'name' => 'Oficina principal',
-            'address' => 'inicio de registros',
-            'phone' => '12345678',
-            'observation' => 'inicio de registros',
-            'state' => true,
-            'company_id' => 1,
-            'country_id' => 'PE',
-            'department_id' => '02',
-            'province_id' => '0218',
-            'district_id' => '021801',
-            'email' => 'establecimiento@gmail.com'
-        ]);
+        // DB::table('set_establishments')->insert([
+        //     'name' => 'Oficina principal',
+        //     'address' => 'inicio de registros',
+        //     'phone' => '12345678',
+        //     'observation' => 'inicio de registros',
+        //     'state' => true,
+        //     'company_id' => 1,
+        //     'country_id' => 'PE',
+        //     'department_id' => '02',
+        //     'province_id' => '0218',
+        //     'district_id' => '021801',
+        //     'email' => 'establecimiento@gmail.com'
+        // ]);
     }
 
     /**

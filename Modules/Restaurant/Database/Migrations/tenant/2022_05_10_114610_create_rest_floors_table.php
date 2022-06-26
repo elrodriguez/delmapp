@@ -22,11 +22,6 @@ class CreateRestFloorsTable extends Migration
             $table->timestamps();
             $table->foreign('establishment_id')->references('id')->on('set_establishments');
         });
-
-        DB::table('rest_floors')->insert([
-            ['establishment_id' => 1, 'name' => 'piso 1'],
-            ['establishment_id' => 1, 'name' => 'piso 2']
-        ]);
     }
 
     /**

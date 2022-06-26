@@ -110,7 +110,7 @@
                                             </span>
                                             <span class="d-flex">
                                                 <span class="avatar avatar-xs mr-2">
-                                                    <img src="assets/images/people/110/woman-5.jpg" alt="people" class="avatar-img rounded-circle">
+                                                    <img src="{{ asset('themes/tutorio/images/people/110/woman-5.jpg') }}" alt="people" class="avatar-img rounded-circle">
                                                 </span>
                                                 <span class="flex d-flex flex-column">
                                                     <strong>Michelle</strong>
@@ -128,7 +128,7 @@
                                             </span>
                                             <span class="d-flex">
                                                 <span class="avatar avatar-xs mr-2">
-                                                    <img src="assets/images/people/110/woman-5.jpg" alt="people" class="avatar-img rounded-circle">
+                                                    <img src="{{ asset('themes/tutorio/images/people/110/woman-5.jpg') }}" alt="people" class="avatar-img rounded-circle">
                                                 </span>
                                                 <span class="flex d-flex flex-column">
                                                     <strong>Michelle</strong>
@@ -221,7 +221,7 @@
                         <h2 class="text-white mb-0">{{ auth()->user()->name }}</h2>
                         <p class="lead text-white-50 d-flex align-items-center">{{ auth()->user()->email }} <span class="ml-16pt d-flex align-items-center"><i class="material-icons icon-16pt mr-4pt">opacity</i> 2,300 IQ</span></p>
                     </div>
-                    <a href="student-edit-account.html" class="btn btn-outline-white">Crear cliente</a>
+                    <a href="{{ route('landlord_customer') }}" class="btn btn-outline-white">Crear cliente</a>
                 </div>
             </div>
 
@@ -258,59 +258,28 @@
         </div>
     </div>
     <!-- // END Header Layout -->
-
+    @livewireScripts
     <!-- jQuery -->
-    <script src="{{ asset('themes/tutorio/vendor/jquery.min.js') }}"></script>
+    <script src="{{ asset('themes/tutorio/vendor/jquery.min.js') }}" defer></script>
 
     <!-- Bootstrap -->
-    <script src="{{ asset('themes/tutorio/vendor/popper.min.js') }}"></script>
-    <script src="{{ asset('themes/tutorio/vendor/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('themes/tutorio/vendor/popper.min.js') }}" defer></script>
+    <script src="{{ asset('themes/tutorio/vendor/bootstrap.min.js') }}" defer></script>
 
     <!-- Perfect Scrollbar -->
-    <script src="{{ asset('themes/tutorio/vendor/perfect-scrollbar.min.js') }}"></script>
+    <script src="{{ asset('themes/tutorio/vendor/perfect-scrollbar.min.js') }}" defer></script>
 
     <!-- DOM Factory -->
-    <script src="{{ asset('themes/tutorio/vendor/dom-factory.js') }}"></script>
+    <script src="{{ asset('themes/tutorio/vendor/dom-factory.js') }}" defer></script>
 
     <!-- MDK -->
-    <script src="{{ asset('themes/tutorio/vendor/material-design-kit.js') }}"></script>
+    <script src="{{ asset('themes/tutorio/vendor/material-design-kit.js') }}" defer></script>
 
     <!-- Fix Footer -->
-    <script src="{{ asset('themes/tutorio/vendor/fix-footer.js') }}"></script>
-
-    <!-- Chart.js -->
-    <script src="{{ asset('themes/tutorio/vendor/Chart.min.js') }}"></script>
+    <script src="{{ asset('themes/tutorio/vendor/fix-footer.js') }}" defer></script>
 
     <!-- App JS -->
-    <script src="{{ asset('themes/tutorio/js/app.js') }}"></script>
-
-    <!-- Highlight.js -->
-    <script src="{{ asset('themes/tutorio/js/hljs.js') }}"></script>
-
-    <!-- App Settings (safe to remove) -->
-    <script src="{{ asset('themes/tutorio/js/app-settings.js') }}"></script>
-
-
-    <!-- Global Settings -->
-    <script src="{{ asset('themes/tutorio/js/settings.js') }}"></script>
-
-    <!-- Moment.js -->
-    <script src="{{ asset('themes/tutorio/vendor/moment.min.js') }}"></script>
-    <script src="{{ asset('themes/tutorio/vendor/moment-range.min.js') }}"></script>
-
-    <!-- Chart.js -->
-    <script src="{{ asset('themes/tutorio/vendor/Chart.min.js') }}"></script>
-
-    <!-- UI Charts Page JS -->
-    <script src="{{ asset('themes/tutorio/js/chartjs-rounded-bar.js') }}"></script>
-    <script src="{{ asset('themes/tutorio/js/chartjs.js') }}"></script>
-
-    <!-- Chart.js Samples -->
-    <script src="{{ asset('themes/tutorio/js/page.instructor-dashboard.js') }}"></script>
-
-    <!-- List.js -->
-    <script src="{{ asset('themes/tutorio/vendor/list.min.js') }}"></script>
-    <script src="{{ asset('themes/tutorio/js/list.js') }}"></script>
+    <script src="{{ asset('themes/tutorio/js/app.js') }}" defer></script>
 
 </body>
 

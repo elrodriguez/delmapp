@@ -25,11 +25,11 @@ class CreateUserEstablishmentsTable extends Migration
             $table->foreign('establishment_id')->references('id')->on('set_establishments');
         });
 
-        DB::table('user_establishments')->insert([
-            'user_id'           => 1,
-            'establishment_id'  => 1,
-            'main'              => true
-        ]);
+        // DB::table('user_establishments')->insert([
+        //     'user_id'           => 1,
+        //     'establishment_id'  => 1,
+        //     'main'              => true
+        // ]);
     }
 
     /**

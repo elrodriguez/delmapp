@@ -18,7 +18,7 @@
                     <div class="container">
 
                         <!-- Navbar Brand -->
-                        <a href="{{ route('home') }}" class="navbar-brand">
+                        <a href="{{ route('landlord_home') }}" class="navbar-brand">
                             {{-- <img class="navbar-brand-icon" src="{{ URL('themes/tutorio/images/logo/logo.jpg') }}" width="30" alt="Del"> --}}
                             <span class="d-none d-md-block">{{ env('APP_NAME') }}</span>
                         </a>
@@ -32,7 +32,7 @@
                                 <a href="signup.html" class="nav-link">Signup</a>
                             </li> --}}
                             <li class="nav-item active">
-                                <a href="{{ route('home') }}" class="nav-link">Iniciar sesión</a>
+                                <a href="{{ route('landlord_home') }}" class="nav-link">Iniciar sesión</a>
                             </li>
                         </ul>
                         <!-- // END Main Navigation -->

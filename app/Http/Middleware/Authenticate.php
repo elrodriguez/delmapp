@@ -14,8 +14,14 @@ class Authenticate extends Middleware
      */
     protected function redirectTo($request)
     {
-        if (! $request->expectsJson()) {
-            return route('login');
+        $central_domain = env('CENTRAR_DOMAIN');
+        $domain = $_SERVER['SERVER_NAME'];
+        if (!$request->expectsJson()) {
+            if ($domain == $central_domain) {
+                return route('landlord_login');
+            } else {
+                return route('login');
+            }
         }
     }
 }
