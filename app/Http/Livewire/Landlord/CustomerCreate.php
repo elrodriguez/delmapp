@@ -48,7 +48,11 @@ class CustomerCreate extends Component
 
         $tenant = Tenant::create([
             'plan' => $this->plan_id,
-            'id' => $this->database_name
+            'id' => $this->database_name,
+            'name' => $this->company_name,
+            'phone' => $this->phone,
+            'phone_mobile' => $this->phone_mobile,
+            'representative_name' => $this->representative_name
         ]);
 
         $tenant->domains()->create(['domain' => $new_domain]);
