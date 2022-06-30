@@ -260,26 +260,26 @@
     <!-- // END Header Layout -->
     @livewireScripts
     <!-- jQuery -->
-    <script src="{{ asset('themes/tutorio/vendor/jquery.min.js') }}" defer></script>
+    <script src="{{ url('themes/tutorio/vendor/jquery.min.js') }}" defer></script>
 
     <!-- Bootstrap -->
-    <script src="{{ asset('themes/tutorio/vendor/popper.min.js') }}" defer></script>
-    <script src="{{ asset('themes/tutorio/vendor/bootstrap.min.js') }}" defer></script>
+    <script src="{{ url('themes/tutorio/vendor/popper.min.js') }}" defer></script>
+    <script src="{{ url('themes/tutorio/vendor/bootstrap.min.js') }}" defer></script>
 
     <!-- Perfect Scrollbar -->
-    <script src="{{ asset('themes/tutorio/vendor/perfect-scrollbar.min.js') }}" defer></script>
+    <script src="{{ url('themes/tutorio/vendor/perfect-scrollbar.min.js') }}" defer></script>
 
     <!-- DOM Factory -->
-    <script src="{{ asset('themes/tutorio/vendor/dom-factory.js') }}" defer></script>
+    <script src="{{ url('themes/tutorio/vendor/dom-factory.js') }}" defer></script>
 
     <!-- MDK -->
-    <script src="{{ asset('themes/tutorio/vendor/material-design-kit.js') }}" defer></script>
+    <script src="{{ url('themes/tutorio/vendor/material-design-kit.js') }}" defer></script>
 
     <!-- Fix Footer -->
-    <script src="{{ asset('themes/tutorio/vendor/fix-footer.js') }}" defer></script>
+    <script src="{{ url('themes/tutorio/vendor/fix-footer.js') }}" defer></script>
 
     <!-- App JS -->
-    <script src="{{ asset('themes/tutorio/js/app.js') }}" defer></script>
+    <script src="{{ url('themes/tutorio/js/app.js') }}" defer></script>
 
 </body>
 
