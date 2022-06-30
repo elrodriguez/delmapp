@@ -8,21 +8,21 @@
                             class="text-danger">*</span> </label>
                     <input wire:model="name" type="text" class="form-control" id="name" required="">
                     @error('name')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback-2">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="col-md-4 mb-3">
                     <label class="form-label" for="number">Ruc <span class="text-danger">*</span> </label>
                     <input wire:model="number" type="text" class="form-control" id="number" required="">
                     @error('number')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback-2">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="col-md-4 mb-3">
                     <label class="form-label" for="email">Email <span class="text-danger">*</span> </label>
                     <input wire:model="email" type="text" class="form-control" id="email" required="">
                     @error('email')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback-2">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
@@ -32,7 +32,7 @@
                             class="text-danger">*</span> </label>
                     <input wire:model="tradename" type="text" class="form-control" id="tradename" required="">
                     @error('tradename')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback-2">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="col-md-4 mb-3">
@@ -40,7 +40,7 @@
                     </label>
                     <input wire:model="phone" type="text" class="form-control" id="phone" required="">
                     @error('phone')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback-2">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="col-md-4 mb-3">
@@ -48,7 +48,7 @@
                             class="text-danger">*</span> </label>
                     <input wire:model="phone_mobile" type="text" class="form-control" id="phone_mobile" required="">
                     @error('phone_mobile')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback-2">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
@@ -59,7 +59,7 @@
                     <input wire:model="representative_name" type="text" class="form-control" id="representative_name"
                         required="">
                     @error('representative_name')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback-2">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="col-md-4 mb-3">
@@ -68,7 +68,7 @@
                     <input wire:model="representative_number" type="text" class="form-control"
                         id="representative_number" required="">
                     @error('representative_number')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback-2">{{ $message }}</div>
                     @enderror
                 </div>
             </div>
@@ -77,7 +77,7 @@
                     <label class="form-label" for="logo">Logo Sistema</label>
                     <input wire:model="logo" type="file" id="logo">
                     @error('logo')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback-2">{{ $message }}</div>
                     @enderror
                     @if ($logo_view)
                         <img class="img-thumbnail mt-5" width="100%" src="{{ url('storage/' . $this->logo_view) }}">
@@ -87,7 +87,7 @@
                     <label class="form-label" for="logo_store">Logo Documentos </label>
                     <input wire:model="logo_store" type="file" id="logo_store">
                     @error('logo_store')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <div class="invalid-feedback-2">{{ $message }}</div>
                     @enderror
                     @if ($logo_store_view)
                         <img class="img-thumbnail mt-5" width="100%"

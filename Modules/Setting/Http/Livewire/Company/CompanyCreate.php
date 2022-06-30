@@ -8,6 +8,7 @@ use Modules\Setting\Entities\SetCompany;
 use Livewire\WithFileUploads;
 use Elrod\UserActivity\Activity;
 use Illuminate\Support\Facades\Auth;
+
 class CompanyCreate extends Component
 {
     use WithFileUploads;
@@ -44,18 +45,19 @@ class CompanyCreate extends Component
 
     ];
 
-    public function save(){
+    public function save()
+    {
 
         $this->validate();
 
-        $logo_name = 'company'.DIRECTORY_SEPARATOR.'logos'.DIRECTORY_SEPARATOR;
-        $logo_store_name = 'company'.DIRECTORY_SEPARATOR.'logos'.DIRECTORY_SEPARATOR;
+        $logo_name = 'company' . DIRECTORY_SEPARATOR . 'logos' . DIRECTORY_SEPARATOR;
+        $logo_store_name = 'company' . DIRECTORY_SEPARATOR . 'logos' . DIRECTORY_SEPARATOR;
 
-        $this->logo->storeAs($logo_name,'logo.jpg','public');
-        $this->logo_store->storeAs($logo_store_name,'logo_store.jpg','public');
+        $this->logo->storeAs($logo_name, 'logo.jpg', 'public');
+        $this->logo_store->storeAs($logo_store_name, 'logo_store.jpg', 'public');
 
-        if($this->main){
-            SetCompany::where('main',true)->update(['main' => false]);
+        if ($this->main) {
+            SetCompany::where('main', true)->update(['main' => false]);
         }
 
         $company = SetCompany::create([
@@ -67,13 +69,13 @@ class CompanyCreate extends Component
             'phone_mobile' => $this->phone_mobile,
             'representative_name' => $this->representative_name,
             'representative_number' => $this->representative_number,
-            'logo' => $logo_name.DIRECTORY_SEPARATOR.'logo.jpg',
-            'logo_store' => $logo_store_name.DIRECTORY_SEPARATOR.'logo_store.jpg',
+            'logo' => $logo_name . DIRECTORY_SEPARATOR . 'logo.jpg',
+            'logo_store' => $logo_store_name . DIRECTORY_SEPARATOR . 'logo_store.jpg',
             'main' => ($this->main ? true : false)
         ]);
 
         $activity = new Activity;
-        $activity->modelOn(SetCompany::class,$company->id,'set_companies');
+        $activity->modelOn(SetCompany::class, $company->id, 'set_companies');
         $activity->causedBy(Auth::user());
         $activity->routeOn(route('setting_company_create'));
         $activity->logType('create');
@@ -82,5 +84,4 @@ class CompanyCreate extends Component
 
         $this->dispatchBrowserEvent('set-company-save', ['msg' => Lang::get('setting::labels.msg_success')]);
     }
-
 }

@@ -8,6 +8,7 @@ use Modules\Setting\Entities\SetCompany;
 use Livewire\WithFileUploads;
 use Elrod\UserActivity\Activity;
 use Illuminate\Support\Facades\Auth;
+
 class CompanyEdit extends Component
 {
     use WithFileUploads;
@@ -28,7 +29,8 @@ class CompanyEdit extends Component
     public $logo_view;
     public $main;
 
-    public function mount($company_id){
+    public function mount($company_id)
+    {
         $this->company_id = $company_id;
         $this->company = SetCompany::find($this->company_id);
         $this->name = $this->company->name;
@@ -41,18 +43,17 @@ class CompanyEdit extends Component
         $this->representative_number = $this->company->representative_number;
         $this->main = $this->company->main;
 
-        if($this->company->logo){
+        if ($this->company->logo) {
             $this->logo_view = $this->company->logo;
         }
-        if($this->company->logo_store){
+        if ($this->company->logo_store) {
             $this->logo_store_view = $this->company->logo_store;
         }
-
     }
 
     public function render()
     {
-        
+
 
         return view('setting::livewire.company.company-edit');
     }
@@ -68,27 +69,28 @@ class CompanyEdit extends Component
         'representative_number' => 'required|min:8'
     ];
 
-    public function save(){
+    public function save()
+    {
 
         $this->validate();
         $logo = $this->logo_view;
         $logo_store = $this->logo_store_view;
         //dd($this->logo);
-        if($this->logo){
-            
-            $logo_name = 'company'.DIRECTORY_SEPARATOR.'logos';
-            $this->logo->storeAs($logo_name,'logo.jpg','public');
-            $logo = $logo_name.DIRECTORY_SEPARATOR.'logo.jpg';
+        if ($this->logo) {
+
+            $logo_name = 'company' . DIRECTORY_SEPARATOR . 'logos';
+            $this->logo->storeAs($logo_name, 'logo.jpg', 'public');
+            $logo = $logo_name . DIRECTORY_SEPARATOR . 'logo.jpg';
+        }
+        //dd('fff');
+        if ($this->logo_store) {
+            $logo_store_name = 'company' . DIRECTORY_SEPARATOR . 'logos';
+            $this->logo_store->storeAs($logo_store_name, 'logo_store.jpg', 'public');
+            $logo_store = $logo_store_name . DIRECTORY_SEPARATOR . 'logo_store.jpg';
         }
 
-        if($this->logo_store){
-            $logo_store_name = 'company'.DIRECTORY_SEPARATOR.'logos';
-            $this->logo_store->storeAs($logo_store_name,'logo_store.jpg','public');
-            $logo_store = $logo_store_name.DIRECTORY_SEPARATOR.'logo_store.jpg';
-        }
-        
-        if($this->main){
-            SetCompany::where('main',true)->update(['main' => false]);
+        if ($this->main) {
+            SetCompany::where('main', true)->update(['main' => false]);
         }
         $activity = new Activity;
         $activity->dataOld(SetCompany::find($this->company->id));
@@ -106,11 +108,11 @@ class CompanyEdit extends Component
             'logo_store' => $logo_store,
             'main' => ($this->main ? true : false)
         ]);
-        
-        
-        $activity->modelOn(SetCompany::class,$this->company->id,'set_companies');
+
+
+        $activity->modelOn(SetCompany::class, $this->company->id, 'set_companies');
         $activity->causedBy(Auth::user());
-        $activity->routeOn(route('setting_company_edit',$this->company->id));
+        $activity->routeOn(route('setting_company_edit', $this->company->id));
         $activity->logType('edit');
         $activity->dataUpdated($this->company);
         $activity->log('se actualizo datos de la empresa');

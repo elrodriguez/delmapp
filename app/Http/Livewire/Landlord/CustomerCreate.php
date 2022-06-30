@@ -97,7 +97,12 @@ class CustomerCreate extends Component
                 'establishment_id'  => $establishment->id,
                 'main'              => true
             ]);
+
             $this->loading_msg = 'Creando Datos de Empresa';
+
+            $storage_path = storage_path();
+
+            mkdir("$storage_path/framework/cache", 0777, true);
         });
 
         $this->loading_msg = 'Creando Datos de Iniciales para el sistema';
