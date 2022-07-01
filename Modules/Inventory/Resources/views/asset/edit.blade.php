@@ -18,5 +18,5 @@
 @livewire('inventory::asset.asset-edit',['asset_id' => $id])
 @endsection
 @section('script')
-    <script src="{{ asset('themes/smart-admin/js/formplugins/autocomplete-bootstrap/bootstrap-autocomplete.min.js') }}" defer></script>
+    <script src="{{ url('themes/smart-admin/js/formplugins/autocomplete-bootstrap/bootstrap-autocomplete.min.js') }}" defer></script>
 @endsection

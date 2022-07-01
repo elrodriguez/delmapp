@@ -26,6 +26,6 @@
     @endif
 @endsection
 @section('script')
-<script src="{{ asset('themes/smart-admin/js/formplugins/inputmask/inputmask.bundle.js') }}"></script>
-<script src="{{ asset('themes/smart-admin/js/formplugins/autocomplete-bootstrap/bootstrap-autocomplete.min.js') }}" defer></script>
+<script src="{{ url('themes/smart-admin/js/formplugins/inputmask/inputmask.bundle.js') }}"></script>
+<script src="{{ url('themes/smart-admin/js/formplugins/autocomplete-bootstrap/bootstrap-autocomplete.min.js') }}" defer></script>
 @endsection
