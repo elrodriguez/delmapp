@@ -49,13 +49,14 @@ class ItemEditGeneric extends Component
     public $categories;
     public $unit_measures = [];
 
-    public function mount($item_id){
+    public function mount($item_id)
+    {
         $this->item_id = $item_id;
-        $this->categories = InvCategory::where('status',true)->get();
-        $this->brands = InvBrand::where('status',true)->get();
-        $this->unit_measures = InvUnitMeasure::where('state',true)->get();
+        $this->categories = InvCategory::where('status', true)->get();
+        $this->brands = InvBrand::where('status', true)->get();
+        $this->unit_measures = InvUnitMeasure::where('state', true)->get();
         $this->item = InvItem::find($item_id);
-        $image = InvItemFile::where('item_id',$item_id)->first();
+        $image = InvItemFile::where('item_id', $item_id)->first();
         $this->name = $this->item->name;
         $this->description = $this->item->description;
         $this->price = $this->item->sale_price;
@@ -69,7 +70,7 @@ class ItemEditGeneric extends Component
         $this->unit_measure_id = $this->item->unit_measure_id;
         $this->brand_id = $this->item->brand_id;
         $this->currency_id = $this->item->currency_id;
-        $this->image_w = ($image ? $image->route : null) ;
+        $this->image_w = ($image ? $image->route : null);
     }
 
     public function render()
@@ -77,7 +78,8 @@ class ItemEditGeneric extends Component
         return view('inventory::livewire.item.item-edit-generic');
     }
 
-    public function save(){
+    public function save()
+    {
         $id = $this->item->id;
 
         $this->validate([
@@ -85,7 +87,7 @@ class ItemEditGeneric extends Component
             'price' => 'required',
             'brand_id' => 'required',
             'purchase_price' => 'required',
-            'internal_id' => 'required|unique:inv_items,internal_id,'.$id,
+            'internal_id' => 'required|unique:inv_items,internal_id,' . $id,
             'stock_min' => 'required',
             'unit_measure_id' => 'required'
         ]);
@@ -107,10 +109,10 @@ class ItemEditGeneric extends Component
             'unit_measure_id' => $this->unit_measure_id,
             'brand_id' => $this->brand_id,
             'currency_type_id' => $this->currency_id,
-            'person_edit'=> Auth::user()->person_id
+            'person_edit' => Auth::user()->person_id
         ]);
 
-        $activity->modelOn(InvItem::class, $this->item->id,'inv_items');
+        $activity->modelOn(InvItem::class, $this->item->id, 'inv_items');
         $activity->causedBy(Auth::user());
         $activity->routeOn(route('inventory_item_edit', $this->item->id));
         $activity->logType('edit');
@@ -118,7 +120,7 @@ class ItemEditGeneric extends Component
         $activity->log('Se actualizó datos del Item');
         $activity->save();
 
-        if($this->image){
+        if ($this->image) {
             $imagen_name = $this->image->getClientOriginalName();
             $this->validate([
                 'image' => 'image|mimes:jpg,jpeg,bmp,png|max:2048'
@@ -126,12 +128,12 @@ class ItemEditGeneric extends Component
             $this->extension_photo = $this->image->extension();
             InvItemFile::create([
                 'name' => $imagen_name,
-                'route' => 'storage/items_images/'.$this->item->id.'/'.$imagen_name,
+                'route' => 'items_images/' . $this->item->id . '/' . $imagen_name,
                 'extension' => $this->extension_photo,
                 'item_id' => $this->item->id
             ]);
 
-            $this->image->storeAs('items_images/'.$this->item->id.'/', $imagen_name,'public');
+            $this->image->storeAs('items_images/' . $this->item->id . '/', $imagen_name, 'public');
         }
 
         $this->dispatchBrowserEvent('inv-item-edit', ['msg' => Lang::get('inventory::labels.msg_update')]);

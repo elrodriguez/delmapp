@@ -76,6 +76,11 @@
                                                     <i class="ni ni-picture"></i> @lang('inventory::labels.lbl_images')
                                                 </a>
                                             @endcan --}}
+                                            @can('inventario_items_precios')
+                                                <button wire:click="openModalItemPrices({{ $item->id}})" class="dropdown-item">
+                                                    <i class="fal fa-dollar-sign mr-1"></i> @lang('inventory::labels.lbl_prices')
+                                                </button>
+                                            @endcan
                                             <div class="dropdown-divider"></div>
                                             @can('inventario_items_eliminar')
                                                 <button onclick="confirmDelete({{ $item->id }})" type="button" class="dropdown-item text-danger">
@@ -173,6 +178,108 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div wire:ignore.self class="modal fade" id="modalItemsPrices" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{ $item_name_modal }}
+                    <small class="m-0 opacity-70">
+                        Lista de Precios
+                    </small>
+                </h5>
+                
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label" for="validationCustom01">Medida<span class="text-danger">*</span> </label>
+                        <select wire:model.defer="measure_id" class="custom-select">
+                            <option value="">{{ __('labels.to_select') }}</option>
+                            @foreach($unit_measures as $unit_measure)
+                                <option value="{{ $unit_measure->id }}">{{ $unit_measure->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('measure_id')
+                        <div class="invalid-feedback-2">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">{{ __('labels.description') }}<span class="text-danger">*</span> </label>
+                        <input wire:model.defer="description" type="text" class="form-control">
+                        @error('description')
+                        <div class="invalid-feedback-2">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">{{ __('labels.quantity') }} <span class="text-danger">*</span> </label>
+                        <input wire:model.defer="quantity" type="text" class="form-control">
+                        @error('quantity')
+                        <div class="invalid-feedback-2">{{ $message }}</div>
+                        @enderror
+                    </div>
+                </div>
+                <div class="form-row align-items-end">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">{{ __('labels.price') }} <span class="text-danger">*</span> </label>
+                        <input wire:model.defer="price" type="text" class="form-control">
+                        @error('price')
+                        <div class="invalid-feedback-2">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    {{-- <div class="col-md-4 mb-3">
+                        <div class="custom-control custom-checkbox">
+                            <input wire:model.defer="main" type="checkbox" class="custom-control-input" id="invalidCheck" required="">
+                            <label class="custom-control-label" for="invalidCheck">Configurar Este precio por defecto <span class="text-danger">*</span></label>
+                            @error('main')
+                            <div class="invalid-feedback-2">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div> --}}
+                    <div class="col-md-4 mb-3">
+                        <button wire:loading.attr="disabled" wire:click="saveItemPrice" type="button" class="btn btn-primary">{{ __('labels.save') }}</button>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>{{ __('labels.actions') }}</th>
+                            <th scope="col">Medida</th>
+                            <th scope="col">{{ __('labels.description') }}</th>
+                            <th scope="col">{{ __('labels.quantity') }}</th>
+                            <th scope="col">{{ __('labels.price') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if(count($xprices)>0)
+                            @foreach ($xprices as $xprice)
+                                <tr>
+                                    <td class="text-center align-middle">
+                                        <button wire:click="deleteItemPrice({{ $xprice->id }})" type="button" class="btn btn-danger btn-icon waves-effect waves-themed">
+                                            <i class="fal fa-times"></i>
+                                        </button>
+                                    </td>
+                                    <td class="align-middle">{{ $xprice->name }}</td>
+                                    <td class="align-middle">{{ $xprice->description }}</td>
+                                    <td class="text-right align-middle">{{ $xprice->units }}</td>
+                                    <td class="text-right align-middle">{{ $xprice->price }}</td>
+                                </tr>
+                            @endforeach
+                        @endif
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('labels.close') }}</button>
+            </div>
+        </div>
+        </div>
+    </div>
+
     <script type="text/javascript">
         function confirmDelete(id){
             initApp.playSound('{{ url("themes/smart-admin/media/sound") }}', 'bigbox')
@@ -233,7 +340,49 @@
         });
         function openModalImport(){
             @this.set('loading_import',false);
+            document.getElementById('inputGroupFile03').value = '';
             $('#modalImport').modal('show');
         }
+        document.addEventListener('set-item-price-modal', event => {
+            $('#modalItemsPrices').modal('show');
+        });
+        document.addEventListener('set-item-price-save', event => {
+            initApp.playSound('{{ url('themes/smart-admin/media/sound') }}', 'voice_on')
+            let box = bootbox.alert({
+                title: "<i class='{{ env('BOOTBOX_SUCCESS_ICON') }} text-warning mr-2'></i> <span class='text-warning fw-500'>{{ __('labels.congratulations') }}</span>",
+                message: "<span><strong>{{ __('inventory::labels.excellent') }}... </strong>{{ __('labels.successfully_registered') }}</span>",
+                centerVertical: true,
+                className: "modal-alert",
+                closeButton: false
+            });
+            box.find('.modal-content').css({
+                'background-color': "{{ env('BOOTBOX_SUCCESS_COLOR') }}"
+            });
+        });
+
+        document.addEventListener('set-item-price-delete', event => {
+            let res = event.detail.res;
+            if(res == 'success'){
+                initApp.playSound('{{ url("themes/smart-admin/media/sound") }}', 'voice_on')
+                let box = bootbox.alert({
+                    title: "<i class='fal fa-check-circle text-warning mr-2'></i> <span class='text-warning fw-500'>{{ __('inventory::labels.success') }}!</span>",
+                    message: "<span><strong>{{ __('inventory::labels.excellent') }}... </strong>{{ __('inventory::labels.msg_delete') }}</span>",
+                    centerVertical: true,
+                    className: "modal-alert",
+                    closeButton: false
+                });
+                box.find('.modal-content').css({'background-color': 'rgba(122, 85, 7, 0.5)'});
+            }else{
+                initApp.playSound('{{ url("themes/smart-admin/media/sound") }}', 'voice_off')
+                let box = bootbox.alert({
+                    title: "<i class='fal fa-check-circle text-warning mr-2'></i> <span class='text-warning fw-500'>{{ __('inventory::labels.error') }}!</span>",
+                    message: "<span><strong>{{ __('inventory::labels.went_wrong') }}... </strong>{{ __('inventory::labels.msg_not_peptra') }}</span>",
+                    centerVertical: true,
+                    className: "modal-alert",
+                    closeButton: false
+                });
+                box.find('.modal-content').css({'background-color': 'rgba(122, 85, 7, 0.5)'});
+            }
+        });
     </script>
 </div>

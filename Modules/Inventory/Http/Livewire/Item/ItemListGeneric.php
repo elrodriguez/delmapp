@@ -11,6 +11,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Auth;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
+use Modules\Inventory\Entities\InvItemPrice;
+use Modules\Inventory\Entities\InvUnitMeasure;
 
 class ItemListGeneric extends Component
 {
@@ -18,6 +20,15 @@ class ItemListGeneric extends Component
     public $search;
     public $file_excel;
     public $loading_import = false;
+    public $item_name_modal;
+    public $unit_measures = [];
+    public $measure_id;
+    public $description;
+    public $quantity;
+    public $price;
+    public $main;
+    public $xitem;
+    public $xprices = [];
 
     use WithFileUploads;
     use WithPagination;
@@ -27,6 +38,7 @@ class ItemListGeneric extends Component
     public function mount()
     {
         $this->show = 10;
+        $this->unit_measures = InvUnitMeasure::all();
     }
 
     public function render()
@@ -99,5 +111,77 @@ class ItemListGeneric extends Component
             $this->loading_import = false;
             dd($e->getMessage());
         }
+    }
+
+    public function openModalItemPrices($id)
+    {
+        $this->xitem = InvItem::find($id);
+        $this->getItemPrices($id);
+        $this->item_name_modal = $this->xitem->name;
+
+        $this->dispatchBrowserEvent('set-item-price-modal', ['res' => true]);
+    }
+
+    public function getItemPrices($id)
+    {
+        $this->xprices = InvItemPrice::join('inv_unit_measures', 'measure_id', 'inv_unit_measures.id')
+            ->select(
+                'inv_item_prices.id',
+                'inv_unit_measures.name',
+                'inv_item_prices.description',
+                'inv_item_prices.units',
+                'inv_item_prices.price',
+                'inv_item_prices.main'
+            )
+            ->where('item_id', $id)->get();
+    }
+    public function saveItemPrice()
+    {
+        $this->validate([
+            'measure_id' => 'required',
+            'description' => 'required|max:300',
+            'quantity' => 'required',
+            'price' => 'required'
+        ]);
+
+        InvItemPrice::create([
+            'item_id' => $this->xitem->id,
+            'measure_id' => $this->measure_id,
+            'description' => $this->description,
+            'units' => $this->quantity,
+            'price' => $this->price,
+            'main' => ($this->main ? true : false)
+        ]);
+
+        $this->measure_id =  null;
+        $this->description = null;
+        $this->quantity = null;
+        $this->price = null;
+        $this->main = false;
+
+        $this->getItemPrices($this->xitem->id);
+
+        $this->dispatchBrowserEvent('set-item-price-save', ['res' => true]);
+    }
+    public function deleteItemPrice($id)
+    {
+        try {
+            $item = InvItemPrice::find($id);
+
+            $activity = new activity;
+            $activity->log('Se eliminó el precio');
+            $activity->modelOn(InvItemPrice::class, $id, 'inv_item_prices');
+            $activity->dataOld($item);
+            $activity->logType('delete');
+            $activity->causedBy(Auth::user());
+            $activity->save();
+
+            $item->delete();
+            $res = 'success';
+        } catch (\Illuminate\Database\QueryException $e) {
+            $res = 'error';
+        }
+        $this->getItemPrices($this->xitem->id);
+        $this->dispatchBrowserEvent('set-item-price-delete', ['res' => $res]);
     }
 }

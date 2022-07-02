@@ -23,7 +23,8 @@ class ItemFile extends Component
     public $id_item;
     public $name_item;
 
-    public function mount($item_id){
+    public function mount($item_id)
+    {
         $item = InvItem::find($item_id);
         $this->id_item = $item_id;
         $this->name_item = $item->name;
@@ -31,13 +32,13 @@ class ItemFile extends Component
         $this->item_id = $item_id;
         $this->files = InvItemFile::where('item_id', '=', $item_id)->get();
         $result = array();
-        foreach ($this->files as $row){
+        foreach ($this->files as $row) {
             $obj['id'] =  $row->id;
             $obj['name'] =  $row->name;
             $obj['server_name'] = $row->name;
-            if(file_exists(public_path('storage/'.$row->route))){
-                $image_url = url('storage/'.$row->route);
-                $fileSize = \File::size(public_path('storage/'.$row->route));
+            if (file_exists(public_path($row->route))) {
+                $image_url = url($row->route);
+                $fileSize = \File::size(public_path($row->route));
                 $obj['size'] = $fileSize;
                 $obj['route'] = $image_url;
             }
@@ -52,13 +53,14 @@ class ItemFile extends Component
         return view('inventory::livewire.item.item-file', ['result' => $this->files_a]);
     }
 
-    public function deleteFile($id, $narchivo, $url_file){
+    public function deleteFile($id, $narchivo, $url_file)
+    {
         $file_search = InvItemFile::find($id);
-        if(file_exists(public_path('storage/item_images/Activo_'.$this->item_id.'/'.$narchivo))){
-            unlink(public_path('storage/item_images/Activo_'.$this->item_id.'/'.$narchivo));
+        if (file_exists(public_path('item_images/Activo_' . $this->item_id . '/' . $narchivo))) {
+            unlink(public_path('item_images/Activo_' . $this->item_id . '/' . $narchivo));
             $file_search->delete();
             $msg = 'OK';
-        }else{
+        } else {
             $msg = 'ERROR';
         }
         $this->dispatchBrowserEvent('set-file-delete', ['res' => $msg]);

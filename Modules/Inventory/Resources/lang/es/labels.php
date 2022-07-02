@@ -115,5 +115,6 @@ return [
     'lbl_movements_move'        => 'Trasladar',
     'lbl_transfer_between_warehouses' => 'Traslado entre almacenes',
     'lbl_remove_product_from_warehouse'  => 'Retirar producto de almacén',
-    'lbl_sunat_code' => 'Código Sunat'
+    'lbl_sunat_code' => 'Código Sunat',
+    'lbl_prices' => 'Precios'
 ];

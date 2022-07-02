@@ -116,5 +116,6 @@ return [
     'lbl_movements_move'        => 'Move',
     'lbl_transfer_between_warehouses' => 'Transfer between warehouses',
     'lbl_remove_product_from_warehouse'  => 'Remove product from warehouse',
-    'lbl_sunat_code' => 'Sunat Code'
+    'lbl_sunat_code' => 'Sunat Code',
+    'lbl_prices' => 'Prices'
 ];

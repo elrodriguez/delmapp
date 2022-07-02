@@ -127,7 +127,7 @@ class ItemCreateGeneric extends Component
             $this->extension_photo = $this->image->extension();
             InvItemFile::create([
                 'name' => $imagen_name,
-                'route' => 'storage/items_images/' . $this->item_save->id . '/' . $imagen_name,
+                'route' => 'items_images/' . $this->item_save->id . '/' . $imagen_name,
                 'extension' => $this->extension_photo,
                 'item_id' => $this->item_save->id
             ]);

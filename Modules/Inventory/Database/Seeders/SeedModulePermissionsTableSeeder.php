@@ -19,7 +19,7 @@ class SeedModulePermissionsTableSeeder extends Seeder
     public function run()
     {
         $module = SetModule::create([
-            'uuid' => Str::uuid(),
+            'uuid' => 'inve',
             'logo' => 'fal fa-cubes',
             'label' => 'Inventario',
             'destination_route' => 'inventory_dashboard',
@@ -45,6 +45,7 @@ class SeedModulePermissionsTableSeeder extends Seeder
         array_push($permissions, Permission::create(['name' => 'inventario_items_nuevo', 'guard_name' => 'sanctum']));
         array_push($permissions, Permission::create(['name' => 'inventario_items_importar', 'guard_name' => 'sanctum']));
         array_push($permissions, Permission::create(['name' => 'inventario_items_editar', 'guard_name' => 'sanctum']));
+        array_push($permissions, Permission::create(['name' => 'inventario_items_precios', 'guard_name' => 'sanctum']));
         array_push($permissions, Permission::create(['name' => 'inventario_items_eliminar', 'guard_name' => 'sanctum']));
         array_push($permissions, Permission::create(['name' => 'inventario_items_fotos', 'guard_name' => 'sanctum']));
         array_push($permissions, Permission::create(['name' => 'inventario_items_parte', 'guard_name' => 'sanctum']));

@@ -1,4 +1,5 @@
 <?php
+
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 /*
@@ -18,8 +19,8 @@ Route::middleware([
     'web',
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
-    ])->prefix('inventory')->group(function () {
-        
+])->prefix('inventory')->group(function () {
+
     Route::get('dashboard', 'InventoryController@index')->name('inventory_dashboard');
 
     Route::group(['prefix' => 'category'], function () {

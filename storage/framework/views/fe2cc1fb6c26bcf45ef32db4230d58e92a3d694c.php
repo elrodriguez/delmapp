@@ -72,6 +72,11 @@
                                                 </a>
                                             <?php endif; ?>
                                             
+                                            <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('inventario_items_precios')): ?>
+                                                <button wire:click="openModalItemPrices(<?php echo e($item->id); ?>)" class="dropdown-item">
+                                                    <i class="fal fa-dollar-sign mr-1"></i> <?php echo app('translator')->get('inventory::labels.lbl_prices'); ?>
+                                                </button>
+                                            <?php endif; ?>
                                             <div class="dropdown-divider"></div>
                                             <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('inventario_items_eliminar')): ?>
                                                 <button onclick="confirmDelete(<?php echo e($item->id); ?>)" type="button" class="dropdown-item text-danger">
@@ -168,6 +173,129 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div wire:ignore.self class="modal fade" id="modalItemsPrices" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel"><?php echo e($item_name_modal); ?>
+
+                    <small class="m-0 opacity-70">
+                        Lista de Precios
+                    </small>
+                </h5>
+                
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label" for="validationCustom01">Medida<span class="text-danger">*</span> </label>
+                        <select wire:model.defer="measure_id" class="custom-select">
+                            <option value=""><?php echo e(__('labels.to_select')); ?></option>
+                            <?php $__currentLoopData = $unit_measures; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $unit_measure): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($unit_measure->id); ?>"><?php echo e($unit_measure->name); ?></option>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </select>
+                        <?php $__errorArgs = ['measure_id'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <div class="invalid-feedback-2"><?php echo e($message); ?></div>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label"><?php echo e(__('labels.description')); ?><span class="text-danger">*</span> </label>
+                        <input wire:model.defer="description" type="text" class="form-control">
+                        <?php $__errorArgs = ['description'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <div class="invalid-feedback-2"><?php echo e($message); ?></div>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label"><?php echo e(__('labels.quantity')); ?> <span class="text-danger">*</span> </label>
+                        <input wire:model.defer="quantity" type="text" class="form-control">
+                        <?php $__errorArgs = ['quantity'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <div class="invalid-feedback-2"><?php echo e($message); ?></div>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                    </div>
+                </div>
+                <div class="form-row align-items-end">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label"><?php echo e(__('labels.price')); ?> <span class="text-danger">*</span> </label>
+                        <input wire:model.defer="price" type="text" class="form-control">
+                        <?php $__errorArgs = ['price'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <div class="invalid-feedback-2"><?php echo e($message); ?></div>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                    </div>
+                    
+                    <div class="col-md-4 mb-3">
+                        <button wire:loading.attr="disabled" wire:click="saveItemPrice" type="button" class="btn btn-primary"><?php echo e(__('labels.save')); ?></button>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th><?php echo e(__('labels.actions')); ?></th>
+                            <th scope="col">Medida</th>
+                            <th scope="col"><?php echo e(__('labels.description')); ?></th>
+                            <th scope="col"><?php echo e(__('labels.quantity')); ?></th>
+                            <th scope="col"><?php echo e(__('labels.price')); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if(count($xprices)>0): ?>
+                            <?php $__currentLoopData = $xprices; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $xprice): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <tr>
+                                    <td class="text-center align-middle">
+                                        <button wire:click="deleteItemPrice(<?php echo e($xprice->id); ?>)" type="button" class="btn btn-danger btn-icon waves-effect waves-themed">
+                                            <i class="fal fa-times"></i>
+                                        </button>
+                                    </td>
+                                    <td class="align-middle"><?php echo e($xprice->name); ?></td>
+                                    <td class="align-middle"><?php echo e($xprice->description); ?></td>
+                                    <td class="text-right align-middle"><?php echo e($xprice->units); ?></td>
+                                    <td class="text-right align-middle"><?php echo e($xprice->price); ?></td>
+                                </tr>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal"><?php echo e(__('labels.close')); ?></button>
+            </div>
+        </div>
+        </div>
+    </div>
+
     <script type="text/javascript">
         function confirmDelete(id){
             initApp.playSound('<?php echo e(url("themes/smart-admin/media/sound")); ?>', 'bigbox')
@@ -228,8 +356,50 @@
         });
         function openModalImport(){
             window.livewire.find('<?php echo e($_instance->id); ?>').set('loading_import',false);
+            document.getElementById('inputGroupFile03').value = '';
             $('#modalImport').modal('show');
         }
+        document.addEventListener('set-item-price-modal', event => {
+            $('#modalItemsPrices').modal('show');
+        });
+        document.addEventListener('set-item-price-save', event => {
+            initApp.playSound('<?php echo e(url('themes/smart-admin/media/sound')); ?>', 'voice_on')
+            let box = bootbox.alert({
+                title: "<i class='<?php echo e(env('BOOTBOX_SUCCESS_ICON')); ?> text-warning mr-2'></i> <span class='text-warning fw-500'><?php echo e(__('labels.congratulations')); ?></span>",
+                message: "<span><strong><?php echo e(__('inventory::labels.excellent')); ?>... </strong><?php echo e(__('labels.successfully_registered')); ?></span>",
+                centerVertical: true,
+                className: "modal-alert",
+                closeButton: false
+            });
+            box.find('.modal-content').css({
+                'background-color': "<?php echo e(env('BOOTBOX_SUCCESS_COLOR')); ?>"
+            });
+        });
+
+        document.addEventListener('set-item-price-delete', event => {
+            let res = event.detail.res;
+            if(res == 'success'){
+                initApp.playSound('<?php echo e(url("themes/smart-admin/media/sound")); ?>', 'voice_on')
+                let box = bootbox.alert({
+                    title: "<i class='fal fa-check-circle text-warning mr-2'></i> <span class='text-warning fw-500'><?php echo e(__('inventory::labels.success')); ?>!</span>",
+                    message: "<span><strong><?php echo e(__('inventory::labels.excellent')); ?>... </strong><?php echo e(__('inventory::labels.msg_delete')); ?></span>",
+                    centerVertical: true,
+                    className: "modal-alert",
+                    closeButton: false
+                });
+                box.find('.modal-content').css({'background-color': 'rgba(122, 85, 7, 0.5)'});
+            }else{
+                initApp.playSound('<?php echo e(url("themes/smart-admin/media/sound")); ?>', 'voice_off')
+                let box = bootbox.alert({
+                    title: "<i class='fal fa-check-circle text-warning mr-2'></i> <span class='text-warning fw-500'><?php echo e(__('inventory::labels.error')); ?>!</span>",
+                    message: "<span><strong><?php echo e(__('inventory::labels.went_wrong')); ?>... </strong><?php echo e(__('inventory::labels.msg_not_peptra')); ?></span>",
+                    centerVertical: true,
+                    className: "modal-alert",
+                    closeButton: false
+                });
+                box.find('.modal-content').css({'background-color': 'rgba(122, 85, 7, 0.5)'});
+            }
+        });
     </script>
 </div>
 <?php /**PATH C:\laragon\www\delmapp\Modules/Inventory\Resources/views/livewire/item/item-list-generic.blade.php ENDPATH**/ ?>
