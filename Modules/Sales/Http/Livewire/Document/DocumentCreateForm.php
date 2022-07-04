@@ -752,7 +752,7 @@ class DocumentCreateForm extends Component
         $this->produc_price_old = $data['price'];
         $this->produc_stock = $data['stock'];
         $this->produc_quantity = 1;
-        $itemfile = InvItemFile::where('item_id', $id)->first();
+        $itemfile = InvItemFile::where('item_id', $id)->where('main', true)->first();
         //dd($itemfile);
         if ($itemfile) {
             $this->produc_image = $itemfile->route;

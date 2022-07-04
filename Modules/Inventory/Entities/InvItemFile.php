@@ -14,7 +14,8 @@ class InvItemFile extends Model
         'name',
         'route',
         'extension',
-        'item_id'
+        'item_id',
+        'main'
     ];
 
     public function item()
