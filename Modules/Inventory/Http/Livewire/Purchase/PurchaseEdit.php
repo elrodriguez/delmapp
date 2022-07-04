@@ -42,9 +42,10 @@ class PurchaseEdit extends Component
     public $search_item_edit;
     public $btn_save_item = false;
 
-    public function mount($purchase_id){
+    public function mount($purchase_id)
+    {
         $this->id_purchase = $purchase_id;
-        $this->document_types = DocumentType::whereIn('id',['01','03','GU75'])
+        $this->document_types = DocumentType::whereIn('id', ['01', '03', 'GU75'])
             ->select(
                 'id',
                 'description'
@@ -58,7 +59,7 @@ class PurchaseEdit extends Component
             )
             ->get();
 
-        $this->establishments = SetEstablishment::where('state',true)
+        $this->establishments = SetEstablishment::where('state', true)
             ->select(
                 'id',
                 'name'
@@ -69,9 +70,9 @@ class PurchaseEdit extends Component
         $this->document_type_id = $this->purchase_search->document_type_id;
 
         $date_issue = null;
-        if($this->purchase_search->date_of_issue){
-            list($Y,$m,$d) = explode('-', $this->purchase_search->date_of_issue);
-            $date_issue = $d.'/'.$m.'/'. $Y;
+        if ($this->purchase_search->date_of_issue) {
+            list($Y, $m, $d) = explode('-', $this->purchase_search->date_of_issue);
+            $date_issue = $d . '/' . $m . '/' . $Y;
         }
 
         $this->date_of_issue = $date_issue;
@@ -81,11 +82,11 @@ class PurchaseEdit extends Component
         $this->supplier_id = $this->purchase_search->supplier_id;
         $this->getPurchaseItem();
 
-        if(count($this->items) > 0){
+        if (count($this->items) > 0) {
             $kardex_data = InvKardex::where('kardexable_id', '=', $this->id_purchase)
                 ->where('item_id', '=', $this->items[0]->item_id)
                 ->get();
-            foreach ($kardex_data as $row){
+            foreach ($kardex_data as $row) {
                 $this->establishment_id = $row->establishment_id;
                 $this->store_id = $row->location_id;
                 break;
@@ -94,12 +95,14 @@ class PurchaseEdit extends Component
         $this->getStores();
     }
 
-    public function getStores(){
-        $this->stores = InvLocation::where('establishment_id',$this->establishment_id)
+    public function getStores()
+    {
+        $this->stores = InvLocation::where('establishment_id', $this->establishment_id)
             ->where('state', true)->get();
     }
 
-    public function getPurchaseItem(){
+    public function getPurchaseItem()
+    {
         $this->items = InvPurchaseItem::where('purchase_id', '=', $this->purchase_search->id)
             ->join('inv_items', 'inv_purchase_items.item_id', 'inv_items.id')
             ->select(
@@ -112,12 +115,14 @@ class PurchaseEdit extends Component
             ->get();
     }
 
-    public function render(){
+    public function render()
+    {
         $this->getPurchaseItem();
         return view('inventory::livewire.purchase.purchase-edit');
     }
 
-    public function save(){
+    public function save()
+    {
         $this->validate([
             'supplier_id' => 'required',
             'document_type_id' => 'required',
@@ -130,9 +135,9 @@ class PurchaseEdit extends Component
         ]);
 
         $date_issue = null;
-        if($this->date_of_issue){
-            list($d,$m,$y) = explode('/', $this->date_of_issue);
-            $date_issue = $y.'-'.$m.'-'. $d;
+        if ($this->date_of_issue) {
+            list($d, $m, $y) = explode('/', $this->date_of_issue);
+            $date_issue = $y . '-' . $m . '-' . $d;
         }
 
         $activity = new Activity;
@@ -148,7 +153,13 @@ class PurchaseEdit extends Component
             'person_edit'       => Auth::user()->person_id
         ]);
 
-        $activity->modelOn(InvPurchase::class, $this->purchase_search->id,'inv_purchases');
+        InvKardex::where('kardexable_id', $this->purchase_search->id)
+            ->where('kardexable_type', InvPurchase::class)
+            ->update([
+                'date_of_issue' => $date_issue
+            ]);
+
+        $activity->modelOn(InvPurchase::class, $this->purchase_search->id, 'inv_purchases');
         $activity->causedBy(Auth::user());
         $activity->routeOn(route('inventory_purchase_edit', $this->purchase_search->id));
         $activity->logType('edit');
@@ -159,7 +170,8 @@ class PurchaseEdit extends Component
         $this->dispatchBrowserEvent('inv-purchase-edit', ['msg' => Lang::get('inventory::labels.msg_update')]);
     }
 
-    public function saveItem(){
+    public function saveItem()
+    {
         $this->validate([
             'item_text'         => 'required|min:3',
             'item_id'           => 'required',
@@ -172,7 +184,7 @@ class PurchaseEdit extends Component
         $data_exist  = InvPurchaseItem::where('purchase_id', $this->id_purchase)
             ->where('item_id', $this->item_id)->get();
 
-        if(count($data_exist) == 0){
+        if (count($data_exist) == 0) {
             InvPurchaseItem::create([
                 'purchase_id'   => $this->id_purchase,
                 'item_id'       => $this->item_id,
@@ -182,9 +194,9 @@ class PurchaseEdit extends Component
             ]);
 
             $date_issue = null;
-            if($this->date_of_issue){
-                list($d,$m,$y) = explode('/', $this->date_of_issue);
-                $date_issue = $y.'-'.$m.'-'. $d;
+            if ($this->date_of_issue) {
+                list($d, $m, $y) = explode('/', $this->date_of_issue);
+                $date_issue = $y . '-' . $m . '-' . $d;
             }
 
             InvKardex::create([
@@ -206,12 +218,13 @@ class PurchaseEdit extends Component
             $this->item_price = null;
 
             $this->dispatchBrowserEvent('inv-purchase-edit', ['msg' => Lang::get('inventory::labels.msg_success')]);
-        }else{
+        } else {
             $this->dispatchBrowserEvent('inv-purchase-edit-not', ['msg' => Lang::get('inventory::labels.msg_0009')]);
         }
     }
 
-    public function saveEditItem(){
+    public function saveEditItem()
+    {
         $this->validate([
             'item_text'         => 'required|min:3',
             'item_id'           => 'required',
@@ -232,7 +245,7 @@ class PurchaseEdit extends Component
             'establishment_id'  => $kardex_search->establishment_id,
             'location_id'       => $kardex_search->location_id,
             'item_id'           => $kardex_search->item_id,
-            'quantity'          => -(InvPurchaseItem::find($this->search_item_edit->id)->quantity),
+            'quantity'          => - (InvPurchaseItem::find($this->search_item_edit->id)->quantity),
             'kardexable_id'     => $kardex_search->kardexable_id,
             'kardexable_type'   => $kardex_search->kardexable_type,
             'detail'            => 'Cantidad Corregida'
@@ -248,9 +261,9 @@ class PurchaseEdit extends Component
         ]);
 
         $date_issue = null;
-        if($this->date_of_issue){
-            list($d,$m,$y) = explode('/', $this->date_of_issue);
-            $date_issue = $y.'-'.$m.'-'. $d;
+        if ($this->date_of_issue) {
+            list($d, $m, $y) = explode('/', $this->date_of_issue);
+            $date_issue = $y . '-' . $m . '-' . $d;
         }
 
         InvKardex::create([
@@ -275,7 +288,8 @@ class PurchaseEdit extends Component
         $this->dispatchBrowserEvent('inv-purchase-edit', ['msg' => Lang::get('inventory::labels.msg_update')]);
     }
 
-    public function editItem($id){
+    public function editItem($id)
+    {
         $this->search_item_edit = InvPurchaseItem::where('inv_purchase_items.id', '=', $id)
             ->join('inv_items', 'inv_purchase_items.item_id', 'inv_items.id')
             ->select(
@@ -287,7 +301,7 @@ class PurchaseEdit extends Component
             )
             ->get();
         $id_item_search = 0;
-        foreach ($this->search_item_edit as $row){
+        foreach ($this->search_item_edit as $row) {
             $id_item_search = $row->id;
             $this->item_id = $row->item_id;
             $this->item_text = $row->item_text;
@@ -296,9 +310,10 @@ class PurchaseEdit extends Component
         }
         $this->search_item_edit = InvPurchaseItem::find($id_item_search);
         $this->btn_save_item = true;
-     }
+    }
 
-    public function deleteItem($id){
+    public function deleteItem($id)
+    {
         $item_purchase = InvPurchaseItem::find($id);
 
         $kardex_search = InvKardex::where('kardexable_id', '=', $this->id_purchase)
@@ -311,7 +326,7 @@ class PurchaseEdit extends Component
             'establishment_id'  => $kardex_search->establishment_id,
             'location_id'       => $kardex_search->location_id,
             'item_id'           => $kardex_search->item_id,
-            'quantity'          => -($kardex_search->quantity),
+            'quantity'          => - ($kardex_search->quantity),
             'kardexable_id'     => $kardex_search->kardexable_id,
             'kardexable_type'   => $kardex_search->kardexable_type,
             'detail'            => 'Anulación Compra'

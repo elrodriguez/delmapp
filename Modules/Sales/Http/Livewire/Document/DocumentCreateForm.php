@@ -322,7 +322,9 @@ class DocumentCreateForm extends Component
             'operation_type_id' => '0101',
             'date_of_due' => $date_of_due
         ];
+
         $this->total_taxes = $this->total_igv;
+
         $inputDocument = [
             'user_id' => Auth::id(),
             'external_id' => $this->external_id,
@@ -550,6 +552,15 @@ class DocumentCreateForm extends Component
 
                     $affectation_igv_type = AffectationIgvType::where('id', $item['sale_affectation_igv_type_id'])->first()->toArray();
                     $item['name'] = $item['name'] . ' ' . $this->produc_price_description;
+
+                    $presentation = array('presentation' => []);
+
+                    if ($this->produc_price_id) {
+                        $presentation['presentation'] = InvItemPrice::find($this->produc_price_id)->toArray();
+                    }
+
+                    $item = array_merge($item, $presentation);
+
                     $data = [
                         'item_id' => $item['id'],
                         'item' => json_encode($item),

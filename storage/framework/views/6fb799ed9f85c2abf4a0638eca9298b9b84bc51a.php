@@ -364,9 +364,18 @@ $colspan6 = 6;
 
                         <?php endif; ?>
                     </td>
-                    <td class="text-center align-top"><?php echo e(json_decode($row->item)->unit_measure_id); ?></td>
+                    <td class="text-center align-top">
+                        <?php if(json_decode($row->item)->presentation): ?>
+                            <?php echo e(json_decode($row->item)->presentation->measure_id); ?>
+
+                        <?php else: ?>
+                            <?php echo e(json_decode($row->item)->unit_measure_id); ?>
+
+                        <?php endif; ?>
+                        
+                    </td>
                     <td class="text-left align-top">
-                        <?php echo e(json_decode($row->item)->description); ?>
+                        <?php echo e(json_decode($row->item)->name); ?>
 
                     </td>
                     <!--td class="text-center align-top">

@@ -124,11 +124,18 @@ class Billing
                 $this->savePayments($document, $inputs['payments']);
                 //$this->saveFee($document, $inputs['fee']);
                 foreach ($inputs['items'] as $row) {
+                    //dd(json_decode($row['item'])->presentation->measure_id);
+                    $presentation = json_decode($row['item'])->presentation;
+                    $quantity = $row['quantity'];
+                    if ($presentation) {
+                        $quantity = $presentation->units;
+                    }
+
                     $document->items()->create($row);
                     InvAsset::where('item_id', $row['item_id'])
                         ->where('location_id', $this->warehouse_id)
-                        ->decrement('stock', $row['quantity']);
-                    InvItem::where('id', $row['item_id'])->decrement('stock', $row['quantity']);
+                        ->decrement('stock', $quantity);
+                    InvItem::where('id', $row['item_id'])->decrement('stock', $quantity);
                     InvKardex::create([
                         'date_of_issue' => Carbon::now()->format('Y-m-d'),
                         'establishment_id' => $document->establishment_id,
@@ -136,7 +143,7 @@ class Billing
                         'kardexable_id' => $document->id,
                         'kardexable_type' => SalDocument::class,
                         'location_id' => $this->warehouse_id,
-                        'quantity' => (-$row['quantity']),
+                        'quantity' => (-$quantity),
                         'detail' => 'Venta'
                     ]);
                 }

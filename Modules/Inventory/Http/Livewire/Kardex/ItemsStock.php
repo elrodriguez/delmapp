@@ -67,7 +67,7 @@ class ItemsStock extends Component
         $end = $this->end;
         $item_id = $this->item_id;
         $location_id = $this->location_id;
-        //dd($this->location_id);
+
         $items = InvKardex::join('inv_items', 'inv_kardexes.item_id', 'inv_items.id')
             ->leftJoin('inv_purchases', function ($query) {
                 $query->on('inv_kardexes.kardexable_id', 'inv_purchases.id')

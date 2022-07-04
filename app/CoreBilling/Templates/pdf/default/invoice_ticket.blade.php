@@ -389,12 +389,18 @@ $balance = $document->total - $total_payment - $payments->sum('change');
                             {{ number_format($row->quantity, 0) }}
                         @endif
                     </td>
-                    <td class="text-center desc-9 align-top">{{ json_decode($row->item)->unit_measure_id }}</td>
+                    <td class="text-center desc-9 align-top">
+                        @if(json_decode($row->item)->presentation)
+                            {{ json_decode($row->item)->presentation->measure_id }}
+                        @else
+                            {{ json_decode($row->item)->unit_measure_id }}
+                        @endif
+                    </td>
                     <td class="text-left desc-9 align-top">
                         @if ($row->name_product_pdf)
                             {!! $row->name_product_pdf !!}
                         @else
-                            {{ json_decode($row->item)->description }}
+                            {{ json_decode($row->item)->name }}
                         @endif
 
                         @if (!empty($row->item->presentation))

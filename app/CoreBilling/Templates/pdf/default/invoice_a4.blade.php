@@ -350,9 +350,16 @@ $colspan6 = 6;
                             {{ number_format($row->quantity, 0) }}
                         @endif
                     </td>
-                    <td class="text-center align-top">{{ json_decode($row->item)->unit_measure_id }}</td>
+                    <td class="text-center align-top">
+                        @if(json_decode($row->item)->presentation)
+                            {{ json_decode($row->item)->presentation->measure_id }}
+                        @else
+                            {{ json_decode($row->item)->unit_measure_id }}
+                        @endif
+                        
+                    </td>
                     <td class="text-left align-top">
-                        {{ json_decode($row->item)->description }}
+                        {{ json_decode($row->item)->name }}
                     </td>
                     <!--td class="text-center align-top">
                 {{-- @inject('itemLotGroup', 'App\Services\ItemLotsGroupService')
