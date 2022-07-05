@@ -121,17 +121,19 @@ class ItemEditGeneric extends Component
         $activity->save();
 
         if ($this->image) {
-            InvItemFile::where('item_id', $this->item->id)->update(['main' => false]);
+            $ff = InvItemFile::where('item_id', $this->item->id)->update(['main' => false]);
             $imagen_name = $this->image->getClientOriginalName();
             $this->validate([
                 'image' => 'image|mimes:jpg,jpeg,bmp,png|max:2048'
             ]);
             $this->extension_photo = $this->image->extension();
+
             InvItemFile::create([
                 'name' => $imagen_name,
                 'route' => 'items_images/' . $this->item->id . '/' . $imagen_name,
                 'extension' => $this->extension_photo,
-                'item_id' => $this->item->id
+                'item_id' => $this->item->id,
+                'main' => true
             ]);
 
             $this->image->storeAs('items_images/' . $this->item->id . '/', $imagen_name, 'public');

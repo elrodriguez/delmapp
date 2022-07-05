@@ -126,15 +126,15 @@ class ItemCreateGeneric extends Component
             $dd = InvItemFile::where('item_id', $this->item_save->id)->update(['main' => false]);
             $imagen_name = $this->image->getClientOriginalName();
             $this->extension_photo = $this->image->extension();
-            if ($dd) {
-                InvItemFile::create([
-                    'name' => $imagen_name,
-                    'route' => 'items_images/' . $this->item_save->id . '/' . $imagen_name,
-                    'extension' => $this->extension_photo,
-                    'item_id' => $this->item_save->id,
-                    'main' => true
-                ]);
-            }
+
+            InvItemFile::create([
+                'name' => $imagen_name,
+                'route' => 'items_images/' . $this->item_save->id . '/' . $imagen_name,
+                'extension' => $this->extension_photo,
+                'item_id' => $this->item_save->id,
+                'main' => true
+            ]);
+
 
             $this->image->storeAs('items_images/' . $this->item_save->id . '/', $imagen_name, 'public');
         }
