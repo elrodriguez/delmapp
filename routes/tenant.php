@@ -35,11 +35,9 @@ Route::middleware([
         return view('page_login');
     })->name('login');
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-    
+
     Route::middleware(['auth:sanctum', 'verified'])->get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
     Route::get('micomprobante', [DocumentsController::class, 'documentSearch'])->name('micomprobante');
     Route::get('download/{domain}/{type}/{filename}', [DocumentsController::class, 'downloadExternal'])->name('download_sale_document_public');
-    
 });
-
