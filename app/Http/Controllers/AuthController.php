@@ -31,6 +31,7 @@ class AuthController extends Controller
                     $avatar = url('themes/smart-admin/img/demo/avatars/avatar-m.png');
                 }
                 $response = [
+                    'domain' => request()->root(),
                     'user' => [
                         'name' => auth()->user()->name,
                         'email' => auth()->user()->email,

@@ -28,7 +28,7 @@ class UserLogin extends FormRequest
         return [
             'username' => 'required|string|max:255',
             'password' => 'required|string|min:6',
-            'remember_me' => 'boolean'
+            //'remember_me' => 'boolean'
         ];
     }
 
