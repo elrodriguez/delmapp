@@ -17,47 +17,54 @@
         </div>
     </div>
     <div class="row">
-        @foreach ($tables as $table)
-            @if ($table->occupied)
-                <div onclick="openFormReOrder({{ $table->id }})" class="col-12 col-sm-4 col-md-3 col-lg-3 col-xl-3"
-                    style="cursor: pointer">
-                    <div class="p-3 bg-danger-800  rounded overflow-hidden position-relative text-white mb-g">
-                        <div class="">
-                            <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                                {{ $table->name }}
-                                <small class="m-0 l-h-n">
-                                    Sillas : {{ $table->chairs }}
-                                </small>
-                            </h3>
-                            <code class="mt-2 l-h-n">
-                                ocupado
-                            </code>
-                        </div>
-                        <i class="fal fa-table position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1"
-                            style="font-size:6rem"></i>
+
+        @foreach ($desoccupied_tables as $table)
+            <div onclick="openFormOrder({{ $table->id }})" class="col-12 col-sm-4 col-md-3 col-lg-3 col-xl-3"
+                style="cursor: pointer">
+                <div class="p-3 bg-warning-500 rounded overflow-hidden position-relative text-white mb-g">
+                    <div class="">
+                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                            {{ $table->name }}
+                            <small class="m-0 l-h-n">
+                                Sillas : {{ $table->chairs }}
+                            </small>
+                        </h3>
+                        <code class="mt-2 l-h-n">
+                            libre
+                        </code>
                     </div>
+                    <i class="fal fa-table position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1"
+                        style="font-size:6rem"></i>
                 </div>
-            @else
-                <div onclick="openFormOrder({{ $table->id }})" class="col-12 col-sm-4 col-md-3 col-lg-3 col-xl-3"
-                    style="cursor: pointer">
-                    <div class="p-3 bg-warning-500 rounded overflow-hidden position-relative text-white mb-g">
-                        <div class="">
-                            <h3 class="display-4 d-block l-h-n m-0 fw-500">
-                                {{ $table->name }}
-                                <small class="m-0 l-h-n">
-                                    Sillas : {{ $table->chairs }}
-                                </small>
-                            </h3>
-                            <code class="mt-2 l-h-n">
-                                libre
-                            </code>
-                        </div>
-                        <i class="fal fa-table position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1"
-                            style="font-size:6rem"></i>
-                    </div>
-                </div>
-            @endif
+            </div>
         @endforeach
+
+        @foreach ($occupied_tables as $table)
+            <div onclick="openFormReOrder({{ $table->id }})"
+                @if($table->shared)
+                class="col-12 col-sm-8 col-md-6 col-lg-6 col-xl-6"
+                @else
+                class="col-12 col-sm-4 col-md-3 col-lg-3 col-xl-3"
+                @endif
+                style="cursor: pointer">
+                <div class="p-3 bg-danger-800  rounded overflow-hidden position-relative text-white mb-g">
+                    <div class="">
+                        <h3 class="display-4 d-block l-h-n m-0 fw-500">
+                            {{ $table->name }}
+                            <small class="m-0 l-h-n">
+                                Sillas : {{ $table->chairs }}
+                            </small>
+                        </h3>
+                        <code class="mt-2 l-h-n">
+                            ocupado
+                        </code>
+                    </div>
+                    <i class="fal fa-table position-absolute pos-right pos-bottom opacity-15 mb-n1 mr-n1"
+                        style="font-size:6rem"></i>
+                </div>
+            </div>
+        @endforeach
+
     </div>
     <script>
         function openFormOrder(id) {
