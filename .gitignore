@@ -13,3 +13,5 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+/storage/framework/views/
+/storage/tenanttigers/app/public/rest_sale_note/
