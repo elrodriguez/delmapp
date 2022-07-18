@@ -26,5 +26,6 @@ return  [
     'charge'                    => 'Cobrar',
     'orders_receivable'         => 'Pedidos por Cobrar',
     'sales_notes'               => 'Notas de Venta',
-    'sale_note'               => 'Nota de Venta'
+    'sale_note'                 => 'Nota de Venta',
+    'deliveries'                => 'Deliverys'
 ];
