@@ -2,9 +2,11 @@
 
 namespace Modules\Sales\Http\Controllers;
 
+use App\Models\UserEstablishment;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
 
 class SalesController extends Controller
 {
@@ -17,63 +19,21 @@ class SalesController extends Controller
         return view('sales::index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
-    public function create()
+    public function establishments()
     {
-        return view('sales::create');
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     * @param Request $request
-     * @return Renderable
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function show($id)
-    {
-        return view('sales::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
-    public function edit($id)
-    {
-        return view('sales::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     * @param Request $request
-     * @param int $id
-     * @return Renderable
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     * @param int $id
-     * @return Renderable
-     */
-    public function destroy($id)
-    {
-        //
+        $establishments = UserEstablishment::join('set_establishments', 'establishment_id', 'set_establishments.id')
+            ->select(
+                'set_establishments.id',
+                'set_establishments.name',
+                'user_establishments.main'
+            )
+            ->where('user_establishments.user_id', Auth::id())
+            ->get();
+        if (count($establishments) > 0) {
+            return response()->json($establishments->toArray(), 200);
+        } else {
+            return response()->json([], 200);
+        }
     }
 }

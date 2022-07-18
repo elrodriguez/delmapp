@@ -23,7 +23,16 @@ class AuthController extends Controller
         if (Auth::attempt(array('username' => $request->username, 'password' => $request->password), $request->rememberme)) {
             $user = User::find(Auth::id())->first();
             if (Hash::check($request->password, $user->password)) {
-                $token = $user->createToken('Laravel Password Grant Client')->accessToken;
+
+                $tokenResult = $user->createToken('Laravel Password Grant Client');
+                $token = $tokenResult->token;
+
+                if ($request->rememberme) {
+                    $token->expires_at = Carbon::now()->addWeeks(1);
+                }
+
+                $token->save();
+
                 $url = @file_get_contents(asset('person/' . $user->person_id . '/' . $user->person_id . '.png'));
                 if ($url) {
                     $avatar = url('person/' . $user->person_id . '/' . $user->person_id . '.png');
@@ -41,7 +50,8 @@ class AuthController extends Controller
                             'rid' => ($user->first()->id == null ? '' : $user->roles()->first()->id)
                         ]
                     ],
-                    'token' => $token
+                    'token' => $tokenResult->accessToken,
+                    'expires_at' => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString()
                 ];
                 return response($response, 200);
             } else {
