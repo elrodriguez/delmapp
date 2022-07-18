@@ -104,7 +104,11 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalOrderReDetailsLabel">
                         @if ($table)
-                            Pedido Mesa: {{ $table['name'] }}
+                            @if ($n_tables > 1)
+                                Pedido Mesas: {{ $occupied_tables }}
+                            @else
+                                Pedido Mesa: {{ $table['name'] }}
+                            @endif
                         @else
                             Elejir mesa
                         @endif
@@ -122,10 +126,12 @@
                         <div class="col-12 col-sm-8 col-md-8 col-lg-5">
                             <label>Mesas</label>
                             <select id="retable_ids" name="retable_ids[]" multiple="multiple">
+
                                 @foreach ($xtables as $xtable)
                                     <option value="{{ $xtable->id }}">{{ $xtable->name }}</option>
                                 @endforeach
                             </select>
+
                         </div>
                         <div class="col-12 col-sm-8 col-md-8 col-lg-2">
                             @if ($this->order)
@@ -225,7 +231,8 @@
                                 class="btn btn-danger">{{ __('labels.cancel') }} Pedido</button>
                         @endif
                     @endif
-                    <button onclick="saveRestReOrder()" wire:target="saveOrder" type="button" class="btn btn-primary">
+                    <button onclick="saveRestReOrder()" wire:target="saveOrder" type="button"
+                        class="btn btn-primary">
                         <i class="fal fa-location-arrow mr-1"></i>Actualizar Pedido
                     </button>
                 </div>

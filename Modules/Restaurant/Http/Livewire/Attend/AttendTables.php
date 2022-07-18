@@ -15,6 +15,8 @@ class AttendTables extends Component
     public $floors = [];
     public $floor_id;
     public $tables = [];
+    public $desoccupied_tables = [];
+    public $occupied_tables = [];
     public $user_establishment;
 
     protected $listeners = ['getTablesRefresh' => 'getTables', 'setFreeTableAlert' => 'setFreeTable'];
@@ -42,6 +44,35 @@ class AttendTables extends Component
     {
         $this->floor_id = $this->floors[0]->id;
         $this->tables = RestTable::where('floor_id', $this->floor_id)->get();
+        $this->desoccupied_tables = RestTable::where([
+            'floor_id' => $this->floor_id,
+            'occupied' => false
+        ])->get();
+
+        foreach($this->desoccupied_tables as $des){
+            $des->shared = false; //agrego columna para igualar a las mesas compartidas
+        }
+
+        $orders = RestTableOrder::where('state', true)->orderBy('order_id')->get();
+        $joined_tables = [];
+        $temp = null;
+        $j = 0;
+
+        foreach ($orders as $key => $order) {
+            if ($temp != $order['order_id']) {
+                $temp = $order['order_id'];
+                $table = RestTable::where('id', $order['table_id'])->get()->first();
+                $joined_tables[$j] = $table;
+                $joined_tables[$j++]->shared = false;
+            } else {
+                $table = RestTable::where('id', $order['table_id'])->get()->first();
+                $joined_tables[--$j]->name .= " - " . $table->name;
+                $joined_tables[$j]->chairs += $table->chairs;
+                $joined_tables[$j++]->shared = true;
+            }
+        }
+        $this->occupied_tables = $joined_tables;
+
     }
 
     public function setFreeTable($id)

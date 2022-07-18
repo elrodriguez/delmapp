@@ -25,6 +25,7 @@ class AttendReOrder extends Component
     public $table = [];
     public $table_order;
     public $order;
+    public $order_id;
     public $table_id;
     public $categories = [];
     public $category_id = 0;
@@ -38,6 +39,8 @@ class AttendReOrder extends Component
     public $discount;
     public $total = 0;
     public $table_orders;
+    public $occupied_tables;
+    public $n_tables;
 
     public function mount()
     {
@@ -49,12 +52,27 @@ class AttendReOrder extends Component
         $this->recalculateTotalRe();
         $this->getCommands();
         $this->getItems();
+        $this->occupied_tables = $this->getOccupiedTables($this->order_id);
         if (count($this->table) > 0) {
             $this->xtables = RestTable::where('id', '<>', $this->table['id'])->where('occupied', false)->get();
         }
 
         $this->dispatchBrowserEvent('rest-reselect2', ['success' => true]);
         return view('restaurant::livewire.attend.attend-re-order');
+    }
+
+    public function getOccupiedTables($order_id){
+        $tables = RestTableOrder::where([
+            ['state', '=', '1'],
+            ['order_id', '=', $order_id]
+        ])->get();
+        $x="";
+        foreach($tables as $k => $table){
+            $x .= RestTable::where('id', $table->table_id)->get()->first()->name." - ";
+        }
+        $x= rtrim($x," - ");
+        $this->n_tables = count($tables);
+        return $x; //envía un string con los nombres de las mesas ocupadas en la orden
     }
 
     public function retableId($id)
@@ -67,6 +85,7 @@ class AttendReOrder extends Component
         ])->first();
 
         $this->order = RestOrder::where('id', $this->table_order->order_id)->first();
+        $this->order_id = $this->order->id;
 
         if ($this->order->state == 'X' || $this->order->state == 'Z') {
             $this->emit('setFreeTableAlert', $this->order->id);
@@ -78,10 +97,10 @@ class AttendReOrder extends Component
 
             $table_orders = RestTableOrder::where([
                 ['state', '=', '1'],
-                ['order_id', '=', $this->order->id],
-                ['table_id', '<>', $id]
+                ['order_id', '=', $this->order->id]
             ])->get();
             $xtable_orders = [];
+
             if (count($table_orders) > 0) {
                 foreach ($table_orders as $h => $table_order) {
                     $xtable_orders[$h] = $table_order->table_id;
