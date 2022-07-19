@@ -29,5 +29,6 @@ return  [
     'sale_note'                 => 'Nota de Venta',
     'deliveries'                => 'Deliverys',
     'pending_deliveries'        => 'Deliverys Pendientes',
-    'delivered_orders'          =>  'Ordenes Entregadas'
+    'delivered_orders'          =>  'Ordenes Entregadas',
+    'customer'                  => 'Cliente'
 ];
