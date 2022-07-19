@@ -96,7 +96,7 @@ $path[4] = array_key_exists(4, $path) > 0 ? $path[4] : '';
                         @can('restaurante_panel_delivery')
                             <li
                                 class="{{ $path[0] == 'restaurant' && $path[1] == 'panels' && $path[2] == 'tables' ? 'active' : '' }}">
-                                <a href="{{ route('restaurant_panels_tables') }}" title="@lang('restaurant::labels.deliveries')"
+                                <a href="{{ route('restaurant_panels_deliveries') }}" title="@lang('restaurant::labels.deliveries')"
                                     data-filter-tags="@lang('restaurant::labels.deliveries')">
                                     <span class="nav-link-text" data-i18n="nav.@lang('restaurant::labels.deliveries')">@lang('restaurant::labels.deliveries')</span>
                                 </a>
