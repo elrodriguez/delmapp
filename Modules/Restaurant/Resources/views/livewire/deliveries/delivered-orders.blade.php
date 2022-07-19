@@ -4,7 +4,7 @@
             <div class="card-header">D{{ $order->id }}</div>
             <div class="card-body pb-0 px-4">@lang('restaurant::labels.customer'): {{ $order->customer_person_name }}</div>
 
-            <div class="card-footer">footer</div>
+            <div class="card-footer">Fecha: {{ $order->created_at}}</div>
         </div>
     @endforeach
 </div>
