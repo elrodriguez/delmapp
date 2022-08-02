@@ -48,6 +48,7 @@ Route::middleware([
 
     Route::group(['prefix' => 'panels'], function () {
         Route::middleware(['middleware' => 'role_or_permission:restaurante_panel_atender'])->get('tables', 'AttendController@index')->name('restaurant_panels_tables');
+        Route::middleware(['middleware' => 'role_or_permission:restaurante_panel_delivery'])->get('deliveries', 'DeliveriesController@index')->name('restaurant_panels_deliveries');
         Route::middleware(['middleware' => 'role_or_permission:restaurante_panel_atender'])->get('tables/attend', 'AttendController@attend')->name('restaurant_panels_attend');
         Route::middleware(['middleware' => 'role_or_permission:restaurante_panel_pedidos'])->get('orders/list', 'OrdersController@index')->name('restaurant_panels_orders');
         Route::middleware(['middleware' => 'role_or_permission:restaurante_panel_cobrar'])->get('charge/list', 'ChargeController@index')->name('restaurant_panels_charge');

@@ -27,5 +27,8 @@ return  [
     'orders_receivable'         => 'Pedidos por Cobrar',
     'sales_notes'               => 'Notas de Venta',
     'sale_note'                 => 'Nota de Venta',
-    'deliveries'                => 'Deliverys'
+    'deliveries'                => 'Deliverys',
+    'pending_deliveries'        => 'Deliverys Pendientes',
+    'delivered_orders'          =>  'Ordenes Entregadas',
+    'customer'                  => 'Cliente'
 ];

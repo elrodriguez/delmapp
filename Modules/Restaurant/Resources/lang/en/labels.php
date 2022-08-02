@@ -26,6 +26,9 @@ return  [
     'charge'                    => 'Charge',
     'orders_receivable'         => 'Orders Receivable',
     'sales_notes'               => 'Sale Notes',
-    'sale_note'               => 'Sale Note',
-    'deliveries'               => 'Deliveries'
+    'sale_note'                 => 'Sale Note',
+    'deliveries'                => 'Deliveries',
+    'pending_deliveries'        => 'Pending Deliveries',
+    'delivered_orders'          => 'Delivered Orders',
+    'customer'                  => 'Customer'
 ];
