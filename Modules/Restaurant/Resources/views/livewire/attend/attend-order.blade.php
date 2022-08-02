@@ -21,11 +21,11 @@
                                     style="cursor: pointer">
                                     <td>
                                         @if ($command->image)
-                                            <img src="{{ url($command->image) }}" alt="comanda" width="80px"
+                                            <img src="{{ asset($command->image) }}" alt="comanda" width="80px"
                                                 class="img-thumbnail img-responsive rounded-circle"
                                                 style="width:5rem; height: 5rem;">
                                         @else
-                                            <img src="img/demo/authors/sunny.png" alt="comanda"
+                                            <img src="{{ url('logo/imagen-no-disponible.jpg') }}" alt="comanda"
                                                 class="img-thumbnail img-responsive rounded-circle"
                                                 style="width:5rem; height: 5rem;">
                                         @endif

@@ -121,7 +121,7 @@ class CommandsEdit extends Component
             $this->extension_photo = $this->image->extension();
             $image_name = $this->image->storeAs('commands', $this->command->id . '.' . $this->extension_photo, 'public');
             $this->command->update([
-                'image' => 'storage/' . $image_name
+                'image' => $image_name
             ]);
         }
 

@@ -56,6 +56,7 @@ class ModulePermissionsTableSeeder extends Seeder
         array_push($permissions, Permission::create(['name' => 'restaurante_panel', 'guard_name' => 'sanctum']));
         array_push($permissions, Permission::create(['name' => 'restaurante_panel_atender', 'guard_name' => 'sanctum']));
         array_push($permissions, Permission::create(['name' => 'restaurante_panel_delivery', 'guard_name' => 'sanctum']));
+        array_push($permissions, Permission::create(['name' => 'restaurante_panel_delivery_nuevo', 'guard_name' => 'sanctum']));
         array_push($permissions, Permission::create(['name' => 'restaurante_panel_pedidos', 'guard_name' => 'sanctum']));
         array_push($permissions, Permission::create(['name' => 'restaurante_panel_cobrar', 'guard_name' => 'sanctum']));
 

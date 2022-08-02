@@ -18,4 +18,12 @@ class AttendController extends Controller
     {
         return view('restaurant::attend.attend');
     }
+    public function deliveries()
+    {
+        return view('restaurant::attend.deliveries');
+    }
+    public function deliveriesCreate()
+    {
+        return view('restaurant::attend.deliveries_create');
+    }
 }

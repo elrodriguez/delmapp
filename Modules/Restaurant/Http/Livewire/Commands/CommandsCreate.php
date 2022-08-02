@@ -102,7 +102,7 @@ class CommandsCreate extends Component
             $this->extension_photo = $this->image->extension();
             $image_name = $this->image->storeAs('commands', $command->id . '.' . $this->extension_photo, 'public');
             $command->update([
-                'image' => 'storage/' . $image_name
+                'image' => $image_name
             ]);
         }
         $category_ids  = null;

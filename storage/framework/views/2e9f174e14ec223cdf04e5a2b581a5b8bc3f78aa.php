@@ -121,8 +121,8 @@ $path[4] = array_key_exists(4, $path) > 0 ? $path[4] : '';
                         <?php endif; ?>
                         <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('restaurante_panel_delivery')): ?>
                             <li
-                                class="<?php echo e($path[0] == 'restaurant' && $path[1] == 'panels' && $path[2] == 'tables' ? 'active' : ''); ?>">
-                                <a href="<?php echo e(route('restaurant_panels_tables')); ?>" title="<?php echo app('translator')->get('restaurant::labels.deliveries'); ?>"
+                                class="<?php echo e($path[0] == 'restaurant' && $path[1] == 'panels' && $path[2] == 'deliveries' ? 'active' : ''); ?>">
+                                <a href="<?php echo e(route('restaurant_panels_deliveries')); ?>" title="<?php echo app('translator')->get('restaurant::labels.deliveries'); ?>"
                                     data-filter-tags="<?php echo app('translator')->get('restaurant::labels.deliveries'); ?>">
                                     <span class="nav-link-text" data-i18n="nav.<?php echo app('translator')->get('restaurant::labels.deliveries'); ?>"><?php echo app('translator')->get('restaurant::labels.deliveries'); ?></span>
                                 </a>

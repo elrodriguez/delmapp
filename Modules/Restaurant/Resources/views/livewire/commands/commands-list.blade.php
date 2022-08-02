@@ -29,7 +29,7 @@
         @foreach ($commands as $command)
             <div class="card">
                 @if ($command->image)
-                    <img src="{{ url($command->image) }}" class="card-img-top" alt="Comanda" height="250px">
+                    <img src="{{ asset($command->image) }}" class="card-img-top" alt="Comanda" height="250px">
                 @endif
                 <div class="card-body">
                     <h4 class="card-title">{{ $command->description }}</h4>

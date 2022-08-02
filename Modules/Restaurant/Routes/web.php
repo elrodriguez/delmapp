@@ -1,4 +1,5 @@
 <?php
+
 use Stancl\Tenancy\Middleware\InitializeTenancyByDomain;
 use Stancl\Tenancy\Middleware\PreventAccessFromCentralDomains;
 /*
@@ -18,7 +19,7 @@ Route::middleware([
     'web',
     InitializeTenancyByDomain::class,
     PreventAccessFromCentralDomains::class,
-    ])->prefix('restaurant')->group(function () {
+])->prefix('restaurant')->group(function () {
 
     Route::get('dashboard', 'RestaurantController@index')->name('restaurant_dashboard');
     Route::get('notes/print/{external_id}/{format?}', 'ChargeController@printSaleNote');
@@ -51,5 +52,7 @@ Route::middleware([
         Route::middleware(['middleware' => 'role_or_permission:restaurante_panel_pedidos'])->get('orders/list', 'OrdersController@index')->name('restaurant_panels_orders');
         Route::middleware(['middleware' => 'role_or_permission:restaurante_panel_cobrar'])->get('charge/list', 'ChargeController@index')->name('restaurant_panels_charge');
         Route::middleware(['middleware' => 'role_or_permission:restaurante_panel_cobrar'])->get('charge/sale_note/{id}', 'ChargeController@sale_note')->name('restaurant_panels_charge_sale_note');
+        Route::middleware(['middleware' => 'role_or_permission:restaurante_panel_delivery'])->get('deliveries', 'AttendController@deliveries')->name('restaurant_panels_deliveries');
+        Route::middleware(['middleware' => 'role_or_permission:restaurante_panel_delivery_nuevo'])->get('deliveries/create', 'AttendController@deliveriesCreate')->name('restaurant_panels_deliveries_create');
     });
 });
