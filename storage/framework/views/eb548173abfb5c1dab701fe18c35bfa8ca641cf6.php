@@ -11,15 +11,15 @@
         <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('landlord.customer-create', [])->html();
-} elseif ($_instance->childHasBeenRendered('ngMWMW9')) {
-    $componentId = $_instance->getRenderedChildComponentId('ngMWMW9');
-    $componentTag = $_instance->getRenderedChildComponentTagName('ngMWMW9');
+} elseif ($_instance->childHasBeenRendered('k60uCpq')) {
+    $componentId = $_instance->getRenderedChildComponentId('k60uCpq');
+    $componentTag = $_instance->getRenderedChildComponentTagName('k60uCpq');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('ngMWMW9');
+    $_instance->preserveRenderedChild('k60uCpq');
 } else {
     $response = \Livewire\Livewire::mount('landlord.customer-create', []);
     $html = $response->html();
-    $_instance->logRenderedChild('ngMWMW9', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('k60uCpq', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>

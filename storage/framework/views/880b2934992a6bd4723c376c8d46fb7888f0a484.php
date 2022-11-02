@@ -228,15 +228,15 @@
             <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('landlord.nav', [])->html();
-} elseif ($_instance->childHasBeenRendered('8gmeQ05')) {
-    $componentId = $_instance->getRenderedChildComponentId('8gmeQ05');
-    $componentTag = $_instance->getRenderedChildComponentTagName('8gmeQ05');
+} elseif ($_instance->childHasBeenRendered('1hTMIC4')) {
+    $componentId = $_instance->getRenderedChildComponentId('1hTMIC4');
+    $componentTag = $_instance->getRenderedChildComponentTagName('1hTMIC4');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('8gmeQ05');
+    $_instance->preserveRenderedChild('1hTMIC4');
 } else {
     $response = \Livewire\Livewire::mount('landlord.nav', []);
     $html = $response->html();
-    $_instance->logRenderedChild('8gmeQ05', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('1hTMIC4', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?> 
@@ -275,26 +275,26 @@ echo $html;
     <?php echo \Livewire\Livewire::scripts(); ?>
 
     <!-- jQuery -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/jquery.min.js')); ?>" defer></script>
+    <script src="<?php echo e(url('themes/tutorio/vendor/jquery.min.js')); ?>" defer></script>
 
     <!-- Bootstrap -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/popper.min.js')); ?>" defer></script>
-    <script src="<?php echo e(asset('themes/tutorio/vendor/bootstrap.min.js')); ?>" defer></script>
+    <script src="<?php echo e(url('themes/tutorio/vendor/popper.min.js')); ?>" defer></script>
+    <script src="<?php echo e(url('themes/tutorio/vendor/bootstrap.min.js')); ?>" defer></script>
 
     <!-- Perfect Scrollbar -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/perfect-scrollbar.min.js')); ?>" defer></script>
+    <script src="<?php echo e(url('themes/tutorio/vendor/perfect-scrollbar.min.js')); ?>" defer></script>
 
     <!-- DOM Factory -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/dom-factory.js')); ?>" defer></script>
+    <script src="<?php echo e(url('themes/tutorio/vendor/dom-factory.js')); ?>" defer></script>
 
     <!-- MDK -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/material-design-kit.js')); ?>" defer></script>
+    <script src="<?php echo e(url('themes/tutorio/vendor/material-design-kit.js')); ?>" defer></script>
 
     <!-- Fix Footer -->
-    <script src="<?php echo e(asset('themes/tutorio/vendor/fix-footer.js')); ?>" defer></script>
+    <script src="<?php echo e(url('themes/tutorio/vendor/fix-footer.js')); ?>" defer></script>
 
     <!-- App JS -->
-    <script src="<?php echo e(asset('themes/tutorio/js/app.js')); ?>" defer></script>
+    <script src="<?php echo e(url('themes/tutorio/js/app.js')); ?>" defer></script>
 
 </body>
 
