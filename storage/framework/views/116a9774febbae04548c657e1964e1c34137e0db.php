@@ -25,15 +25,15 @@
         <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('login-form')->html();
-} elseif ($_instance->childHasBeenRendered('f9g1Mwx')) {
-    $componentId = $_instance->getRenderedChildComponentId('f9g1Mwx');
-    $componentTag = $_instance->getRenderedChildComponentTagName('f9g1Mwx');
+} elseif ($_instance->childHasBeenRendered('OSJUNqW')) {
+    $componentId = $_instance->getRenderedChildComponentId('OSJUNqW');
+    $componentTag = $_instance->getRenderedChildComponentTagName('OSJUNqW');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('f9g1Mwx');
+    $_instance->preserveRenderedChild('OSJUNqW');
 } else {
     $response = \Livewire\Livewire::mount('login-form');
     $html = $response->html();
-    $_instance->logRenderedChild('f9g1Mwx', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('OSJUNqW', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>

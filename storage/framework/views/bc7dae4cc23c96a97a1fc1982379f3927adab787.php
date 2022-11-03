@@ -43,15 +43,15 @@
     <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('landlord.login-form', [])->html();
-} elseif ($_instance->childHasBeenRendered('1J3OLhm')) {
-    $componentId = $_instance->getRenderedChildComponentId('1J3OLhm');
-    $componentTag = $_instance->getRenderedChildComponentTagName('1J3OLhm');
+} elseif ($_instance->childHasBeenRendered('zduzGtf')) {
+    $componentId = $_instance->getRenderedChildComponentId('zduzGtf');
+    $componentTag = $_instance->getRenderedChildComponentTagName('zduzGtf');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('1J3OLhm');
+    $_instance->preserveRenderedChild('zduzGtf');
 } else {
     $response = \Livewire\Livewire::mount('landlord.login-form', []);
     $html = $response->html();
-    $_instance->logRenderedChild('1J3OLhm', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('zduzGtf', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?> 

@@ -228,6 +228,7 @@
             <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('landlord.nav', [])->html();
+<<<<<<< HEAD
 } elseif ($_instance->childHasBeenRendered('tZy9iEW')) {
     $componentId = $_instance->getRenderedChildComponentId('tZy9iEW');
     $componentTag = $_instance->getRenderedChildComponentTagName('tZy9iEW');
@@ -237,6 +238,17 @@ if (! isset($_instance)) {
     $response = \Livewire\Livewire::mount('landlord.nav', []);
     $html = $response->html();
     $_instance->logRenderedChild('tZy9iEW', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+=======
+} elseif ($_instance->childHasBeenRendered('1hTMIC4')) {
+    $componentId = $_instance->getRenderedChildComponentId('1hTMIC4');
+    $componentTag = $_instance->getRenderedChildComponentTagName('1hTMIC4');
+    $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
+    $_instance->preserveRenderedChild('1hTMIC4');
+} else {
+    $response = \Livewire\Livewire::mount('landlord.nav', []);
+    $html = $response->html();
+    $_instance->logRenderedChild('1hTMIC4', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+>>>>>>> 8cd795c7301b9e2aa91ade50730054ae16295a4f
 }
 echo $html;
 ?> 
