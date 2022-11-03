@@ -14,6 +14,8 @@ use Modules\Restaurant\Entities\RestOrder;
 use Modules\Restaurant\Entities\RestOrderCommand;
 use App\Events\Restaurant\OrderCommand;
 use Illuminate\Support\Facades\Lang;
+use Modules\Restaurant\Entities\RestDeliveryMan;
+use Modules\Staff\Entities\StaEmployee;
 
 class DeliveriesCreate extends Component
 {
@@ -27,6 +29,7 @@ class DeliveriesCreate extends Component
     public $discount;
     public $total = 0;
     public $delivery_man;
+    public $employees;
 
     public function mount()
     {
@@ -38,7 +41,7 @@ class DeliveriesCreate extends Component
         $this->recalculateTotal();
         $this->getCommands();
         $this->getItems();
-
+        $this->getEmployee();
         return view('restaurant::livewire.attend.deliveries-create');
     }
 
@@ -140,11 +143,7 @@ class DeliveriesCreate extends Component
                 'details' => null
             ));
 
-            $this->table['order'] = $this->order_items;
             $this->total = $this->total + $price;
-            $this->table['total'] = $this->total;
-            session([$array_key => $this->table]);
-
             $this->dispatchBrowserEvent('restaurant-add-items-tray', ['success' => true]);
         }
     }
@@ -164,6 +163,10 @@ class DeliveriesCreate extends Component
 
     public function saveOrder()
     {
+        $this->validate([
+            'delivery_man' => 'required'
+        ]);
+
         if (count($this->order_items) > 0) {
 
             foreach ($this->order_items as $key => $val) {
@@ -173,26 +176,33 @@ class DeliveriesCreate extends Component
             }
 
             $order = RestOrder::create([
-                'waiter_person_id' => Auth::user()->person_id,
-                'customer_person_name' => $this->client,
-                'discount' => $this->discount,
-                'total' => $this->total
+                'waiter_person_id'      => Auth::user()->person_id,
+                'customer_person_name'  => $this->client,
+                'discount'              => $this->discount,
+                'order_type'            => 'D',
+                'total'                 => $this->total
             ]);
 
 
             foreach ($this->order_items as $val) {
                 RestOrderCommand::create([
-                    'order_id' => $order->id,
-                    'command_id' => $val['id'],
-                    'command_type' => $val['type'],
-                    'description' => $val['name'],
-                    'quantity' => $val['quantity'],
-                    'price' => $val['price'],
-                    'discount' => $val['discount'],
-                    'total' => $val['subtotal'],
-                    'details' => $val['details']
+                    'order_id'      => $order->id,
+                    'command_id'    => $val['id'],
+                    'command_type'  => $val['type'],
+                    'description'   => $val['name'],
+                    'quantity'      => $val['quantity'],
+                    'price'         => $val['price'],
+                    'discount'      => $val['discount'],
+                    'total'         => $val['subtotal'],
+                    'details'       => $val['details'],
+                    'command_local' => false
                 ]);
             }
+
+            RestDeliveryMan::create([
+                'person_id' => $this->delivery_man,
+                'order_id' => $order->id
+            ]);
 
             $this->clearForm();
 
@@ -221,5 +231,16 @@ class DeliveriesCreate extends Component
         $this->total = 0;
         $this->client = null;
         $this->order_items = [];
+        $this->delivery_man = null;
+    }
+
+    public function getEmployee()
+    {
+        $this->employees = StaEmployee::join('people', 'person_id', 'people.id')
+            ->select(
+                'people.id',
+                'people.full_name'
+            )
+            ->get();
     }
 }

@@ -16,7 +16,7 @@ class ItemsController extends Controller
 {
     public function searchItems(Request $request)
     {
-        $establishment_id = $request->input('est');
+        $establishment_id = $request->input('est') ? $request->input('est') : 1;
         $search = $request->input('qry');
 
         $warehouse_id = InvLocation::where('establishment_id', $establishment_id)->value('id');
@@ -103,11 +103,14 @@ class ItemsController extends Controller
             ->select(
                 'inv_item_prices.id',
                 'inv_unit_measures.name',
+                'inv_unit_measures.id AS measure_id',
                 'inv_item_prices.description',
                 'inv_item_prices.units',
                 'inv_item_prices.price',
-                'inv_item_prices.main'
+                'inv_item_prices.main',
+				DB::raw('0 AS active')
             )
+			
             ->where('item_id', $id)
             ->get();
         $data = [];

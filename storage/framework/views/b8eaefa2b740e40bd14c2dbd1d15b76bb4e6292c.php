@@ -69,7 +69,13 @@
                                 <td class="align-middle"><?php echo e($item->part_description); ?></td>
                                 <td class="align-middle"><?php echo e($item->patrimonial_code); ?></td>
                                 <td class="align-middle"><?php echo e($item->location_name); ?></td>
-                                <td class="align-middle"><?php echo e($item->state); ?></td>
+                                <td class="align-middle">
+                                    <?php if($item->state): ?>
+                                        <span class="badge badge-warning"><?php echo e(__('inventory::labels.active')); ?></span>
+                                    <?php else: ?>
+                                        <span class="badge badge-danger"><?php echo e(__('inventory::labels.inactive')); ?></span>
+                                    <?php endif; ?>
+                                </td>
                             </tr>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     <?php else: ?>

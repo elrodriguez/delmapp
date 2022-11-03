@@ -15,7 +15,7 @@ class CreateRestOrdersTable extends Migration
     {
         Schema::create('rest_orders', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('waiter_person_id');
+            $table->unsignedBigInteger('waiter_person_id')->nullable();
             $table->string('customer_person_name', 300)->nullable();
             $table->decimal('discount', 8, 2)->nullable();
             $table->decimal('total', 8, 2);

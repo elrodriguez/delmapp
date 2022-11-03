@@ -40,11 +40,12 @@ class InvItem extends Model
         'purchase_affectation_igv_type_id',
         'web_show',
         'barcode',
-        'item_code_gs1'
+        'item_code_gs1',
+        'size'
     ];
     public function images()
     {
-        return $this->hasMany(InvItemFile::class,'item_id');
+        return $this->hasMany(InvItemFile::class, 'item_id');
     }
     protected static function newFactory()
     {

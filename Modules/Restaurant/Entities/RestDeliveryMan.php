@@ -5,16 +5,17 @@ namespace Modules\Restaurant\Entities;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class RestOrder extends Model
+class RestDeliveryMan extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'waiter_person_id', 'customer_person_name', 'discount', 'total', 'state', 'order_type'
+        'person_id',
+        'order_id'
     ];
 
     protected static function newFactory()
     {
-        return \Modules\Restaurant\Database\factories\RestOrderFactory::new();
+        return \Modules\Restaurant\Database\factories\RestDeliveryManFactory::new();
     }
 }

@@ -3,6 +3,7 @@
 namespace Modules\Restaurant\Http\Livewire\Orders;
 
 use Livewire\Component;
+use Modules\Restaurant\Entities\RestDeliveryMan;
 use Modules\Restaurant\Entities\RestOrder;
 use Modules\Restaurant\Entities\RestOrderCommand;
 use Modules\Restaurant\Entities\RestTableOrder;
@@ -54,19 +55,20 @@ class OrdersList extends Component
 
         foreach ($orders as $k => $order) {
             $this->orders[$k] = [
-                'id' => $order->id,
-                'order_created_at' => $order->order_created_at,
-                'customer_person_name' => $order->customer_person_name,
-                'order_type' => $order->order_type,
-                'full_name' => $order->full_name,
-                'command_id' => $order->command_id,
-                'command_created_at' => $order->command_created_at,
-                'description' => $order->description,
-                'quantity' => $order->quantity,
-                'details' => $order->details,
-                'command_local' => $order->command_local,
-                'command_state' => $order->command_state,
-                'array_tables' => $this->getOrderTables($order->id)
+                'id'                    => $order->id,
+                'order_created_at'      => $order->order_created_at,
+                'customer_person_name'  => $order->customer_person_name,
+                'order_type'            => $order->order_type,
+                'full_name'             => $order->full_name,
+                'command_id'            => $order->command_id,
+                'command_created_at'    => $order->command_created_at,
+                'description'           => $order->description,
+                'quantity'              => $order->quantity,
+                'details'               => $order->details,
+                'command_local'         => $order->command_local,
+                'command_state'         => $order->command_state,
+                'array_tables'          => $this->getOrderTables($order->id),
+                'array_mens'            => $this->getDeliveryMan($order->id)
             ];
         }
     }
@@ -94,5 +96,19 @@ class OrdersList extends Component
             RestOrder::find($id)->update(['state' => 'T']);
             RestOrderCommand::where('order_id', $id)->update(['state' => 'S']);
         }
+    }
+    public function getDeliveryMan($id)
+    {
+        $mens  = RestDeliveryMan::join('people', 'person_id', 'people.id')
+            ->select(
+                'people.full_name'
+            )
+            ->where('order_id', $id)
+            ->get();
+        $data = [];
+        if (count($mens) > 0) {
+            $data = $mens->toArray();
+        }
+        return $data;
     }
 }

@@ -69,7 +69,13 @@
                                 <td class="align-middle">{{ $item->part_description }}</td>
                                 <td class="align-middle">{{ $item->patrimonial_code }}</td>
                                 <td class="align-middle">{{ $item->location_name }}</td>
-                                <td class="align-middle">{{ $item->state }}</td>
+                                <td class="align-middle">
+                                    @if($item->state)
+                                        <span class="badge badge-warning">{{ __('inventory::labels.active') }}</span>
+                                    @else
+                                        <span class="badge badge-danger">{{ __('inventory::labels.inactive') }}</span>
+                                    @endif
+                                </td>
                             </tr>
                         @endforeach
                     @else

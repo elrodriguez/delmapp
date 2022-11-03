@@ -28,5 +28,6 @@ Route::middleware([
         Route::post('products_search', 'ItemsController@searchItems');
         Route::get('products_prices/{id}', 'ItemsController@itemPrices');
         Route::get('establishments', 'SalesController@establishments');
+        Route::post('store', 'SalesController@saleValidate');
     });
 });

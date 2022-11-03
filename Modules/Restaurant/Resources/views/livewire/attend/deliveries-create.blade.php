@@ -103,9 +103,14 @@
                         </div>
                         <div class="col-12 col-sm-8 col-md-8 col-lg-6">
                             <label>Repartidor</label>
-                            <select id="delivery_man" name="delivery_man[]" multiple="multiple">
-                                
-                            </select>
+                            <div wire:ignore>
+                                <select id="delivery_man" name="delivery_man">
+                                    <option value="">{{ __('labels.to_select') }}</option>
+                                    @foreach ($employees as $employe)
+                                    <option value="{{ $employe->id }}">{{ $employe->full_name }}</option>                                   
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div>
@@ -117,7 +122,7 @@
                                 @foreach ($order_items as $i => $order_item)
                                     <tr class="{{ $c % 2 == 0 ? 'table-primary' : 'table-warning' }}">
                                         <td class="align-middle text-center">
-                                            <button wire:click="removeItems({{ $i }})"
+                                            <button wire:click="removeItems({{ $i }})" type="button"
                                                 class="btn btn-danger btn-icon waves-effect waves-themed">
                                                 <i class="fal fa-times"></i>
                                             </button>
@@ -170,12 +175,15 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary"
-                        data-dismiss="modal">{{ __('labels.close') }}</button>
+                    <button type="button" class="btn btn-secondary btn-lg"
+                        data-dismiss="modal">{{ __('labels.close') }}
+                    </button>
                     <button wire:click="removeAllItems" type="button"
-                        class="btn btn-danger">{{ __('labels.cancel') }} Pedido</button>
-                    <button onclick="saveRestOrder()" wire:target="saveOrder" type="button" class="btn btn-primary">
-                        <i class="fal fa-location-arrow mr-1"></i>Pedir
+                        class="btn btn-danger btn-lg">{{ __('labels.cancel') }} Pedido
+                    </button>
+                    <button type="button" class="btn btn-primary btn-lg waves-effect waves-themed" wire:loading.attr="disabled" onclick="saveRestOrder()">
+                        <span wire:loading wire:target="saveOrder" wire:loading.class="spinner-border spinner-border-sm" wire:loading.class.remove="fal fa-check" class="fal fa-check mr-2" role="status" aria-hidden="true"></span>
+                        <span>Pedir</span>
                     </button>
                 </div>
             </div>
@@ -191,10 +199,8 @@
                 className: "modal-alert",
                 closeButton: false,
                 callback: function() {
-                    @this.emit('getTablesRefresh');
-                    $('#table_ids').val(null).trigger('change');
-                    $('a[href="#tab_default-1"]').click();
                     $('#modalOrderDetails').modal('hide');
+                    $("#delivery_man").val('').trigger('change')
                 }
             });
 
@@ -202,32 +208,19 @@
                 'background-color': "{{ env('BOOTBOX_SUCCESS_COLOR') }}"
             });
         });
-        window.addEventListener('restaurant-active-orders', event => {
-            $('a[href="#tab_default-2"]').click();
-        });
-        window.addEventListener('restaurant-active-tables', event => {
-            $('a[href="#tab_default-1"]').click();
-        })
-        document.addEventListener('rest-select2', event => {
-            $('#table_ids').select2();
-        });
+
         document.addEventListener('livewire:load', function() {
-            $('#table_ids').select2();
+            $('#delivery_man').select2();
         });
 
         function saveRestOrder() {
-            let table_ids = $('#table_ids').val();
-            @this.set('table_ids', table_ids);
+            let delivery_mans = $('#delivery_man').val();
+            @this.set('delivery_man', delivery_mans);
             @this.saveOrder();
-        }
-
-        function returnTables() {
-            $('a[href="#tab_default-1"]').click();
         }
 
         window.addEventListener('restaurant-add-items-tray', event => {
             Command: toastr["success"]("Agregado correctamente")
-
             toastr.options = {
                 "closeButton": false,
                 "debug": false,

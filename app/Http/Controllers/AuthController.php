@@ -51,7 +51,8 @@ class AuthController extends Controller
                         ]
                     ],
                     'token' => $tokenResult->accessToken,
-                    'expires_at' => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString()
+                    'expires_in' => Carbon::parse($tokenResult->token->expires_in),
+                    'expires_at' => Carbon::parse($tokenResult->token->expires_at)
                 ];
                 return response($response, 200);
             } else {

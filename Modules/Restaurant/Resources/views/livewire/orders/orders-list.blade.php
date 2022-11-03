@@ -123,6 +123,7 @@
                                     </div>
                                 </div>
                                 <div class="card-footer">
+                                @if(count($order['array_tables'])>0)
                                     @foreach ($order['array_tables'] as $array_table)
                                         <div class="position-relative js-waves-off" style="width: 55px;">
                                             <img
@@ -131,7 +132,18 @@
                                                 class="badge border border-light rounded-pill bg-success-700 position-absolute pos-bottom pos-right">{{ $array_table['name'] }}</span>
                                         </div>
                                     @endforeach
+                                  @elseif($order['order_type'] == 'D')
+                                  <div class="position-relative js-waves-off" style="width: 55px;">
+                                    <img
+                                    src="{{ url('themes/smart-admin/img/icon-png/delivery.png') }}">
+                                    
                                 </div>
+                                    @foreach ($order['array_mens'] as $array_men)
+                                        
+                                        <span
+                                                class="badge border border-light  bg-success-700">{{ $array_men['full_name'] }}</span>
+                                    @endforeach
+                                @endif
                             </div>
                             @php
                                 $order_id = $order['id'];
