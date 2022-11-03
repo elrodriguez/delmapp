@@ -7,7 +7,7 @@
                         <label class="form-label" for="category_id_new">@lang('restaurant::labels.categories')
                         </label>
                         <div wire:ignore>
-                            <input type="text" id="justAnotherInputBox" placeholder="Escriba para filtrar"
+                            <input type="text" id="justAnotherInputBox" placeholder="Escriba para filtrar" readonly
                                 autocomplete="off" />
                         </div>
                         @error('category_id_new')
@@ -15,7 +15,7 @@
                         @enderror
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label class="form-label" for="price">@lang('labels.code') <span
+                        <label class="form-label" for="code">@lang('labels.code') <span
                                 class="text-danger">*</span> </label>
                         <input wire:model.defer="internal_id" type="text" class="form-control" id="code" required="" readonly>
                         @error('internal_id')
@@ -49,9 +49,9 @@
                 </div>
                 <div class="form-row" style="float: right;">
                     <div class="col-md-2 mb-3">
-                        <label class="form-label" for="amount_to_enter">@lang('labels.amount_to_enter') <span
+                        <label class="form-label" for="amount_to_discard">@lang('labels.amount_to_discard') <span
                                 class="text-danger">*</span> </label>
-                        <input wire:model="amount_to_enter" type="text" class="form-control" id="stock" required="" style="min-width: 6rem">
+                        <input wire:model="amount_to_discard" type="text" class="form-control" id="stock" required="" style="min-width: 6rem">
                         @error('stock')
                             <div class="invalid-feedback-2">{{ $message }}</div>
                         @enderror

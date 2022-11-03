@@ -48,7 +48,7 @@
                     </a>
                     <a href="#" class="card-link">{{ __('labels.delete') }}</a>
                     <a href="{{ route('restaurant_commands_add_stocks', $command->id) }}" class="card-link">{{ __('labels.add_stocks') }}</a>
-                    <a href="#" class="card-link">{{ __('labels.discard_stocks') }}</a>
+                    <a href="{{ route('restaurant_commands_discard_stocks', $command->id) }}" class="card-link">{{ __('labels.discard_stocks') }}</a>
 
                 </div>
             </div>

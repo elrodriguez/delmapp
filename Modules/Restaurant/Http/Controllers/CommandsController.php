@@ -41,4 +41,9 @@ class CommandsController extends Controller
     {
         return view('restaurant::commands.add_stocks')->with('id', $id);
     }
+
+    public function discard_stocks($id)
+    {
+        return view('restaurant::commands.discard_stocks')->with('id', $id);
+    }
 }

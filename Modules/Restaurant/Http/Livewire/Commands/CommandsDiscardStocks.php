@@ -7,7 +7,7 @@ use Modules\Restaurant\Entities\RestCategoryCommand;
 use Modules\Restaurant\Entities\RestComCatDetail;
 use Modules\Restaurant\Entities\RestCommand;
 
-class CommandsAddStocks extends Component
+class CommandsDiscardStocks extends Component
 {
 
     public $category_id_old = [];
@@ -41,7 +41,7 @@ class CommandsAddStocks extends Component
 
     public function render()
     {
-        return view('restaurant::livewire.commands.commands-add-stocks');
+        return view('restaurant::livewire.commands.commands-discard-stocks');
     }
 
     public function getCategories()
@@ -82,5 +82,4 @@ class CommandsAddStocks extends Component
 
         return $data;
     }
-
 }

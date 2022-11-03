@@ -41,6 +41,7 @@ Route::middleware([
         Route::middleware(['middleware' => 'role_or_permission:restaurante_administracion_comandas_nuevo'])->get('commands/create', 'CommandsController@create')->name('restaurant_commands_create');
         Route::middleware(['middleware' => 'role_or_permission:restaurante_administracion_comandas_editar'])->get('commands/edit/{id}', 'CommandsController@edit')->name('restaurant_commands_edit');
         Route::middleware(['middleware' => 'role_or_permission:restaurante_administracion_comandas_editar'])->get('commands/add_stocks/{id}', 'CommandsController@add_stocks')->name('restaurant_commands_add_stocks');
+        Route::middleware(['middleware' => 'role_or_permission:restaurante_administracion_comandas_editar'])->get('commands/discard_stocks/{id}', 'CommandsController@discard_stocks')->name('restaurant_commands_discard_stocks');
 
         Route::middleware(['middleware' => 'role_or_permission:restaurante_administracion_pisos'])->get('floors/list', 'FloorsController@index')->name('restaurant_floors_list');
         Route::middleware(['middleware' => 'role_or_permission:restaurante_administracion_pisos_nuevo'])->get('floors/create', 'FloorsController@create')->name('restaurant_floors_create');
