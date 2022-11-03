@@ -36,4 +36,9 @@ class CommandsController extends Controller
     {
         return view('restaurant::commands.edit')->with('id', $id);
     }
+
+    public function add_stocks($id)
+    {
+        return view('restaurant::commands.add_stocks')->with('id', $id);
+    }
 }
