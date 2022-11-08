@@ -2,10 +2,14 @@
 
 namespace Modules\Restaurant\Http\Livewire\Commands;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Lang;
 use Livewire\Component;
 use Modules\Restaurant\Entities\RestCategoryCommand;
 use Modules\Restaurant\Entities\RestComCatDetail;
 use Modules\Restaurant\Entities\RestCommand;
+use Modules\Restaurant\Entities\RestKardex;
+use Modules\Restaurant\Entities\RestPreparationOrders;
 
 class CommandsAddStocks extends Component
 {
@@ -17,9 +21,14 @@ class CommandsAddStocks extends Component
     public $stock;
     public $internal_id;
     public $description;
+    public $amount_to_enter;
+    public $command_id;
+    public $description_stock;
 
     public function mount($command_id)
     {
+        $this->command_id = $command_id;
+
         $this->categories = $this->getCategories();
 
         $this->command = RestCommand::find($command_id);
@@ -83,4 +92,29 @@ class CommandsAddStocks extends Component
         return $data;
     }
 
+    public function saveStock()
+    {
+        $this->validate(['amount_to_enter' => 'required|numeric']);
+
+        $enter = RestPreparationOrders::create([
+            'command_id' => $this->command_id,
+            'responsable_id' => Auth::user()->person_id,
+            'quantity' => $this->amount_to_enter,
+            'description' => $this->description_stock
+        ]);
+
+        RestKardex::create([
+            'command_id' => $this->command_id,
+            'quantity' => $this->amount_to_enter,
+            'movement_type_id' => $enter->id,
+            'state' => true,
+            'description' => 'Ingreso desde cocina',
+            'movement_type_entity' => RestPreparationOrders::class
+        ]);
+
+        $this->command->increment('stock', $this->amount_to_enter);
+        $this->amount_to_enter = null;
+
+        $this->dispatchBrowserEvent('set-command-stock-save', ['msg' => Lang::get('labels.successfully_registered')]);
+    }
 }

@@ -43,13 +43,20 @@
                     </dl>
                 </div>
                 <div class="card-body">
-                    <a href="{{ route('restaurant_commands_edit', $command->id) }}"
-                        class="card-link">{{ __('labels.edit') }}
-                    </a>
-                    <a href="#" class="card-link">{{ __('labels.delete') }}</a>
-                    <a href="{{ route('restaurant_commands_add_stocks', $command->id) }}" class="card-link">{{ __('labels.add_stocks') }}</a>
-                    <a href="{{ route('restaurant_commands_discard_stocks', $command->id) }}" class="card-link">{{ __('labels.discard_stocks') }}</a>
-
+                    <div class="btn-group btn-group-sm">
+                        <a href="{{ route('restaurant_commands_edit', $command->id) }}" class="btn btn-secondary waves-effect waves-themed" title="{{ __('labels.edit') }}">
+                            <i class="fal fa-pencil-alt"></i>
+                        </a>
+                        <a href="{{ route('restaurant_commands_add_stocks', $command->id) }}" class="btn btn-secondary waves-effect waves-themed" title="{{ __('restaurant::labels.add_stocks') }}">
+                            <i class="fal fa-plus"></i>
+                        </a>
+                        <a href="{{ route('restaurant_commands_discard_stocks', $command->id) }}" class="btn btn-secondary waves-effect waves-themed" title="{{ __('restaurant::labels.discard_stocks') }}">
+                            <i class="fal fa-minus"></i>
+                        </a>
+                        <a href="#" class="btn btn-secondary waves-effect waves-themed" title="{{ __('labels.delete') }}">
+                            <i class="fal fa-trash-alt"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
         @endforeach

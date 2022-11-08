@@ -10,9 +10,10 @@ class RestDiscardOrders extends Model
     use HasFactory;
 
     protected $fillable = [
-        'kardex_id',
+        'command_id',
         'responsable_id',
-        'quantity'
+        'quantity',
+        'description'
     ];
 
     protected static function newFactory()

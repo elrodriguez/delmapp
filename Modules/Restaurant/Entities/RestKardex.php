@@ -13,6 +13,7 @@ class RestKardex extends Model
         'command_id',
         'quantity',
         'movement_type_id',
+        'movement_type_entity',
         'state',
         'description'
     ];

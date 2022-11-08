@@ -30,5 +30,9 @@ return  [
     'deliveries'                => 'Deliverys',
     'pending_deliveries'        => 'Deliverys Pendientes',
     'delivered_orders'          =>  'Ordenes Entregadas',
-    'customer'                  => 'Cliente'
+    'customer'                  => 'Cliente',
+    'stock_available'           => 'Stock Disponible',
+    'amount_to_enter'           => 'Cantidad a Ingresar',
+    'add_stocks'                => 'Añadir Existencias',
+    'discard_stocks'            => 'Descartar Existencias'
 ];

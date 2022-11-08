@@ -30,5 +30,9 @@ return  [
     'deliveries'                => 'Deliveries',
     'pending_deliveries'        => 'Pending Deliveries',
     'delivered_orders'          => 'Delivered Orders',
-    'customer'                  => 'Customer'
+    'customer'                  => 'Customer',
+    'stock_available'           => 'Stock Available',
+    'amount_to_enter'           => 'Amount to Enter',
+    'add_stocks'                => 'Add Stocks',
+    'discard_stocks'            => 'Discard Stock'
 ];
