@@ -7,7 +7,7 @@
                         <label class="form-label" for="category_id_new">@lang('restaurant::labels.categories')
                         </label>
                         <div wire:ignore>
-                            <input type="text" id="justAnotherInputBox" placeholder="Escriba para filtrar" readonly
+                            <input type="text" disabled id="justAnotherInputBox" placeholder="Escriba para filtrar" readonly
                                 autocomplete="off" />
                         </div>
                         @error('category_id_new')
@@ -47,12 +47,20 @@
                         @enderror
                     </div>
                 </div>
-                <div class="form-row" style="float: right;">
+                <div class="form-row">
                     <div class="col-md-2 mb-3">
-                        <label class="form-label" for="amount_to_discard">@lang('labels.amount_to_discard') <span
+                        <label class="form-label" for="amount_to_discard">@lang('restaurant::labels.amount_to_discard') <span
                                 class="text-danger">*</span> </label>
-                        <input wire:model="amount_to_discard" type="text" class="form-control" id="stock" required="" style="min-width: 6rem">
-                        @error('stock')
+                        <input wire:model="amount_to_discard" type="text" class="form-control" id="amount_to_discard" required="" >
+                        @error('amount_to_enter')
+                            <div class="invalid-feedback-2">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-md-8 mb-3">
+                        <label class="form-label" for="description_stock">@lang('labels.description') <span
+                                class="text-danger">*</span> </label>
+                        <input wire:model="description_stock" type="text" class="form-control" id="description_stock" required="" >
+                        @error('description_stock')
                             <div class="invalid-feedback-2">{{ $message }}</div>
                         @enderror
                     </div>
@@ -62,20 +70,24 @@
         <div class="card-footer d-flex flex-row align-items-center">
             <a href="{{ route('restaurant_commands_list') }}" type="button"
                 class="btn btn-secondary waves-effect waves-themed">{{ __('labels.list') }}</a>
-            <button onclick="saveRestCommand()" wire:target="saveCommand" wire:loading.attr="disabled" type="button"
-                class="btn btn-info ml-auto waves-effect waves-themed">{{ __('labels.btn_add_stock') }}</button>
+            <button wire:click="saveStock" wire:target="saveStock" wire:loading.attr="disabled" type="button" id="saveStock"
+                class="btn btn-info ml-auto waves-effect waves-themed">{{ __('labels.save') }}</button>
         </div>
     </div>
     <script type="text/javascript">
         var comboTree2 = null;
-        document.addEventListener('set-command-save', event => {
+        document.addEventListener('set-command-stock-save', event => {
             initApp.playSound('{{ url('themes/smart-admin/media/sound') }}', 'voice_on')
             let box = bootbox.alert({
                 title: "<i class='{{ env('BOOTBOX_SUCCESS_ICON') }} text-warning mr-2'></i> <span class='text-warning fw-500'>Éxito!</span>",
                 message: "<span><strong>Excelente... </strong>" + event.detail.msg + "</span>",
                 centerVertical: true,
                 className: "modal-alert",
-                closeButton: false
+                closeButton: false,
+                callback: function (){
+                    document.getElementById('saveStock').disabled = true;
+                    @this.back();
+                }
             });
 
             box.find('.modal-content').css({

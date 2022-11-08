@@ -34,5 +34,6 @@ return  [
     'stock_available'           => 'Stock Available',
     'amount_to_enter'           => 'Amount to Enter',
     'add_stocks'                => 'Add Stocks',
-    'discard_stocks'            => 'Discard Stock'
+    'discard_stocks'            => 'Discard Stock',
+    'amount_to_discard'         => 'Amount to discard',
 ];

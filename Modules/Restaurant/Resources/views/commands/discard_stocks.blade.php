@@ -18,7 +18,7 @@
         </a>
     </li>
     <li class="breadcrumb-item active">
-        {{ __('labels.discard_stocks') }}
+        {{ __('restaurant::labels.discard_stocks') }}
     </li>
     <li class="position-absolute pos-top pos-right d-none d-sm-block">
         <x-js-get-date></x-js-get-date>
@@ -29,11 +29,11 @@
         <i class="subheader-icon fal fa-burger-soda"></i>
         {{ __('restaurant::labels.commands') }}
         <sup class='badge badge-primary fw-500'>
-            {{ __('labels.discard_stocks') }}
+            {{ __('restaurant::labels.discard_stocks') }}
         </sup>
     </h1>
     <div class="subheader-block">
-        {{ __('labels.discard_stocks') }}
+        {{ __('restaurant::labels.discard_stocks') }}
     </div>
 @endsection
 @section('content')
