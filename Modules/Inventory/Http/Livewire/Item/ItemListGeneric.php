@@ -205,24 +205,13 @@ class ItemListGeneric extends Component
         // set font
         $pdf->SetFont('helvetica', '', 10);
 
-        // define barcode style
         $style = array(
-            'position' => '',
-            'align' => 'C',
-            'stretch' => false,
-            'fitwidth' => true,
-            'cellfitalign' => '',
             'border' => false,
-            'hpadding' => 'auto',
-            'vpadding' => 'auto',
+            'padding' => 'auto',
             'fgcolor' => array(0, 0, 0),
-            'bgcolor' => false, //array(255,255,255),
-            'text' => true,
-            'font' => 'helvetica',
+            'bgcolor' => false,
             'fontsize' => 12,
-            'stretchtext' => 4
         );
-
 
         $i = 0;
 
@@ -241,15 +230,14 @@ class ItemListGeneric extends Component
             ];
 
             $pdf->AddPage();
-            // $pdf->Cell(0, 0, 'C: ' . $itms_print->internal_id, 0, 1);
-            // $pdf->Cell(0, 0, 'T: ' . intval($itms_print->size), 0, 1);
-            $pdf->MultiCell(35, 0, 'P: ' . $itms_print->sale_price, 0, 'L', false, 1, 1, 0, false, 0, false, false, 0, 'T', false);
-            $pdf->write1DBarcode($itms_print->internal_id . '-' . intval($itms_print->size), 'C39', 0, 5, 35, 20, 0.4, $style, 'N');
 
-            // $pdf->MultiCell(70, 3, 'C: ' . $itms_print->internal_id, 0, 'L', false, 1, 125, 10, false, 0, false, false, 0, 'T', false);
-            // $pdf->MultiCell(70, 3, 'T: ' . intval($itms_print->size), 0, 'L', false, 1, 125, 15, false, 0, false, false, 0, 'T', false);
-            $pdf->MultiCell(35, 0, 'P: ' . $itms_print->sale_price, 0, 'L', false, 1, 38, 0, false, 0, false, false, 0, 'T', false);
-            $pdf->write1DBarcode($itms_print->internal_id . '-' . intval($itms_print->size), 'C39', 38, 5, 35, 20, 0.4, $style, 'N');
+            $pdf->MultiCell(35, 0, 'P: ' . $itms_print->sale_price, 0, 'L', false, 1, 10, 0, false, 0, false, false, 0, 'T', false);
+            //$pdf->write1DBarcode($itms_print->internal_id . intval($itms_print->size), 'C128A', 0, 5, 35, 20, 0.4, $style, 'N');
+            $pdf->write2DBarcode($itms_print->internal_id . intval($itms_print->size), 'QRCODE', 10, 3, 20, 20, $style, 'N');
+
+            $pdf->MultiCell(35, 0, 'P: ' . $itms_print->sale_price, 0, 'L', false, 1, 45, 0, false, 0, false, false, 0, 'T', false);
+            //$pdf->write1DBarcode($itms_print->internal_id . intval($itms_print->size), 'C128A', 38, 5, 35, 20, 0.4, $style, 'N');
+            $pdf->write2DBarcode($itms_print->internal_id . intval($itms_print->size), 'QRCODE', 45, 3, 20, 20, $style, 'N');
 
             $pdf->Ln();
             // $i = $i + 20;

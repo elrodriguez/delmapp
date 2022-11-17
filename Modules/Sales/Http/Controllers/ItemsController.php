@@ -17,6 +17,7 @@ class ItemsController extends Controller
     public function searchItems(Request $request)
     {
         $establishment_id = $request->input('est') ? $request->input('est') : 1;
+
         $search = $request->input('qry');
 
         $warehouse_id = InvLocation::where('establishment_id', $establishment_id)->value('id');
@@ -45,12 +46,13 @@ class ItemsController extends Controller
             ->where('inv_assets.location_id', $warehouse_id)
             ->where(function ($query) use ($search) {
                 $query->where('inv_assets.patrimonial_code', '=', $search)
+                    ->orWhere(DB::raw("CONCAT(inv_items.internal_id, FLOOR(inv_items.size))"), '=', $search)
                     ->orWhere(DB::raw("REPLACE(inv_items.name, ' ', '')"), 'like', "%" . str_replace(' ', '', $search) . "%");
             })
             ->orderBy('inv_items.name')
-            ->limit(100)
+            ->limit(20)
             ->get();
-
+        //dd($items);
         $data = [];
         $value_icbper = Parameter::where('id_parameter', 'PRT006ICP')->value('value_default');
         $igv = (int) Parameter::where('id_parameter', 'PRT002IGV')->value('value_default');
@@ -108,9 +110,9 @@ class ItemsController extends Controller
                 'inv_item_prices.units',
                 'inv_item_prices.price',
                 'inv_item_prices.main',
-				DB::raw('0 AS active')
+                DB::raw('0 AS active')
             )
-			
+
             ->where('item_id', $id)
             ->get();
         $data = [];
