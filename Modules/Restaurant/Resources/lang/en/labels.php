@@ -20,7 +20,7 @@ return  [
     'fullscreen'                => 'Fullscreen',
     'waiter'                    => 'Waiter',
     'order'                     => 'Order',
-    'list_orders'                     => 'Orders',
+    'list_orders'               => 'Orders',
     'local'                     => 'Local',
     'to_carry_out'              => 'To carry out',
     'charge'                    => 'Charge',

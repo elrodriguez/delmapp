@@ -112,7 +112,8 @@ class CommandsAddStocks extends Component
             'movement_type_entity' => RestPreparationOrders::class
         ]);
 
-        $this->command->increment('stock', $this->amount_to_enter);
+        $this->command->decrement('stock', $this->amount_to_enter);
+
         $this->amount_to_enter = null;
 
         $this->dispatchBrowserEvent('set-command-stock-save', ['msg' => Lang::get('labels.successfully_registered')]);

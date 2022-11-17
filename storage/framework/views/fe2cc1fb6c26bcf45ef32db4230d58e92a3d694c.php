@@ -30,6 +30,11 @@
                     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('inventario_items_importar')): ?>
                         <button onclick="openModalImport()" type="button" class="btn btn-warning waves-effect waves-themed"><?php echo e(__('labels.to_import')); ?></button>
                     <?php endif; ?>
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('inventario_items_imprimir_etiketas')): ?>
+                        <button wire:click="printLabels" class="btn btn-info waves-effect waves-themed" >
+                            <?php echo app('translator')->get('inventory::labels.lbl_print_label'); ?>
+                        </button>
+                    <?php endif; ?>
                     <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('inventario_items_nuevo')): ?>
                         <a href="<?php echo e(route('inventory_item_create')); ?>" class="btn btn-success waves-effect waves-themed" type="button"><?php echo app('translator')->get('inventory::labels.btn_new'); ?></a>
                     <?php endif; ?>
@@ -41,8 +46,11 @@
             <table class="table m-0">
                 <thead>
                 <tr>
-                    <th class="text-center">#</th>
+                    <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('inventario_items_imprimir_etiketas')): ?>
+                        <th class="text-center"><?php echo e(__('labels.to_print')); ?></th>
+                    <?php endif; ?>
                     <th class="text-center"><?php echo app('translator')->get('inventory::labels.lbl_actions'); ?></th>
+                    <th><?php echo app('translator')->get('labels.code'); ?></th>
                     <th><?php echo app('translator')->get('inventory::labels.name'); ?></th>
                     <th><?php echo app('translator')->get('inventory::labels.category'); ?></th>
                     <th><?php echo app('translator')->get('inventory::labels.description'); ?></th>
@@ -59,7 +67,14 @@
                     <?php if(count($items) > 0): ?>
                         <?php $__currentLoopData = $items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $key => $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                             <tr>
-                                <td class="text-center align-middle"><?php echo e($key + 1); ?></td>
+                                <?php if (app(\Illuminate\Contracts\Auth\Access\Gate::class)->check('inventario_items_imprimir_etiketas')): ?>
+                                    <td class="text-center tdw-50 align-middle">
+                                        <div class="custom-control custom-checkbox">
+                                            <input wire:model.defer="item_ids.<?php echo e($key); ?>" value="<?php echo e($item->id); ?>" type="checkbox" class="custom-control-input" id="defaultChecked<?php echo e($key); ?>">
+                                            <label class="custom-control-label" for="defaultChecked<?php echo e($key); ?>"></label>
+                                        </div>
+                                    </td>
+                                <?php endif; ?>
                                 <td class="text-center tdw-50 align-middle">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-secondary rounded-circle btn-icon waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -86,6 +101,7 @@
                                         </div>
                                     </div>
                                 </td>
+                                <td class="align-middle"><?php echo e($item->internal_id); ?></td>
                                 <td class="align-middle"><?php echo e($item->name); ?></td>
                                 <td class="align-middle"><?php echo e($item->name_category); ?></td>
                                 <td class="align-middle"><?php echo e($item->description); ?></td>
@@ -295,7 +311,29 @@ unset($__errorArgs, $__bag); ?>
         </div>
         </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="modalPrintLabels" tabindex="-1" aria-labelledby="modalPrintLabelsLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalPrintLabelsLabel">
+                        <?php echo e(__('inventory::labels.lbl_print_label')); ?>
 
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script type="text/javascript">
         function confirmDelete(id){
             initApp.playSound('<?php echo e(url("themes/smart-admin/media/sound")); ?>', 'bigbox')
@@ -399,6 +437,9 @@ unset($__errorArgs, $__bag); ?>
                 });
                 box.find('.modal-content').css({'background-color': 'rgba(122, 85, 7, 0.5)'});
             }
+        });
+        document.addEventListener('set-item-print-labels', event => {
+            $('#modalPrintLabels').modal('show');
         });
     </script>
 </div>

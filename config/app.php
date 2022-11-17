@@ -168,7 +168,6 @@ return [
         Laraveles\Spanish\SpanishServiceProvider::class,
         Spatie\Permission\PermissionServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
-        
         /*
          * Application Service Providers...
          */
@@ -179,8 +178,9 @@ return [
         App\Providers\RouteServiceProvider::class,
         Elibyy\TCPDF\ServiceProvider::class,
         Rap2hpoutre\LaravelLogViewer\LaravelLogViewerServiceProvider::class,
-        App\Providers\TenancyServiceProvider::class, 
+        App\Providers\TenancyServiceProvider::class,
         Elrod\UserActivity\UserActivityServiceProvider::class,
+
     ],
 
     /*

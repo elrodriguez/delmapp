@@ -2,6 +2,7 @@
 
 namespace Modules\Inventory\Http\Livewire\Item;
 
+use Elibyy\TCPDF\TCPDF;
 use Livewire\Component;
 use Modules\Inventory\Entities\InvItem;
 use Modules\Inventory\Imports\ItemsImportGeneric;
@@ -13,6 +14,7 @@ use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 use Modules\Inventory\Entities\InvItemPrice;
 use Modules\Inventory\Entities\InvUnitMeasure;
+use PDF;
 
 class ItemListGeneric extends Component
 {
@@ -29,6 +31,7 @@ class ItemListGeneric extends Component
     public $main;
     public $xitem;
     public $xprices = [];
+    public $item_ids = [];
 
     use WithFileUploads;
     use WithPagination;
@@ -57,6 +60,7 @@ class ItemListGeneric extends Component
             ->leftJoin('inv_brands', 'brand_id', 'inv_brands.id')
             ->leftJoin('inv_unit_measures', 'unit_measure_id', 'inv_unit_measures.id')
             ->select(
+                'inv_items.internal_id',
                 'inv_items.id',
                 'inv_items.name',
                 'inv_items.description',
@@ -183,5 +187,80 @@ class ItemListGeneric extends Component
         }
         $this->getItemPrices($this->xitem->id);
         $this->dispatchBrowserEvent('set-item-price-delete', ['res' => $res]);
+    }
+
+    public function printLabels()
+    {
+
+        $itms_prints = [];
+
+
+        $filename = 'tickets.pdf';
+        $medidas = array(72, 25); // Ajustar aqui segun los milimetros necesarios;
+        $pdf = new TCPDF('P', 'mm', $medidas, true, 'UTF-8', false);
+        $pdf->SetTitle('Hello World');
+
+        $pdf->setBarcode(date('Y-m-d H:i:s'));
+
+        // set font
+        $pdf->SetFont('helvetica', '', 10);
+
+        // define barcode style
+        $style = array(
+            'position' => '',
+            'align' => 'C',
+            'stretch' => false,
+            'fitwidth' => true,
+            'cellfitalign' => '',
+            'border' => false,
+            'hpadding' => 'auto',
+            'vpadding' => 'auto',
+            'fgcolor' => array(0, 0, 0),
+            'bgcolor' => false, //array(255,255,255),
+            'text' => true,
+            'font' => 'helvetica',
+            'fontsize' => 12,
+            'stretchtext' => 4
+        );
+
+
+        $i = 0;
+
+        foreach ($this->item_ids as $k) {
+            $itms_print = InvItem::select(
+                'internal_id',
+                'sale_price',
+                'size'
+            )
+                ->where('id', $k)
+                ->first();
+            $itms_prints[$i] = [
+                'internal_id' => $itms_print->internal_id,
+                'size' => $itms_print->size,
+                'sale_price' => $itms_print->sale_price
+            ];
+
+            $pdf->AddPage();
+            // $pdf->Cell(0, 0, 'C: ' . $itms_print->internal_id, 0, 1);
+            // $pdf->Cell(0, 0, 'T: ' . intval($itms_print->size), 0, 1);
+            $pdf->MultiCell(35, 0, 'P: ' . $itms_print->sale_price, 0, 'L', false, 1, 1, 0, false, 0, false, false, 0, 'T', false);
+            $pdf->write1DBarcode($itms_print->internal_id . '-' . intval($itms_print->size), 'C39', 0, 5, 35, 20, 0.4, $style, 'N');
+
+            // $pdf->MultiCell(70, 3, 'C: ' . $itms_print->internal_id, 0, 'L', false, 1, 125, 10, false, 0, false, false, 0, 'T', false);
+            // $pdf->MultiCell(70, 3, 'T: ' . intval($itms_print->size), 0, 'L', false, 1, 125, 15, false, 0, false, false, 0, 'T', false);
+            $pdf->MultiCell(35, 0, 'P: ' . $itms_print->sale_price, 0, 'L', false, 1, 38, 0, false, 0, false, false, 0, 'T', false);
+            $pdf->write1DBarcode($itms_print->internal_id . '-' . intval($itms_print->size), 'C39', 38, 5, 35, 20, 0.4, $style, 'N');
+
+            $pdf->Ln();
+            // $i = $i + 20;
+            $i++;
+        }
+        //$pdf->writeHTML(view('inventory::item.print_tickets')->with('itms_prints', $itms_prints)->render());
+
+        $pdf->Output(public_path($filename), 'F');
+
+        return response()->download(public_path($filename));
+
+        //$this->dispatchBrowserEvent('set-item-print-labels', ['success' => true]);
     }
 }

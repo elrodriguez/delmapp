@@ -30,6 +30,11 @@
                     @can('inventario_items_importar')
                         <button onclick="openModalImport()" type="button" class="btn btn-warning waves-effect waves-themed">{{ __('labels.to_import') }}</button>
                     @endcan
+                    @can('inventario_items_imprimir_etiketas')
+                        <button wire:click="printLabels" class="btn btn-info waves-effect waves-themed" >
+                            @lang('inventory::labels.lbl_print_label')
+                        </button>
+                    @endcan
                     @can('inventario_items_nuevo')
                         <a href="{{ route('inventory_item_create') }}" class="btn btn-success waves-effect waves-themed" type="button">@lang('inventory::labels.btn_new')</a>
                     @endcan
@@ -41,8 +46,11 @@
             <table class="table m-0">
                 <thead>
                 <tr>
-                    <th class="text-center">#</th>
+                    @can('inventario_items_imprimir_etiketas')
+                        <th class="text-center">{{ __('labels.to_print') }}</th>
+                    @endif
                     <th class="text-center">@lang('inventory::labels.lbl_actions')</th>
+                    <th>@lang('labels.code')</th>
                     <th>@lang('inventory::labels.name')</th>
                     <th>@lang('inventory::labels.category')</th>
                     <th>@lang('inventory::labels.description')</th>
@@ -59,7 +67,14 @@
                     @if(count($items) > 0)
                         @foreach($items as $key => $item)
                             <tr>
-                                <td class="text-center align-middle">{{ $key + 1 }}</td>
+                                @can('inventario_items_imprimir_etiketas')
+                                    <td class="text-center tdw-50 align-middle">
+                                        <div class="custom-control custom-checkbox">
+                                            <input wire:model.defer="item_ids.{{ $key }}" value="{{ $item->id }}" type="checkbox" class="custom-control-input" id="defaultChecked{{ $key }}">
+                                            <label class="custom-control-label" for="defaultChecked{{ $key }}"></label>
+                                        </div>
+                                    </td>
+                                @endif
                                 <td class="text-center tdw-50 align-middle">
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-secondary rounded-circle btn-icon waves-effect waves-themed" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -90,6 +105,7 @@
                                         </div>
                                     </div>
                                 </td>
+                                <td class="align-middle">{{ $item->internal_id }}</td>
                                 <td class="align-middle">{{ $item->name }}</td>
                                 <td class="align-middle">{{ $item->name_category }}</td>
                                 <td class="align-middle">{{ $item->description }}</td>
@@ -279,7 +295,28 @@
         </div>
         </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="modalPrintLabels" tabindex="-1" aria-labelledby="modalPrintLabelsLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalPrintLabelsLabel">
+                        {{ __('inventory::labels.lbl_print_label') }}
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script type="text/javascript">
         function confirmDelete(id){
             initApp.playSound('{{ url("themes/smart-admin/media/sound") }}', 'bigbox')
@@ -383,6 +420,9 @@
                 });
                 box.find('.modal-content').css({'background-color': 'rgba(122, 85, 7, 0.5)'});
             }
+        });
+        document.addEventListener('set-item-print-labels', event => {
+            $('#modalPrintLabels').modal('show');
         });
     </script>
 </div>

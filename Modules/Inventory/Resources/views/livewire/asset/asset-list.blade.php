@@ -92,7 +92,7 @@
                                                 @if (!$asset->part)
                                                     <a href="{{ route('inventory_asset_part', [$asset->item_id, $asset->id]) }}"
                                                         class="dropdown-item">
-                                                        <i class="ni ni-layers"></i> @lang('inventory::labels.parts')
+                                                        <i class="ni ni-layers mr-1"></i>@lang('inventory::labels.parts')
                                                     </a>
                                                 @endif
                                             @endcan
