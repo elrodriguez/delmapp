@@ -42,7 +42,7 @@
                         <dd class="col-sm-8">: {{ $command->price }}</dd>
                     </dl>
                 </div>
-                <div class="card-body">
+                <div class="card-body nav justify-content-center">
                     <div class="btn-group btn-group-sm">
                         <a href="{{ route('restaurant_commands_edit', $command->id) }}" class="btn btn-secondary waves-effect waves-themed" title="{{ __('labels.edit') }}">
                             <i class="fal fa-pencil-alt"></i>

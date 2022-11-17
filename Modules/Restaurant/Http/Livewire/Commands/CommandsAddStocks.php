@@ -2,6 +2,7 @@
 
 namespace Modules\Restaurant\Http\Livewire\Commands;
 
+use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Lang;
 use Livewire\Component;
@@ -96,6 +97,9 @@ class CommandsAddStocks extends Component
     {
         $this->validate(['amount_to_enter' => 'required|numeric']);
 
+        if ($this->description_stock == null) {
+            $this->description_stock = 'Ingreso desde cocina';
+        }
         $enter = RestPreparationOrders::create([
             'command_id' => $this->command_id,
             'responsable_id' => Auth::user()->person_id,
@@ -108,7 +112,7 @@ class CommandsAddStocks extends Component
             'quantity' => $this->amount_to_enter,
             'movement_type_id' => $enter->id,
             'state' => true,
-            'description' => 'Ingreso desde cocina',
+            'description' => $this->description_stock,
             'movement_type_entity' => RestPreparationOrders::class
         ]);
 
@@ -117,5 +121,10 @@ class CommandsAddStocks extends Component
         $this->amount_to_enter = null;
 
         $this->dispatchBrowserEvent('set-command-stock-save', ['msg' => Lang::get('labels.successfully_registered')]);
+
+    }
+
+    public function back(){
+        redirect()->route('restaurant_commands_list');
     }
 }

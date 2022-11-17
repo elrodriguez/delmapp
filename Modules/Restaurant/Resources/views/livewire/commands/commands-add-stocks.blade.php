@@ -11,31 +11,33 @@
                                 autocomplete="off" />
                         </div>
                         @error('category_id_new')
-                            <div class="invalid-feedback-2">{{ $message }}</div>
+                        <div class="invalid-feedback-2">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label class="form-label" for="price">@lang('labels.code') <span
-                                class="text-danger">*</span> </label>
-                        <input wire:model.defer="internal_id" type="text" class="form-control" id="code" required="" readonly>
+                        <label class="form-label" for="price">@lang('labels.code') <span class="text-danger">*</span>
+                        </label>
+                        <input wire:model.defer="internal_id" type="text" class="form-control" id="code" required=""
+                            readonly>
                         @error('internal_id')
-                            <div class="invalid-feedback-2">{{ $message }}</div>
+                        <div class="invalid-feedback-2">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label" for="description">@lang('labels.description') <span
                                 class="text-danger">*</span> </label>
-                        <input wire:model="description" type="text" class="form-control" id="description" required="" readonly>
+                        <input wire:model="description" type="text" class="form-control" id="description" required=""
+                            readonly>
                         @error('description')
-                            <div class="invalid-feedback-2">{{ $message }}</div>
+                        <div class="invalid-feedback-2">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="col-md-2 mb-3">
-                        <label class="form-label" for="price">@lang('labels.price') <span
-                                class="text-danger">*</span> </label>
+                        <label class="form-label" for="price">@lang('labels.price') <span class="text-danger">*</span>
+                        </label>
                         <input wire:model="price" type="text" class="form-control" id="price" required="" readonly>
                         @error('price')
-                            <div class="invalid-feedback-2">{{ $message }}</div>
+                        <div class="invalid-feedback-2">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="col-md-2 mb-3">
@@ -43,25 +45,27 @@
                                 class="text-danger">*</span> </label>
                         <input wire:model="stock" type="text" class="form-control" id="stock" required="" readonly>
                         @error('stock')
-                            <div class="invalid-feedback-2">{{ $message }}</div>
+                        <div class="invalid-feedback-2">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="col-md-2 mb-3">
-                        <label class="form-label" for="amount_to_enter">@lang('restaurant::labels.amount_to_enter') <span
-                                class="text-danger">*</span> </label>
-                        <input wire:model="amount_to_enter" type="text" class="form-control" id="amount_to_enter" required="" >
+                        <label class="form-label" for="amount_to_enter">@lang('restaurant::labels.amount_to_enter')
+                            <span class="text-danger">*</span> </label>
+                        <input wire:model="amount_to_enter" type="text" class="form-control" id="amount_to_enter"
+                            required="">
                         @error('amount_to_enter')
-                            <div class="invalid-feedback-2">{{ $message }}</div>
+                        <div class="invalid-feedback-2">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="col-md-8 mb-3">
                         <label class="form-label" for="description_stock">@lang('labels.description') <span
                                 class="text-danger">*</span> </label>
-                        <input wire:model="description_stock" type="text" class="form-control" id="description_stock" required="" >
+                        <input wire:model="description_stock" type="text" class="form-control" id="description_stock"
+                            required="">
                         @error('description_stock')
-                            <div class="invalid-feedback-2">{{ $message }}</div>
+                        <div class="invalid-feedback-2">{{ $message }}</div>
                         @enderror
                     </div>
                 </div>
@@ -70,7 +74,7 @@
         <div class="card-footer d-flex flex-row align-items-center">
             <a href="{{ route('restaurant_commands_list') }}" type="button"
                 class="btn btn-secondary waves-effect waves-themed">{{ __('labels.list') }}</a>
-            <button wire:click="saveStock" wire:target="saveStock" wire:loading.attr="disabled" type="button"
+            <button wire:click="saveStock" wire:target="saveStock" wire:loading.attr="disabled" type="button" id="saveStock"
                 class="btn btn-info ml-auto waves-effect waves-themed">{{ __('labels.save') }}</button>
         </div>
     </div>
@@ -83,7 +87,11 @@
                 message: "<span><strong>Excelente... </strong>" + event.detail.msg + "</span>",
                 centerVertical: true,
                 className: "modal-alert",
-                closeButton: false
+                closeButton: false,
+                callback: function (){
+                    document.getElementById('saveStock').disabled = true;
+                    @this.back();
+                }
             });
 
             box.find('.modal-content').css({

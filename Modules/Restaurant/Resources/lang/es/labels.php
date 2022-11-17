@@ -34,5 +34,6 @@ return  [
     'stock_available'           => 'Stock Disponible',
     'amount_to_enter'           => 'Cantidad a Ingresar',
     'add_stocks'                => 'Añadir Existencias',
-    'discard_stocks'            => 'Descartar Existencias'
+    'discard_stocks'            => 'Descartar Existencias',
+    'amount_to_discard'         => 'Cantidad para eliminar',
 ];
