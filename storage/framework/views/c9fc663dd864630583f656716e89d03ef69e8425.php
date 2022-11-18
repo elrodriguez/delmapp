@@ -45,7 +45,34 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
                     </div>
-                    
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label" for="name">Talla</label>
+                        <input wire:model="size" type="text" class="form-control" id="internal_id" required="">
+                        <?php $__errorArgs = ['size'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <div class="invalid-feedback-2"><?php echo e($message); ?></div>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label" for="name">Codigo Fabrica</label>
+                        <input wire:model="factory_code" type="text" class="form-control" id="internal_id" required="">
+                        <?php $__errorArgs = ['factory_code'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <div class="invalid-feedback-2"><?php echo e($message); ?></div>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                    </div>
                     <div class="col-md-3 mb-3">
                         <label class="form-label" for="name"><?php echo app('translator')->get('inventory::labels.lbl_internal_code'); ?> <span class="text-danger">*</span> </label>
                         <input wire:model.defer="internal_id" type="text" class="form-control" id="internal_id" required="">

@@ -48,7 +48,8 @@ class ItemCreateGeneric extends Component
     //Category
     public $categories;
     public $unit_measures = [];
-
+    public $factory_code;
+    public $size;
     public function mount()
     {
         $this->categories = InvCategory::where('status', true)->get();
@@ -82,6 +83,7 @@ class ItemCreateGeneric extends Component
             'sale_price' => $this->price,
             'purchase_price' => $this->purchase_price,
             'internal_id' => $this->internal_id,
+            'factory_code' => $this->factory_code,
             'item_code' => $this->sunat_code,
             'stock' => $this->stock,
             'stock_min' => $this->stock_min,
@@ -93,7 +95,8 @@ class ItemCreateGeneric extends Component
             'currency_type_id' => $this->currency_id,
             'person_create' => Auth::user()->person_id,
             'sale_affectation_igv_type_id' => $this->affectation_igv_type_id,
-            'item_type_id' => $this->item_type_id
+            'item_type_id' => $this->item_type_id,
+            'size' => $this->size
         ]);
 
         InvKardex::create([

@@ -41,7 +41,8 @@ class InvItem extends Model
         'web_show',
         'barcode',
         'item_code_gs1',
-        'size'
+        'size',
+        'factory_code'
     ];
     public function images()
     {

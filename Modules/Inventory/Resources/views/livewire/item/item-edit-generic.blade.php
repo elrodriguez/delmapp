@@ -3,14 +3,14 @@
         <div class="card-body">
             <div>
                 <div class="form-row">
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label class="form-label" for="name">@lang('inventory::labels.name') <span class="text-danger">*</span> </label>
                         <input wire:model="name" type="text" class="form-control" id="name" required="">
                         @error('name')
                         <div class="invalid-feedback-2">{{ $message }}</div>
                         @enderror
                     </div>
-                    <div class="col-md-8 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label class="form-label" for="name">@lang('labels.description') </label>
                         <input wire:model="description" type="text" class="form-control" id="description" required="">
                         @error('description')
@@ -24,7 +24,20 @@
                         <div class="invalid-feedback-2">{{ $message }}</div>
                         @enderror
                     </div>
-                    
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label" for="name">Talla</label>
+                        <input wire:model="size" type="text" class="form-control" id="internal_id" required="">
+                        @error('size')
+                        <div class="invalid-feedback-2">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label class="form-label" for="name">Codigo Fabrica</label>
+                        <input wire:model="factory_code" type="text" class="form-control" id="internal_id" required="">
+                        @error('factory_code')
+                        <div class="invalid-feedback-2">{{ $message }}</div>
+                        @enderror
+                    </div>
                     <div class="col-md-3 mb-3">
                         <label class="form-label" for="name">@lang('inventory::labels.lbl_internal_code') <span class="text-danger">*</span> </label>
                         <input wire:model.defer="internal_id" type="text" class="form-control" id="internal_id" required="">

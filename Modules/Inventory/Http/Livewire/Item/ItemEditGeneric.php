@@ -48,7 +48,8 @@ class ItemEditGeneric extends Component
     //Category
     public $categories;
     public $unit_measures = [];
-
+    public $factory_code;
+    public $size;
     public function mount($item_id)
     {
         $this->item_id = $item_id;
@@ -71,6 +72,8 @@ class ItemEditGeneric extends Component
         $this->brand_id = $this->item->brand_id;
         $this->currency_id = $this->item->currency_id;
         $this->image_w = ($image ? $image->route : null);
+        $this->factory_code = $this->item->factory_code;
+        $this->size = $this->item->size;
     }
 
     public function render()
@@ -109,7 +112,9 @@ class ItemEditGeneric extends Component
             'unit_measure_id' => $this->unit_measure_id,
             'brand_id' => $this->brand_id,
             'currency_type_id' => $this->currency_id,
-            'person_edit' => Auth::user()->person_id
+            'person_edit' => Auth::user()->person_id,
+            'factory_code' => $this->factory_code,
+            'size' => $this->size
         ]);
 
         $activity->modelOn(InvItem::class, $this->item->id, 'inv_items');
