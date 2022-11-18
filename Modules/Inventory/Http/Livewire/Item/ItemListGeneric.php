@@ -231,13 +231,15 @@ class ItemListGeneric extends Component
 
             $pdf->AddPage();
 
-            $pdf->MultiCell(35, 0, 'P: ' . $itms_print->sale_price, 0, 'L', false, 1, 10, 0, false, 0, false, false, 0, 'T', false);
+            $pdf->MultiCell(35, 0, 'P: ' . $itms_print->sale_price, 0, 'L', false, 1, 0, 0, false, 0, false, false, 0, 'T', false);
+            $pdf->MultiCell(35, 0, 'P: ' . $itms_print->internal_id . intval($itms_print->size), 0, 'L', false, 1, 0, 3, false, 0, false, false, 0, 'T', false);
             //$pdf->write1DBarcode($itms_print->internal_id . intval($itms_print->size), 'C128A', 0, 5, 35, 20, 0.4, $style, 'N');
-            $pdf->write2DBarcode($itms_print->internal_id . intval($itms_print->size), 'QRCODE', 10, 3, 20, 20, $style, 'N');
+            $pdf->write2DBarcode($itms_print->internal_id . intval($itms_print->size), 'QRCODE', 10, 5, 20, 20, $style, 'N');
 
-            $pdf->MultiCell(35, 0, 'P: ' . $itms_print->sale_price, 0, 'L', false, 1, 45, 0, false, 0, false, false, 0, 'T', false);
+            $pdf->MultiCell(35, 0, 'P: ' . $itms_print->sale_price, 0, 'L', false, 1, 38, 0, false, 0, false, false, 0, 'T', false);
+            $pdf->MultiCell(35, 0, 'P: ' . $itms_print->internal_id . intval($itms_print->size), 0, 'L', false, 1, 38, 3, false, 0, false, false, 0, 'T', false);
             //$pdf->write1DBarcode($itms_print->internal_id . intval($itms_print->size), 'C128A', 38, 5, 35, 20, 0.4, $style, 'N');
-            $pdf->write2DBarcode($itms_print->internal_id . intval($itms_print->size), 'QRCODE', 45, 3, 20, 20, $style, 'N');
+            $pdf->write2DBarcode($itms_print->internal_id . intval($itms_print->size), 'QRCODE', 45, 5, 20, 20, $style, 'N');
 
             $pdf->Ln();
             // $i = $i + 20;
