@@ -427,7 +427,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="exampleModalprint" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
+    <div class="modal fade" id="exampleModalprint" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-header">
@@ -473,7 +473,7 @@
         </div>
     </div>
     <!-- Modal -->
-    <div wire:ignore.self class="modal fade" id="modalPreProductDetailsAdd" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modalPreProductDetailsAddLabel" aria-hidden="true">
+    <div wire:ignore.self class="modal fade" data-backdrop="static" data-keyboard="false" id="modalPreProductDetailsAdd" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modalPreProductDetailsAddLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
