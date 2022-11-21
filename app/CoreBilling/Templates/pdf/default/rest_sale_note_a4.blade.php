@@ -44,7 +44,7 @@ $payments = $document->payments;
 <body>
     <table class="full-width">
         <tr>
-            @if ($company->logo)
+            @if (!$company->logo)
                 <td width="20%">
                     <div class="company_logo_box">
                         <img src="data:{{ mime_content_type(public_path("storage/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/{$company->logo}"))) }}"
@@ -53,6 +53,7 @@ $payments = $document->payments;
                 </td>
             @else
                 <td width="20%">
+                    <img src="{{ asset($company->logo) }}" class="company_logo" style="max-width: 150px">
                 </td>
             @endif
             <td width="50%" class="pl-3">
