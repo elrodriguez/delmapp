@@ -85,9 +85,16 @@ class CashController extends Controller
         )
             ->get();
 
+        $methods_payment_notes = CatPaymentMethodType::select(
+            'cat_payment_method_types.id',
+            'cat_payment_method_types.description AS name',
+            DB::raw("(SELECT SUM(payment) FROM sal_sale_note_payments INNER JOIN sal_sale_notes ON sal_sale_note_payments.sale_note_id=sal_sale_notes.id WHERE sal_sale_notes.state_type_id NOT IN ('11','13') AND sal_sale_note_payments.payment_method_type_id=cat_payment_method_types.id) AS payment_sum")
+        )
+            ->get();
+
         set_time_limit(0);
 
-        $pdf = PDF::loadView('sales::cash.report_pdf', compact("cash", "company", "methods_payment"));
+        $pdf = PDF::loadView('sales::cash.report_pdf', compact("cash", "company", "methods_payment", "methods_payment_notes"));
 
         $filename = "REPORTE - {$cash->user->name} - {$cash->date_opening} {$cash->time_opening}";
 

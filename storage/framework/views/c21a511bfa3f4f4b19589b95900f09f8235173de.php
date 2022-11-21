@@ -566,6 +566,101 @@ unset($__errorArgs, $__bag); ?>
             </div>
         </div>
     </div>
+    <!-- Modal -->
+    <div wire:ignore.self class="modal fade" id="modalPreProductDetailsAdd" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modalPreProductDetailsAddLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalPreProductDetailsAddLabel">
+                        <?php echo e($produc_name); ?>
+
+                        <small class="m-0 opacity-70">
+                            <?php echo e(__('labels.detail')); ?>
+
+                        </small>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-3">
+                            <?php if($this->produc_image): ?>
+                                <img src="<?php echo e(asset($this->produc_image)); ?>" class="img-thumbnail" alt="...">
+                            <?php else: ?>
+                                <img src="<?php echo e(url('logo/imagen-no-disponible.jpg')); ?>" class="img-thumbnail" alt="...">
+                            <?php endif; ?>
+                        </div>
+                        <div class="col">
+                            <div class="row">
+                                <div class="col mb-3">
+                                    <label><?php echo e(__('labels.stock')); ?></label>
+                                    <input type="text" disabled class="form-control text-right" value="<?php echo e($produc_stock); ?>">
+                                </div>
+                                <div class="col mb-3">
+                                    <label><?php echo e(__('labels.price')); ?> Unitario</label>
+                                    <input type="text" class="form-control text-right" value="<?php echo e($produc_price); ?>" disabled>
+                                </div>
+                                <div class="col mb-3" wire:ignore>
+                                    <label><?php echo e(__('labels.quantity')); ?></label>
+                                    <div class="quantity">
+                                        <input type="number" min="1" max="10" step="1" wire:model.defer="produc_quantity" class="form-control text-center">
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th><?php echo e(__('labels.actions')); ?></th>
+                                        <th scope="col">Medida</th>
+                                        <th scope="col"><?php echo e(__('labels.description')); ?></th>
+                                        <th scope="col"><?php echo e(__('labels.quantity')); ?></th>
+                                        <th scope="col"><?php echo e(__('labels.price')); ?></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if(count($produc_prices)>0): ?>
+                                        <?php $__currentLoopData = $produc_prices; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $xprice): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                            <tr>
+                                                <td class="text-center align-middle">
+                                                    <?php if($btn_color_add == $xprice->id): ?>
+                                                        <button wire:click="removeProductPrice(<?php echo e($xprice->id); ?>,'<?php echo e($xprice->price); ?>')" type="button" class="btn btn-warning btn-icon waves-effect waves-themed">
+                                                            <i class="fal fa-times"></i>
+                                                        </button>
+                                                    <?php else: ?>
+                                                        <button wire:click="addProductPrice(<?php echo e($xprice->id); ?>,'<?php echo e($xprice->price); ?>','<?php echo e($xprice->units); ?>','<?php echo e($xprice->description); ?>')" type="button" class="btn btn-default btn-icon waves-effect waves-themed">
+                                                            <i class="fal fa-check"></i>
+                                                        </button>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td class="align-middle"><?php echo e($xprice->name); ?></td>
+                                                <td class="align-middle"><?php echo e($xprice->description); ?></td>
+                                                <td class="text-right align-middle">
+                                                    <span class="badge badge-warning"><?php echo e($xprice->units); ?></span>
+                                                </td>
+                                                <td class="text-right align-middle"><?php echo e($xprice->price); ?></td>
+                                            </tr>
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                    <?php else: ?>
+                                        <tr>
+                                            <td colspan="5">
+                                                <div class="alert alert-info text-center">No existen datos</div> 
+                                            </td>
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><?php echo e(__('labels.close')); ?></button>
+                    <button wire:click="addProductBox" type="button" class="btn btn-primary"><?php echo e(__('labels.add')); ?></button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         document.addEventListener('livewire:load', function () {
 
@@ -603,7 +698,8 @@ unset($__errorArgs, $__bag); ?>
                     }
                 }
             }).on('autocomplete.select', function (evt, item) {
-                selectProduct(item.value);
+                //selectProduct(item.value);
+                window.livewire.find('<?php echo e($_instance->id); ?>').openModalProductDetails(item.value,item.item_data);
                 $('.basicAutoCompleteProduct').autoComplete('clear');
             });
 
@@ -677,6 +773,12 @@ unset($__errorArgs, $__bag); ?>
             $('#exampleModalClientNew').modal('hide');
             window.livewire.find('<?php echo e($_instance->id); ?>').set('customer_id', id);
         }
+        window.addEventListener('response-open-modal-product-details', event => {
+            $('#modalPreProductDetailsAdd').modal('show');
+        });
+        window.addEventListener('response-hide-modal-product-details', event => {
+            $('#modalPreProductDetailsAdd').modal('hide');
+        });
     </script>
 </div>
 <?php /**PATH C:\laragon\www\delmapp\Modules/Sales\Resources/views/livewire/document/sale-notes-create-form.blade.php ENDPATH**/ ?>

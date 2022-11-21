@@ -461,6 +461,99 @@
             </div>
         </div>
     </div>
+    <!-- Modal -->
+    <div wire:ignore.self class="modal fade" id="modalPreProductDetailsAdd" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="modalPreProductDetailsAddLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalPreProductDetailsAddLabel">
+                        {{ $produc_name }}
+                        <small class="m-0 opacity-70">
+                            {{ __('labels.detail') }}
+                        </small>
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-3">
+                            @if($this->produc_image)
+                                <img src="{{ asset($this->produc_image) }}" class="img-thumbnail" alt="...">
+                            @else
+                                <img src="{{ url('logo/imagen-no-disponible.jpg') }}" class="img-thumbnail" alt="...">
+                            @endif
+                        </div>
+                        <div class="col">
+                            <div class="row">
+                                <div class="col mb-3">
+                                    <label>{{ __('labels.stock') }}</label>
+                                    <input type="text" disabled class="form-control text-right" value="{{ $produc_stock }}">
+                                </div>
+                                <div class="col mb-3">
+                                    <label>{{ __('labels.price') }} Unitario</label>
+                                    <input type="text" class="form-control text-right" value="{{ $produc_price }}" disabled>
+                                </div>
+                                <div class="col mb-3" wire:ignore>
+                                    <label>{{ __('labels.quantity') }}</label>
+                                    <div class="quantity">
+                                        <input type="number" min="1" max="10" step="1" wire:model.defer="produc_quantity" class="form-control text-center">
+                                    </div>
+                                </div>
+                            </div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>{{ __('labels.actions') }}</th>
+                                        <th scope="col">Medida</th>
+                                        <th scope="col">{{ __('labels.description') }}</th>
+                                        <th scope="col">{{ __('labels.quantity') }}</th>
+                                        <th scope="col">{{ __('labels.price') }}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if(count($produc_prices)>0)
+                                        @foreach ($produc_prices as $xprice)
+                                            <tr>
+                                                <td class="text-center align-middle">
+                                                    @if($btn_color_add == $xprice->id)
+                                                        <button wire:click="removeProductPrice({{ $xprice->id }},'{{ $xprice->price }}')" type="button" class="btn btn-warning btn-icon waves-effect waves-themed">
+                                                            <i class="fal fa-times"></i>
+                                                        </button>
+                                                    @else
+                                                        <button wire:click="addProductPrice({{ $xprice->id }},'{{ $xprice->price }}','{{ $xprice->units }}','{{ $xprice->description }}')" type="button" class="btn btn-default btn-icon waves-effect waves-themed">
+                                                            <i class="fal fa-check"></i>
+                                                        </button>
+                                                    @endif
+                                                </td>
+                                                <td class="align-middle">{{ $xprice->name }}</td>
+                                                <td class="align-middle">{{ $xprice->description }}</td>
+                                                <td class="text-right align-middle">
+                                                    <span class="badge badge-warning">{{ $xprice->units }}</span>
+                                                </td>
+                                                <td class="text-right align-middle">{{ $xprice->price }}</td>
+                                            </tr>
+                                        @endforeach
+                                    @else
+                                        <tr>
+                                            <td colspan="5">
+                                                <div class="alert alert-info text-center">No existen datos</div> 
+                                            </td>
+                                        </tr>
+                                    @endif
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('labels.close') }}</button>
+                    <button wire:click="addProductBox" type="button" class="btn btn-primary">{{ __('labels.add') }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         document.addEventListener('livewire:load', function () {
 
@@ -498,7 +591,8 @@
                     }
                 }
             }).on('autocomplete.select', function (evt, item) {
-                selectProduct(item.value);
+                //selectProduct(item.value);
+                @this.openModalProductDetails(item.value,item.item_data);
                 $('.basicAutoCompleteProduct').autoComplete('clear');
             });
 
@@ -572,5 +666,11 @@
             $('#exampleModalClientNew').modal('hide');
             @this.set('customer_id', id);
         }
+        window.addEventListener('response-open-modal-product-details', event => {
+            $('#modalPreProductDetailsAdd').modal('show');
+        });
+        window.addEventListener('response-hide-modal-product-details', event => {
+            $('#modalPreProductDetailsAdd').modal('hide');
+        });
     </script>
 </div>

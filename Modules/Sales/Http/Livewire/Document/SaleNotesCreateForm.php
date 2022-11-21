@@ -39,6 +39,8 @@ use App\CoreBilling\Helpers\Storage\StorageDocument;
 use App\Models\GlobalPayment;
 use Modules\Inventory\Entities\InvAsset;
 use Modules\Inventory\Entities\InvLocation;
+use Modules\Inventory\Entities\InvItemFile;
+use Modules\Inventory\Entities\InvItemPrice;
 
 class SaleNotesCreateForm extends Component
 {
@@ -98,36 +100,50 @@ class SaleNotesCreateForm extends Component
     public $districts = [];
     public $soap_type_id;
     public $stock_notes;
-    
-    public function mount(){
-        $this->value_icbper = Parameter::where('id_parameter','PRT006ICP')->value('value_default');
-        $this->igv = (int) Parameter::where('id_parameter','PRT002IGV')->value('value_default');
-        $this->stock_notes = (boolean) Parameter::where('id_parameter','PRT008DSN')->value('value_default');
-    
-        $this->establishments = UserEstablishment::join('set_establishments','establishment_id','set_establishments.id')
-                            ->select(
-                                'set_establishments.id',
-                                'set_establishments.name',
-                                'user_establishments.main'
-                            )
-                            ->where('user_establishments.user_id',Auth::id())
-                            ->get();
-        if($this->establishments){
-            $this->establishment_id = UserEstablishment::where('user_establishments.user_id',Auth::id())
-                                        ->where('main',true)
-                                        ->value('establishment_id');
+
+    public $produc_name;
+    public $produc_image;
+    public $produc_price;
+    public $produc_price_old;
+    public $produc_stock;
+    public $produc_quantity;
+    public $produc_prices = [];
+    public $produc_price_id;
+    public $produc_price_units;
+    public $produc_price_description;
+    public $btn_color_add;
+    public $produc_id;
+
+    public function mount()
+    {
+        $this->value_icbper = Parameter::where('id_parameter', 'PRT006ICP')->value('value_default');
+        $this->igv = (int) Parameter::where('id_parameter', 'PRT002IGV')->value('value_default');
+        $this->stock_notes = (bool) Parameter::where('id_parameter', 'PRT008DSN')->value('value_default');
+
+        $this->establishments = UserEstablishment::join('set_establishments', 'establishment_id', 'set_establishments.id')
+            ->select(
+                'set_establishments.id',
+                'set_establishments.name',
+                'user_establishments.main'
+            )
+            ->where('user_establishments.user_id', Auth::id())
+            ->get();
+        if ($this->establishments) {
+            $this->establishment_id = UserEstablishment::where('user_establishments.user_id', Auth::id())
+                ->where('main', true)
+                ->value('establishment_id');
         }
 
-        $this->warehouse_id = InvLocation::where('establishment_id',$this->establishment_id)->where('state',true)->first()->id;
+        $this->warehouse_id = InvLocation::where('establishment_id', $this->establishment_id)->where('state', true)->first()->id;
         $this->changeSeries();
 
-        $this->countries = Country::where('active',true)->get();
-        $this->departments = Department::where('active',true)->get();
+        $this->countries = Country::where('active', true)->get();
+        $this->departments = Department::where('active', true)->get();
 
         $this->f_issuance = Carbon::now()->format('d/m/Y');
         $this->f_expiration = Carbon::now()->format('d/m/Y');
 
-        $this->soap_type_id = SetCompany::where('main',true)->first()->soap_type_id;
+        $this->soap_type_id = SetCompany::where('main', true)->first()->soap_type_id;
 
         $activity = new Activity;
         $activity->causedBy(Auth::user());
@@ -144,50 +160,54 @@ class SaleNotesCreateForm extends Component
         $billing = new Billing();
         $this->cat_expense_method_types = $billing->getPaymentDestinations();
 
-        $this->identity_document_types = IdentityDocumentType::where('active',1)->get();
+        $this->identity_document_types = IdentityDocumentType::where('active', 1)->get();
 
-        $this->xgenerico = Person::where('trade_name','like','%Clientes Varios%')
-            ->where('identity_document_type_id',0)
-            ->select('people.id AS value',DB::raw('CONCAT(people.number," - ",people.trade_name) AS text'))
+        $this->xgenerico = Person::where('trade_name', 'like', '%Clientes Varios%')
+            ->where('identity_document_type_id', 0)
+            ->select('people.id AS value', DB::raw('CONCAT(people.number," - ",people.trade_name) AS text'))
             ->first();
-        if($this->xgenerico){
-            if(!$this->customer_id){
+        if ($this->xgenerico) {
+            if (!$this->customer_id) {
                 $this->customer_id = $this->xgenerico->value;
             }
         }
         return view('sales::livewire.document.sale-notes-create-form');
     }
 
-    public function changeSeries(){
-        $this->series = SalSerie::where('document_type_id',$this->document_type_id)
-            ->where('establishment_id',$this->establishment_id)
+    public function changeSeries()
+    {
+        $this->series = SalSerie::where('document_type_id', $this->document_type_id)
+            ->where('establishment_id', $this->establishment_id)
             ->get();
 
         $this->serie_id = $this->series->max('id');
         $this->selectCorrelative();
     }
 
-    public function selectCorrelative(){
-        $serie = SalSerie::where('id',$this->serie_id)->first();
-        if($serie){
+    public function selectCorrelative()
+    {
+        $serie = SalSerie::where('id', $this->serie_id)->first();
+        if ($serie) {
             $this->correlative = str_pad($serie->correlative, 8, "0", STR_PAD_LEFT);
-        }else{
+        } else {
             $this->correlative = str_pad(0, 8, "0", STR_PAD_LEFT);
         }
     }
 
-    public function removeItem($key){
+    public function removeItem($key)
+    {
         unset($this->box_items[$key]);
         $this->calculateTotal();
         $this->payment_method_types[0]['amount'] = $this->total;
     }
 
-    public function recalculateAll(){
-        if(count($this->box_items)>0){
+    public function recalculateAll()
+    {
+        if (count($this->box_items) > 0) {
 
-            foreach($this->box_items as $key => $item){
+            foreach ($this->box_items as $key => $item) {
                 //if(is_numeric($item['quantity'])){
-                    $data[$key] = $this->calculateRowItem($item);
+                $data[$key] = $this->calculateRowItem($item);
                 //}
             }
 
@@ -197,7 +217,8 @@ class SaleNotesCreateForm extends Component
         }
     }
 
-    public function newPaymentMethodTypes(){
+    public function newPaymentMethodTypes()
+    {
         $data = [
             'method' => '01',
             'destination' => 'cash',
@@ -205,14 +226,16 @@ class SaleNotesCreateForm extends Component
             'reference' => null,
             'amount' => null
         ];
-        array_push($this->payment_method_types,$data);
+        array_push($this->payment_method_types, $data);
     }
 
-    public function removePaymentMethodTypes($key){
+    public function removePaymentMethodTypes($key)
+    {
         unset($this->payment_method_types[$key]);
     }
 
-    public function validateForm(){
+    public function validateForm()
+    {
         //dd($this->customer_id);
         $this->external_id = null;
 
@@ -226,10 +249,9 @@ class SaleNotesCreateForm extends Component
         ]);
 
         if ($this->box_items > 0) {
-            foreach($this->box_items as $key => $val)
-            {
+            foreach ($this->box_items as $key => $val) {
                 $this->validate([
-                    'box_items.'.$key.'.quantity' => 'numeric|required'
+                    'box_items.' . $key . '.quantity' => 'numeric|required'
                 ]);
             }
         }
@@ -237,28 +259,29 @@ class SaleNotesCreateForm extends Component
         $total_amount = 0;
 
         if ($this->payment_method_types > 0) {
-            foreach($this->payment_method_types as $key => $val){
+            foreach ($this->payment_method_types as $key => $val) {
                 $total_amount = $total_amount + $val['amount'];
             }
         }
 
         // if($this->total == $total_amount){
-            $this->store();
+        $this->store();
         // }else{
         //     $this->dispatchBrowserEvent('response_payment_total_different', ['message' => Lang::get('labels.msg_totaldtc')]);
         // }
 
     }
 
-    public function store(){
+    public function store()
+    {
         $this->selectCorrelative($this->serie_id);
-        $establishment_json = SetEstablishment::where('id',$this->establishment_id)->first();
-        $customer_json = Person::where('id',$this->customer_id)->first();
-        $this->warehouse_id = InvLocation::where('establishment_id',$this->establishment_id)->where('state',true)->first()->id;
+        $establishment_json = SetEstablishment::where('id', $this->establishment_id)->first();
+        $customer_json = Person::where('id', $this->customer_id)->first();
+        $this->warehouse_id = InvLocation::where('establishment_id', $this->establishment_id)->where('state', true)->first()->id;
         //$company = SetCompany::first();
-        list($di,$mi,$yi) = explode('/',$this->f_issuance);
-        list($de,$me,$ye) = explode('/',$this->f_expiration);
-        $date_of_issue = $yi.'-'.$mi.'-'.$di;
+        list($di, $mi, $yi) = explode('/', $this->f_issuance);
+        list($de, $me, $ye) = explode('/', $this->f_expiration);
+        $date_of_issue = $yi . '-' . $mi . '-' . $di;
         //$date_of_due = $ye.'-'.$me.'-'.$de;
 
         $numberletters = new NumberNumberLetter();
@@ -268,7 +291,7 @@ class SaleNotesCreateForm extends Component
         $this->external_id = Str::uuid()->toString();
         $this->total_taxes = $this->total_igv;
         $paid = 0;
-        foreach($this->payment_method_types as $key => $value){
+        foreach ($this->payment_method_types as $key => $value) {
             $paid = $paid + $value['amount'];
         }
 
@@ -310,7 +333,7 @@ class SaleNotesCreateForm extends Component
             'observation' => $this->additional_information
         ]);
 
-        foreach($this->box_items as $row) {
+        foreach ($this->box_items as $row) {
 
             SalSaleNoteItem::create([
                 'sale_note_id' => $sale_note->id,
@@ -338,11 +361,11 @@ class SaleNotesCreateForm extends Component
                 'total' => $row['total']
             ]);
 
-            if($this->stock_notes){
-                InvAsset::where('item_id',$row['item_id'])
-                        ->where('location_id',$this->warehouse_id)
-                        ->decrement('stock',$row['quantity']);
-                InvItem::where('id',$row['item_id'])->decrement('stock',$row['quantity']);
+            if ($this->stock_notes) {
+                InvAsset::where('item_id', $row['item_id'])
+                    ->where('location_id', $this->warehouse_id)
+                    ->decrement('stock', $row['quantity']);
+                InvItem::where('id', $row['item_id'])->decrement('stock', $row['quantity']);
                 InvKardex::create([
                     'date_of_issue' => Carbon::now()->format('Y-m-d'),
                     'establishment_id' => $sale_note->establishment_id,
@@ -350,27 +373,26 @@ class SaleNotesCreateForm extends Component
                     'kardexable_id' => $sale_note->id,
                     'kardexable_type' => SalSaleNote::class,
                     'location_id' => $this->warehouse_id,
-                    'quantity'=> (-$row['quantity']),
+                    'quantity' => (-$row['quantity']),
                     'detail' => 'Venta'
                 ]);
             }
-
         }
         $billing = new Billing();
-        $billing->saveCashDocument($sale_note->id,'sale_note');
+        $billing->saveCashDocument($sale_note->id, 'sale_note');
 
         $this->savePayments($sale_note);
 
-        SalSerie::where('id',$this->serie_id)->increment('correlative');
+        SalSerie::where('id', $this->serie_id)->increment('correlative');
 
         $this->selectCorrelative($this->serie_id);
-        
+
         $this->setFilename($sale_note);
-        $this->createPdf($sale_note,"a4");
+        $this->createPdf($sale_note, "a4");
 
         $user = Auth::user();
         $activity = new Activity;
-        $activity->modelOn(SalSaleNote::class,$sale_note->id);
+        $activity->modelOn(SalSaleNote::class, $sale_note->id);
         $activity->causedBy($user);
         $activity->routeOn(route('sales_documents_sale_notes_create'));
         $activity->componentOn('sales::document.sale-notes-create-form');
@@ -382,10 +404,10 @@ class SaleNotesCreateForm extends Component
         $this->clearForm();
 
         $this->dispatchBrowserEvent('response_sale_note_store', ['msg' => Lang::get('labels.successfully_registered')]);
-
     }
 
-    public function clearForm(){
+    public function clearForm()
+    {
         $this->f_issuance = Carbon::now()->format('d/m/Y');
         $this->f_expiration = Carbon::now()->format('d/m/Y');
         $this->box_items = [];
@@ -395,7 +417,8 @@ class SaleNotesCreateForm extends Component
         $this->additional_information = null;
     }
 
-    public function calculateTotal() {
+    public function calculateTotal()
+    {
         $total_discount = 0;
         $total_charge = 0;
         $total_exportation = 0;
@@ -408,7 +431,7 @@ class SaleNotesCreateForm extends Component
         $total_value = 0;
         $total = 0;
         $total_plastic_bag_taxes = 0;
-        $onerosas = array('10','20','30','40');
+        $onerosas = array('10', '20', '30', '40');
 
         foreach ($this->box_items as $key => $value) {
             $total_discount = $total_discount + 0;
@@ -440,29 +463,27 @@ class SaleNotesCreateForm extends Component
 
             if (in_array($affectation_igv, array('13', '14', '15'))) {
 
-                $unit_value = ($value['total_value']/$value['quantity']) / (1 + $value['percentage_igv'] / 100);
+                $unit_value = ($value['total_value'] / $value['quantity']) / (1 + $value['percentage_igv'] / 100);
                 $total_value_partial = $unit_value * $value['quantity'];
                 //$total_taxes = $value['total_value'] - $total_value_partial;
                 $total_taxes = $total_igv;
                 $this->box_items[$key]['total_igv'] = $value['total_value'] - $total_value_partial;
                 $this->box_items[$key]['total_base_igv'] = $total_value_partial;
                 $total_value = $total_value - $value['total_value'];
-
             }
-
         }
 
         $this->total_exportation = number_format($total_exportation, 2, '.', '');
         $this->total_taxed = number_format($total_taxed, 2, '.', '');
         $this->total_exonerated = number_format($total_exonerated, 2, '.', '');
         $this->total_unaffected = number_format($total_unaffected, 2, '.', '');
-        $this->total_free =number_format($total_free, 2, '.', '');
+        $this->total_free = number_format($total_free, 2, '.', '');
         $this->total_igv = number_format($total_igv, 2, '.', '');
         $this->total_value = number_format($total_value, 2, '.', '');
         $this->total_taxes = number_format($total_taxes, 2, '.', '');
         $this->total_plastic_bag_taxes = number_format($total_plastic_bag_taxes, 2, '.', '');
 
-        $this->total = number_format($total+$total_plastic_bag_taxes, 2, '.', '');
+        $this->total = number_format($total + $total_plastic_bag_taxes, 2, '.', '');
 
         // if(this.enabled_discount_global)
         //     this.discountGlobal()
@@ -479,88 +500,97 @@ class SaleNotesCreateForm extends Component
         // this.calculateFee();
     }
 
-    public function clickAddItem() {
+    public function clickAddItem()
+    {
 
         $key = array_search($this->item_id, array_column($this->box_items, 'item_id'));
-        $exists_stock = InvKardex::where('item_id',$this->item_id)
-            ->where('location_id',$this->warehouse_id)
+        $exists_stock = InvKardex::where('item_id', $this->item_id)
+            ->where('location_id', $this->warehouse_id)
             ->sum('quantity');
 
         $success = true;
         $showmsg = false;
         $msg = '';
 
-        if($key === false){
-            if($this->item_id){
+        if ($key === false) {
+            if ($this->item_id) {
 
-                $item = InvItem::where('id',$this->item_id)->first()->toArray();
+                $item = InvItem::where('id', $this->item_id)->first()->toArray();
 
-                if($exists_stock <= $item['stock_min']){
+                if ($exists_stock <= $item['stock_min']) {
 
                     $showmsg = true;
                     $success = true;
                     $msg = Lang::get('labels.msg_product_about_out');
                 }
 
-                if($exists_stock <= 0 ){
+                if ($exists_stock <= 0) {
                     $success = false;
                     $showmsg = true;
                     $msg = Lang::get('labels.msg_product_no_units');
                 }
 
-                if($success){
-
-                    $unit_price = $item['sale_price'];
-                    
+                if ($success) {
+                    //$unit_price = $item['sale_price'];
+                    $unit_price = $this->produc_price;
                     $currencyTypeIdActive = 'PEN';
                     $exchangeRateSale = 0.01;
-                    $currency_type_id_old = $item['currency_type_id'] ? $item['currency_type_id'] : 'PEN';
+                    //$currency_type_id_old = $item['currency_type_id'];
+                    $currency_type_id_old = 'PEN';
 
-
-                    if ($currency_type_id_old === 'PEN' && $currency_type_id_old !== $currencyTypeIdActive){
+                    if ($currency_type_id_old === 'PEN' && $currency_type_id_old !== $currencyTypeIdActive) {
                         $unit_price = $unit_price / $exchangeRateSale;
                     }
 
-                    if ($currencyTypeIdActive === 'PEN' && $currency_type_id_old !== $currencyTypeIdActive){
+                    if ($currencyTypeIdActive === 'PEN' && $currency_type_id_old !== $currencyTypeIdActive) {
                         $unit_price = $unit_price * $exchangeRateSale;
                     }
 
-                    $affectation_igv_type = AffectationIgvType::where('id',$item['sale_affectation_igv_type_id'])->first()->toArray();
-                    
+                    $affectation_igv_type = AffectationIgvType::where('id', $item['sale_affectation_igv_type_id'])->first()->toArray();
+                    $item['name'] = $item['name'] . ' ' . $this->produc_price_description;
+
+                    $presentation = array('presentation' => []);
+
+                    if ($this->produc_price_id) {
+                        $presentation['presentation'] = InvItemPrice::find($this->produc_price_id)->toArray();
+                    }
+
+                    $item = array_merge($item, $presentation);
+
                     $data = [
-                        'item_id'=> $item['id'],
+                        'item_id' => $item['id'],
                         'item' => json_encode($item),
                         'currency_type_id' => $item['currency_type_id'],
-                        'quantity' => 1,
+                        'quantity' => $this->produc_quantity,
                         'unit_value' => 0,
                         'affectation_igv_type_id' => $item['sale_affectation_igv_type_id'],
-                        'affectation_igv_type'=> json_encode($affectation_igv_type),
-                        'total_base_igv'=> 0,
+                        'affectation_igv_type' => json_encode($affectation_igv_type),
+                        'total_base_igv' => 0,
                         'percentage_igv' => $this->igv,
                         'total_igv' => 0,
                         'system_isc_type_id' => null,
-                        'total_base_isc'=> 0,
-                        'percentage_isc'=> 0,
-                        'total_isc'=> 0,
-                        'total_base_other_taxes'=> 0,
-                        'percentage_other_taxes'=> 0,
-                        'total_other_taxes'=> 0,
-                        'total_plastic_bag_taxes'=> 0,
-                        'total_taxes'=> 0,
-                        'price_type_id'=> '01',
-                        'unit_price'=> $unit_price,
-                        'input_unit_price_value' => $item['sale_price'],
+                        'total_base_isc' => 0,
+                        'percentage_isc' => 0,
+                        'total_isc' => 0,
+                        'total_base_other_taxes' => 0,
+                        'percentage_other_taxes' => 0,
+                        'total_other_taxes' => 0,
+                        'total_plastic_bag_taxes' => 0,
+                        'total_taxes' => 0,
+                        'price_type_id' => '01',
+                        'unit_price' => $unit_price,
+                        'input_unit_price_value' => $this->produc_price,
                         'total_value' => 0,
                         'total_discount' => 0,
                         'total_charge' => 0,
                         'total' => 0
                     ];
 
-                    $data = $this->calculateRowItem($data,$currencyTypeIdActive, $exchangeRateSale);
+                    $data = $this->calculateRowItem($data, $currencyTypeIdActive, $exchangeRateSale);
 
-                    array_push($this->box_items,$data);
+                    array_push($this->box_items, $data);
 
-                    $this->payment_method_types[0] =[
+                    $this->payment_method_types[0] = [
                         'method' => '01',
                         'destination' => 'cash',
                         'date_of_payment' => Carbon::now()->format('d/m/Y'),
@@ -568,15 +598,21 @@ class SaleNotesCreateForm extends Component
                         'amount' => $this->total
                     ];
 
+                    $this->btn_color_add = null;
+                    $this->produc_price_id = null;
+                    $this->produc_price = null;
+                    $this->produc_price_units = null;
+                    $this->produc_price_description = null;
+                    $this->produc_image = null;
                 }
             }
         }
 
 
-        $this->dispatchBrowserEvent('response_clear_select_products_alert',['showmsg' => $showmsg,'message'=>$msg]);
+        $this->dispatchBrowserEvent('response_clear_select_products_alert', ['showmsg' => $showmsg, 'message' => $msg]);
     }
-
-    function calculateRowItem($data) {
+    function calculateRowItem($data)
+    {
 
         $percentage_igv = $this->igv;
         $unit_value = $data['unit_price'];
@@ -590,13 +626,13 @@ class SaleNotesCreateForm extends Component
 
         $quantity = 0;
 
-        if($data['quantity']){
+        if ($data['quantity']) {
             $quantity = $data['quantity'];
-        }else{
+        } else {
             $quantity = 0;
         }
         $total_value_partial = $unit_value * $quantity;
-        
+
         $total_isc = 0;
         $total_other_taxes = 0;
         $discount_base = 0;
@@ -635,14 +671,15 @@ class SaleNotesCreateForm extends Component
         }
 
         //impuesto bolsa
-        if(json_decode($data['item'])->has_plastic_bag_taxes){
+        if (json_decode($data['item'])->has_plastic_bag_taxes) {
             $data['total_plastic_bag_taxes'] = number_format($quantity * $this->value_icbper, 2, '.', '');
         }
 
         return $data;
     }
 
-    public function storeClient(){
+    public function storeClient()
+    {
 
         $this->validate([
             'identity_document_type_id' => 'required',
@@ -662,23 +699,24 @@ class SaleNotesCreateForm extends Component
             'number' => $this->number_id,
             'names' => $this->name,
             'country_id' => 'PE',
-            'trade_name' => ($this->trade_name == null?$this->name.' '.$this->last_paternal.' '.$this->last_maternal:$this->trade_name),
+            'trade_name' => ($this->trade_name == null ? $this->name . ' ' . $this->last_paternal . ' ' . $this->last_maternal : $this->trade_name),
             'last_paternal' => $this->last_paternal,
             'last_maternal' => $this->last_maternal,
-            'full_name'=> $this->last_paternal.' '.$this->last_maternal.' '.$this->name,
+            'full_name' => $this->last_paternal . ' ' . $this->last_maternal . ' ' . $this->name,
             'department_id' => $this->department_id,
             'province_id'   => $this->province_id,
             'district_id'   => $this->district_id,
             'sex' => $this->sex
         ]);
 
-        Customer::create(['person_id' => $customer->id,'direct' => true,'person_create' => Auth::user()->person_id]);
+        Customer::create(['person_id' => $customer->id, 'direct' => true, 'person_create' => Auth::user()->person_id]);
 
         $this->clearFormCustomer();
-        $this->dispatchBrowserEvent('response_success_customer_store', ['idperson' => $customer->id,'nameperson' => ($customer->number.' - '.$customer->trade_name),'message' => Lang::get('labels.successfully_registered')]);
+        $this->dispatchBrowserEvent('response_success_customer_store', ['idperson' => $customer->id, 'nameperson' => ($customer->number . ' - ' . $customer->trade_name), 'message' => Lang::get('labels.successfully_registered')]);
     }
 
-    public function clearFormCustomer(){
+    public function clearFormCustomer()
+    {
         $this->identity_document_type_id = 1;
         $this->number_id = null;
         $this->name = null;
@@ -688,23 +726,26 @@ class SaleNotesCreateForm extends Component
         $this->sex = null;
     }
 
-    public function getProvinves(){
-        $this->provinces = Province::where('department_id',$this->department_id)
-            ->where('active',true)->get();
+    public function getProvinves()
+    {
+        $this->provinces = Province::where('department_id', $this->department_id)
+            ->where('active', true)->get();
         $this->districts = [];
     }
 
-    public function getPDistricts(){
-        $this->districts = District::where('province_id',$this->province_id)
-            ->where('active',true)->get();
+    public function getPDistricts()
+    {
+        $this->districts = District::where('province_id', $this->province_id)
+            ->where('active', true)->get();
     }
 
-    private function savePayments($sale_note){
-        list($di,$mi,$yi) = explode('/',$this->f_issuance);
-        $date_of_issue = $yi.'-'.$mi.'-'.$di;
+    private function savePayments($sale_note)
+    {
+        list($di, $mi, $yi) = explode('/', $this->f_issuance);
+        $date_of_issue = $yi . '-' . $mi . '-' . $di;
 
-        foreach($this->payment_method_types as $key => $value){
-            if($value['amount'] > 0){
+        foreach ($this->payment_method_types as $key => $value) {
+            if ($value['amount'] > 0) {
                 $payment = SalSaleNotePayment::create([
                     'sale_note_id' => $sale_note->id,
                     'date_of_payment' => $date_of_issue,
@@ -713,16 +754,17 @@ class SaleNotesCreateForm extends Component
                     'reference' => $value['reference'],
                     'payment' => $value['amount']
                 ]);
-                $this->createGlobalPayment($payment->id,$value['destination']);
+                $this->createGlobalPayment($payment->id, $value['destination']);
             }
         }
     }
 
-    public function createGlobalPayment($id, $destination){
+    public function createGlobalPayment($id, $destination)
+    {
         $row['payment_destination_id'] = $destination;
         $billing = new Billing();
         $destination = $billing->getDestinationRecord($row);
-        $company = SetCompany::where('main',true)->first();
+        $company = SetCompany::where('main', true)->first();
 
         GlobalPayment::create([
             'user_id' => auth()->id(),
@@ -734,30 +776,31 @@ class SaleNotesCreateForm extends Component
         ]);
     }
 
-    private function setFilename($sale_note){
+    private function setFilename($sale_note)
+    {
 
-        $name = [$sale_note->series,$sale_note->number,date('Ymd')];
+        $name = [$sale_note->series, $sale_note->number, date('Ymd')];
         $sale_note->filename = join('-', $name);
         $sale_note->save();
-
     }
 
-    public function createPdf($sale_note = null, $format_pdf = null) {
+    public function createPdf($sale_note = null, $format_pdf = null)
+    {
 
         ini_set("pcre.backtrack_limit", "5000000");
         $template = new Template();
         $pdf = new Mpdf();
 
-        $company = SetCompany::where('main',true)->first();
+        $company = SetCompany::where('main', true)->first();
         $document = $sale_note;
 
-        $base_template = Parameter::where('id_parameter','PRT003THM')->first()->value_default;
+        $base_template = Parameter::where('id_parameter', 'PRT003THM')->first()->value_default;
 
         $html = $template->pdf($base_template, "sale_note", $company, $document, $format_pdf);
 
-        if (($format_pdf === 'ticket') OR ($format_pdf === 'ticket_58')) {
+        if (($format_pdf === 'ticket') or ($format_pdf === 'ticket_58')) {
 
-            $width = ($format_pdf === 'ticket_58') ? 56 : 78 ;
+            $width = ($format_pdf === 'ticket_58') ? 56 : 78;
 
             $company_logo      = ($company->logo) ? 40 : 0;
             $company_name      = (strlen($company->name) / 20) * 10;
@@ -778,8 +821,8 @@ class SaleNotesCreateForm extends Component
             $extra_by_item_description = 0;
             $discount_global = 0;
             foreach ($document->items as $it) {
-                if(strlen(json_decode($it->item)->name)>100){
-                    $extra_by_item_description +=24;
+                if (strlen(json_decode($it->item)->name) > 100) {
+                    $extra_by_item_description += 24;
                 }
                 if ($it->discounts) {
                     $discount_global = $discount_global + 1;
@@ -793,28 +836,29 @@ class SaleNotesCreateForm extends Component
                 'format' => [
                     $width,
                     40 +
-                    (($quantity_rows * 8) + $extra_by_item_description) +
-                    ($discount_global * 3) +
-                    $company_logo +
-                    $payments +
-                    $company_name +
-                    $company_address +
-                    $company_number +
-                    $customer_name +
-                    $customer_address +
-                    $p_order +
-                    $legends +
-                    $total_exportation +
-                    $total_free +
-                    $total_unaffected +
-                    $total_exonerated +
-                    $total_taxed],
+                        (($quantity_rows * 8) + $extra_by_item_description) +
+                        ($discount_global * 3) +
+                        $company_logo +
+                        $payments +
+                        $company_name +
+                        $company_address +
+                        $company_number +
+                        $customer_name +
+                        $customer_address +
+                        $p_order +
+                        $legends +
+                        $total_exportation +
+                        $total_free +
+                        $total_unaffected +
+                        $total_exonerated +
+                        $total_taxed
+                ],
                 'margin_top' => 0,
                 'margin_right' => 2,
                 'margin_bottom' => 0,
                 'margin_left' => 2
             ]);
-        } else if($format_pdf === 'a5'){
+        } else if ($format_pdf === 'a5') {
 
             $company_name      = (strlen($company->name) / 20) * 10;
             $company_address   = (strlen($document->establishment->address) / 30) * 10;
@@ -839,19 +883,19 @@ class SaleNotesCreateForm extends Component
 
 
             $alto = ($quantity_rows * 8) +
-                    ($discount_global * 3) +
-                    $company_name +
-                    $company_address +
-                    $company_number +
-                    $customer_name +
-                    $customer_address +
-                    $p_order +
-                    $legends +
-                    $total_exportation +
-                    $total_free +
-                    $total_unaffected +
-                    $total_exonerated +
-                    $total_taxed;
+                ($discount_global * 3) +
+                $company_name +
+                $company_address +
+                $company_number +
+                $customer_name +
+                $customer_address +
+                $p_order +
+                $legends +
+                $total_exportation +
+                $total_free +
+                $total_unaffected +
+                $total_exonerated +
+                $total_taxed;
             $diferencia = 148 - (float) $alto;
 
             $pdf = new Mpdf([
@@ -859,15 +903,13 @@ class SaleNotesCreateForm extends Component
                 'format' => [
                     210,
                     $diferencia + $alto
-                    ],
+                ],
                 'margin_top' => 2,
                 'margin_right' => 5,
                 'margin_bottom' => 0,
                 'margin_left' => 5
             ]);
-
-
-       } else {
+        } else {
 
             $pdf_font_regular = config('tenant.pdf_name_regular');
             $pdf_font_bold = config('tenant.pdf_name_bold');
@@ -881,28 +923,27 @@ class SaleNotesCreateForm extends Component
 
                 $pdf = new Mpdf([
                     'fontDir' => array_merge($fontDirs, [
-                        app_path('CoreBilling'.DIRECTORY_SEPARATOR.'Templates'.
-                                                DIRECTORY_SEPARATOR.'pdf'.
-                                                DIRECTORY_SEPARATOR.$base_template.
-                                                DIRECTORY_SEPARATOR.'font')
+                        app_path('CoreBilling' . DIRECTORY_SEPARATOR . 'Templates' .
+                            DIRECTORY_SEPARATOR . 'pdf' .
+                            DIRECTORY_SEPARATOR . $base_template .
+                            DIRECTORY_SEPARATOR . 'font')
                     ]),
                     'fontdata' => $fontData + [
                         'custom_bold' => [
-                            'R' => $pdf_font_bold.'.ttf',
+                            'R' => $pdf_font_bold . '.ttf',
                         ],
                         'custom_regular' => [
-                            'R' => $pdf_font_regular.'.ttf',
+                            'R' => $pdf_font_regular . '.ttf',
                         ],
                     ]
                 ]);
             }
-
         }
 
-        $path_css = app_path('CoreBilling'.DIRECTORY_SEPARATOR.'Templates'.
-                                             DIRECTORY_SEPARATOR.'pdf'.
-                                             DIRECTORY_SEPARATOR.$base_template.
-                                             DIRECTORY_SEPARATOR.'style.css');
+        $path_css = app_path('CoreBilling' . DIRECTORY_SEPARATOR . 'Templates' .
+            DIRECTORY_SEPARATOR . 'pdf' .
+            DIRECTORY_SEPARATOR . $base_template .
+            DIRECTORY_SEPARATOR . 'style.css');
 
         $stylesheet = file_get_contents($path_css);
 
@@ -911,12 +952,69 @@ class SaleNotesCreateForm extends Component
 
         $footer = true;
 
-        if($footer) {
+        if ($footer) {
             $html_footer = $template->pdfFooter($base_template);
             $pdf->SetHTMLFooter($html_footer);
         }
 
         $this->uploadStorage($document->filename, $pdf->output('', 'S'), 'sale_note');
-    
+    }
+    public function openModalProductDetails($id, $data)
+    {
+        $this->produc_name = $data['description'];
+        $this->produc_id = $id;
+        $this->produc_price = $data['price'];
+        $this->produc_price_old = $data['price'];
+        $this->produc_stock = $data['stock'];
+        $this->produc_quantity = 1;
+        $itemfile = InvItemFile::where('item_id', $id)->where('main', true)->first();
+        //dd($itemfile);
+        if ($itemfile) {
+            $this->produc_image = $itemfile->route;
+        }
+        $this->getProductListPrices($id);
+        $this->dispatchBrowserEvent('response-open-modal-product-details', ['res' => true]);
+    }
+
+    public function getProductListPrices($id)
+    {
+        $this->produc_prices = InvItemPrice::join('inv_unit_measures', 'measure_id', 'inv_unit_measures.id')
+            ->select(
+                'inv_item_prices.id',
+                'inv_unit_measures.name',
+                'inv_item_prices.description',
+                'inv_item_prices.units',
+                'inv_item_prices.price',
+                'inv_item_prices.main'
+            )
+            ->where('item_id', $id)
+            ->get();
+    }
+
+    public function addProductBox()
+    {
+        $this->item_id = $this->produc_id;
+        $this->clickAddItem();
+        $this->dispatchBrowserEvent('response-hide-modal-product-details', ['res' => true]);
+    }
+    public function addProductPrice($id, $price, $unit, $description)
+    {
+        $this->btn_color_add = $id;
+        $this->produc_price_id = $id;
+        $this->produc_price = $price;
+        $this->produc_price_units = $unit;
+        $this->produc_price_description = $description;
+        $this->getProductListPrices($this->produc_id);
+    }
+
+    public function removeProductPrice($id, $price)
+    {
+        $this->btn_color_add = null;
+        $this->produc_price_id = null;
+        $this->produc_price = $this->produc_price_old;
+        $this->produc_price_units = null;
+        $this->produc_price_description = null;
+        $this->produc_image = null;
+        $this->getProductListPrices($this->produc_id);
     }
 }

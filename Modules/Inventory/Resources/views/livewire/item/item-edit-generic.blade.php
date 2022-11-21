@@ -40,7 +40,7 @@
                     </div>
                     <div class="col-md-3 mb-3">
                         <label class="form-label" for="name">@lang('inventory::labels.lbl_internal_code') <span class="text-danger">*</span> </label>
-                        <input wire:model.defer="internal_id" type="text" class="form-control" id="internal_id" required="">
+                        <input wire:model.defer="internal_id" type="text" class="form-control" id="internal_id" required="" disabled>
                         @error('internal_id')
                         <div class="invalid-feedback-2">{{ $message }}</div>
                         @enderror

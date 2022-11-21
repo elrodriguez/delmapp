@@ -90,7 +90,7 @@ class ItemEditGeneric extends Component
             'price' => 'required',
             'brand_id' => 'required',
             'purchase_price' => 'required',
-            'internal_id' => 'required|unique:inv_items,internal_id,' . $id,
+            //'internal_id' => 'required|unique:inv_items,internal_id,' . $id,
             'stock_min' => 'required',
             'unit_measure_id' => 'required'
         ]);

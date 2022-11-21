@@ -74,7 +74,7 @@ class ItemCreateGeneric extends Component
             'internal_id' => 'required|unique:inv_items,internal_id',
             'stock_min' => 'required',
             'unit_measure_id' => 'required',
-            'image' => 'image|mimes:jpg,jpeg,bmp,png|max:2048'
+            //'image' => 'image|mimes:jpg,jpeg,bmp,png|max:2048'
         ]);
 
         $this->item_save = InvItem::create([

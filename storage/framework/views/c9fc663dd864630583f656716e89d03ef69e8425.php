@@ -3,7 +3,7 @@
         <div class="card-body">
             <div>
                 <div class="form-row">
-                    <div class="col-md-4 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label class="form-label" for="name"><?php echo app('translator')->get('inventory::labels.name'); ?> <span class="text-danger">*</span> </label>
                         <input wire:model="name" type="text" class="form-control" id="name" required="">
                         <?php $__errorArgs = ['name'];
@@ -17,7 +17,7 @@ if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
                     </div>
-                    <div class="col-md-8 mb-3">
+                    <div class="col-md-6 mb-3">
                         <label class="form-label" for="name"><?php echo app('translator')->get('labels.description'); ?> </label>
                         <input wire:model="description" type="text" class="form-control" id="description" required="">
                         <?php $__errorArgs = ['description'];
@@ -75,7 +75,7 @@ unset($__errorArgs, $__bag); ?>
                     </div>
                     <div class="col-md-3 mb-3">
                         <label class="form-label" for="name"><?php echo app('translator')->get('inventory::labels.lbl_internal_code'); ?> <span class="text-danger">*</span> </label>
-                        <input wire:model.defer="internal_id" type="text" class="form-control" id="internal_id" required="">
+                        <input wire:model.defer="internal_id" type="text" class="form-control" id="internal_id" required="" disabled>
                         <?php $__errorArgs = ['internal_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :

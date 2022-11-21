@@ -113,6 +113,8 @@ foreach ($cash_documents as $cash_document) {
 $cash_final_balance = $final_balance + $cash->beginning_balance;
 //$cash_income = ($final_balance > 0) ? ($cash_final_balance - $cash->beginning_balance) : 0;
 
+$sumar = $methods_payment->concat($methods_payment_notes);
+
 @endphp
 <!DOCTYPE html>
 <html lang="en">
@@ -265,7 +267,13 @@ $cash_final_balance = $final_balance + $cash->beginning_balance;
                                 <tr>
                                     <td class="celda">{{ $loop->iteration }}</td>
                                     <td class="celda-left">{{ $item->name }}</td>
-                                    <td class="celda-right">{{ number_format($item->payment_sum, 2, ".", "")  }}</td>
+                                    <td class="celda-right">
+                                        @foreach($methods_payment_notes as $row)
+                                            @if($item->id == $row->id)
+                                                {{ number_format(($item->payment_sum + $row->payment_sum), 2, ".", "")  }}
+                                            @endif
+                                        @endforeach
+                                    </td>
                                 </tr>
 
                             @endforeach
