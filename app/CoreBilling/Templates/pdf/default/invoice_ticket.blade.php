@@ -58,15 +58,15 @@ $balance = $document->total - $total_payment - $payments->sum('change');
 
 <body>
 
-    @if ($company->logo)
+    @if (!$company->logo)
         <div class="text-center company_logo_box pt-5">
             <img src="data:{{ mime_content_type(public_path("storage/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/{$company->logo}"))) }}"
                 alt="{{ $company->name }}" class="company_logo_ticket contain">
         </div>
-        {{-- @else --}}
-        {{-- <div class="text-center company_logo_box pt-5"> --}}
-        {{-- <img src="{{ asset('logo/logo.jpg') }}" class="company_logo_ticket contain"> --}}
-        {{-- </div> --}}
+    @else
+        <div class="text-center company_logo_box pt-5">
+        <img src="{{ asset($company->logo) }}" class="company_logo_ticket contain">
+        </div>
     @endif
 
     @if ($document->state_type_id == '11')
