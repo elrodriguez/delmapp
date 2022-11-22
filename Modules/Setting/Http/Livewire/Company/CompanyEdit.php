@@ -2,12 +2,14 @@
 
 namespace Modules\Setting\Http\Livewire\Company;
 
+
 use Illuminate\Support\Facades\Lang;
 use Livewire\Component;
 use Modules\Setting\Entities\SetCompany;
 use Livewire\WithFileUploads;
 use Elrod\UserActivity\Activity;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class CompanyEdit extends Component
 {
@@ -25,9 +27,10 @@ class CompanyEdit extends Component
     public $phone_mobile;
     public $representative_name;
     public $representative_number;
-    public $logo_store_view;
-    public $logo_view;
+    public $logo_store_last;
+    public $logo_view_last;
     public $main;
+    public $random;
 
     public function mount($company_id)
     {
@@ -42,12 +45,16 @@ class CompanyEdit extends Component
         $this->representative_name = $this->company->representative_name;
         $this->representative_number = $this->company->representative_number;
         $this->main = $this->company->main;
+        $this->random = rand(1,10000);
 
         if ($this->company->logo) {
-            $this->logo_view = $this->company->logo;
+            $this->logo = $this->company->logo;
+            $this->logo_view_last = $this->logo;
+            //dd($this->logo_view);
         }
         if ($this->company->logo_store) {
-            $this->logo_store_view = $this->company->logo_store;
+            $this->logo_store = $this->company->logo_store;
+            $this->logo_store_last =  $this->logo_store;
         }
     }
 
@@ -73,8 +80,8 @@ class CompanyEdit extends Component
     {
 
         $this->validate();
-        $logo = $this->logo_view;
-        $logo_store = $this->logo_store_view;
+        $logo = $this->logo;
+        $logo_store = $this->logo_store;
         //dd($this->logo);
         if ($this->logo) {
 
@@ -108,7 +115,6 @@ class CompanyEdit extends Component
             'logo_store' => $logo_store,
             'main' => ($this->main ? true : false)
         ]);
-
 
         $activity->modelOn(SetCompany::class, $this->company->id, 'set_companies');
         $activity->causedBy(Auth::user());

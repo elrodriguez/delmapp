@@ -72,7 +72,7 @@
                         <div class="invalid-feedback-2">{{ $message }}</div>
                         @enderror
                         @if ($logo_view)
-                            <img class="img-thumbnail mt-5" width="100%" src="{{ url('storage/'.$this->logo_view) }}">
+                            <img class="img-thumbnail mt-5" width="100%" src="{{ $this->logo_view->temporaryUrl() }}">
                         @endif
                     </div>
                     <div class="col-md-6 mb-3">
@@ -82,7 +82,7 @@
                         <div class="invalid-feedback-2">{{ $message }}</div>
                         @enderror
                         @if ($logo_store_view)
-                            <img class="img-thumbnail mt-5" width="100%" src="{{ url('storage/'.$this->logo_store_view) }}">
+                            <img class="img-thumbnail mt-5" width="100%" src="{{ $this->logo_store_view->temporaryUrl() }}">
                         @endif
                     </div>
                 </div>

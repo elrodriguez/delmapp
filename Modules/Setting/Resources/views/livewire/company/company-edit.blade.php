@@ -1,7 +1,7 @@
 <div>
     <div class="card mb-g rounded-top">
         <div class="card-body">
-
+            <form wire:submit.prevent"save">
             <div class="form-row">
                 <div class="col-md-4 mb-3">
                     <label class="form-label" for="name">@lang('setting::labels.name_short') <span
@@ -79,19 +79,25 @@
                     @error('logo')
                         <div class="invalid-feedback-2">{{ $message }}</div>
                     @enderror
-                    @if ($logo_view)
-                        <img class="img-thumbnail mt-5" width="100%" src="{{ url('storage/' . $this->logo_view) }}">
+                    @if ($logo && ($this->logo_view_last != $this->logo))
+                    <img class="img-thumbnail mt-5" width="100%" src="{{ $this->logo->temporaryUrl() }}">
+                    @else
+                    <img class="img-thumbnail mt-5" width="100%" src="{{ url('tenancy/assets/' . $this->logo.'?'.$random) }}">
                     @endif
                 </div>
+
+
                 <div class="col-md-6 mb-3">
                     <label class="form-label" for="logo_store">Logo Documentos </label>
                     <input wire:model="logo_store" type="file" id="logo_store">
                     @error('logo_store')
                         <div class="invalid-feedback-2">{{ $message }}</div>
                     @enderror
-                    @if ($logo_store_view)
-                        <img class="img-thumbnail mt-5" width="100%"
-                            src="{{ url('storage/' . $this->logo_store_view) }}">
+                    @if ($logo_store && ($this->logo_store_last != $this->logo_store))
+                        <img class="img-thumbnail mt-5" width="100%" src="{{ $this->logo_store->temporaryUrl() }}">
+                    @else
+                    <img class="img-thumbnail mt-5" width="100%"
+                            src="{{ url('tenancy/assets/' . $this->logo_store.'?'.$random+1) }}">  <!-- agregando ?$random  donde random es un numero al azar se fuerza a recargar cache de la imagen -->
                     @endif
                 </div>
             </div>
@@ -104,6 +110,7 @@
                     </div>
                 </div>
             </div>
+        </form>
         </div>
         <div class="card-footer d-flex flex-row align-items-center">
             <a href="{{ route('setting_company') }}" type="button"
