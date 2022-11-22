@@ -57,5 +57,6 @@ Route::middleware([
         Route::middleware(['middleware' => 'role_or_permission:restaurante_panel_cobrar'])->get('charge/sale_note/{id}', 'ChargeController@sale_note')->name('restaurant_panels_charge_sale_note');
         Route::middleware(['middleware' => 'role_or_permission:restaurante_panel_delivery'])->get('deliveries', 'AttendController@deliveries')->name('restaurant_panels_deliveries');
         Route::middleware(['middleware' => 'role_or_permission:restaurante_panel_delivery_nuevo'])->get('deliveries/create', 'AttendController@deliveriesCreate')->name('restaurant_panels_deliveries_create');
+        Route::middleware(['middleware' => 'role_or_permission:restaurante_panel_cobrar'])->get('charge/ticket/{id}', 'ChargeController@ticket')->name('restaurant_panels_charge_ticket');
     });
 });

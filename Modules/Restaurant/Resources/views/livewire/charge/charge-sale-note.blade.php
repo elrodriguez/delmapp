@@ -14,7 +14,6 @@
         <div class="panel-container show">
             <div class="panel-content">
                 <form wire:ignore.self>
-
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <div class="form-row">

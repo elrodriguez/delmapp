@@ -30,21 +30,14 @@ class ChargeController extends Controller
         return view('restaurant::charge.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     * @return Renderable
-     */
     public function sale_note($id)
     {
         return view('restaurant::charge.sale_note')->with('id', $id);
     }
-
-
-    /**
-     * Show the specified resource.
-     * @param int $id
-     * @return Renderable
-     */
+    public function ticket($id)
+    {
+        return view('restaurant::charge.ticket')->with('id', $id);
+    }
     public function printSaleNote($external_id, $format = null)
     {
         $document = RestSaleNote::where('external_id', $external_id)->first();
@@ -99,9 +92,8 @@ class ChargeController extends Controller
             $discount_global = 0;
 
             foreach ($document->items as $it) {
-                if($it->item_type == 'Modules\Restaurant\Entities\RestCommand'){
-
-                }else{
+                if ($it->item_type == 'Modules\Restaurant\Entities\RestCommand') {
+                } else {
                     if (strlen(json_decode($it->item)->name) > 100) {
                         $extra_by_item_description += 24;
                     }
@@ -109,7 +101,6 @@ class ChargeController extends Controller
                         $discount_global = $discount_global + 1;
                     }
                 }
-                
             }
             $legends = $document->legends != '' ? '10' : '0';
 

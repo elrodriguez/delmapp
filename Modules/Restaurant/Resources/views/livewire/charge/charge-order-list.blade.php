@@ -47,17 +47,23 @@
                             <tr>
                                 <td class="text-center align-middle">{{ $key + 1 }}</td>
                                 <td class="text-center align-middle">
-                                    <div class="btn-group-vertical" role="group" aria-label="Vertical button group">
-                                        <a href="{{ route('restaurant_panels_charge_sale_note', $order->id) }}"
-                                            type="button" class="btn btn-dark waves-effect waves-themed">Nota
-                                            de Venta</a>
-                                        @if ($btnVouchers)
-                                            <button type="button" class="btn btn-info waves-effect waves-themed">Boleta
-                                                Electrónica</button>
-                                            <button type="button"
-                                                class="btn btn-primary waves-effect waves-themed">Factura
-                                                Electrónica</button>
-                                        @endif
+                                    <div class="btn-group">
+                                        <button type="button"
+                                            class="btn btn-secondary rounded-circle btn-icon waves-effect waves-themed"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            <i class="fal fa-cogs"></i>
+                                        </button>
+                                        <div class="dropdown-menu"
+                                            style="position: absolute; will-change: top, left; top: 35px; left: 0px;"
+                                            x-placement="bottom-start">
+                                            <a href="{{ route('restaurant_panels_charge_sale_note', $order->id) }}"
+                                                type="button" class="dropdown-item">
+                                                <i class="fal fa-file mr-1"></i>Nota de Venta</a>
+                                            <a href="{{ route('restaurant_panels_charge_ticket', $order->id) }}" class="dropdown-item">
+                                                    <i class="fal fa-file-check mr-1"></i>Boleta Electrónica</a>
+                                                <button type="button" class="dropdown-item">
+                                                    <i class="fal fa-file-invoice-dollar mr-1"></i>Factura Electrónica</button>
+                                        </div>
                                     </div>
                                 </td>
                                 <td class="align-middle">P{{ $order->id }}</td>

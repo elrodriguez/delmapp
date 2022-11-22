@@ -20,14 +20,14 @@
     <li class="breadcrumb-item">
         {{ __('restaurant::labels.charge') }}
     </li>
-    <li class="breadcrumb-item active">@lang('restaurant::labels.sale_note')</li>
+    <li class="breadcrumb-item active">Boleta Electrónica</li>
     <li class="position-absolute pos-top pos-right d-none d-sm-block">
         <x-js-get-date></x-js-get-date>
     </li>
 @endsection
 @section('subheader')
     <h1 class="subheader-title">
-        <i class='subheader-icon fal fa-file'></i>{{ __('restaurant::labels.sale_note') }}<sup
+        <i class='subheader-icon fal fa-file-check'></i>Boleta Electrónica<sup
             class='badge badge-primary fw-500'>{{ __('labels.new') }}</sup>
         <small>@lang('labels.available_user')</small>
     </h1>
@@ -36,7 +36,7 @@
     </div>
 @endsection
 @section('content')
-    <livewire:restaurant::charge.charge-sale-note :order_id="$id" />
+<livewire:restaurant::charge.charge-ticket order_id="$id" />
 @endsection
 @section('script')
     <script src="{{ url('themes/smart-admin/js/formplugins/inputmask/inputmask.bundle.js') }}"></script>
