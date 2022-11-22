@@ -36,7 +36,7 @@
     </div>
 @endsection
 @section('content')
-<livewire:restaurant::charge.charge-ticket order_id="$id" />
+<livewire:restaurant::charge.charge-ticket :order_id="$id" />
 @endsection
 @section('script')
     <script src="{{ url('themes/smart-admin/js/formplugins/inputmask/inputmask.bundle.js') }}"></script>

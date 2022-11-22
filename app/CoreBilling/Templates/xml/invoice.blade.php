@@ -359,7 +359,16 @@
     @foreach($document->items as $row)
     <cac:InvoiceLine>
         <cbc:ID>{{ $loop->iteration }}</cbc:ID>
-        <cbc:InvoicedQuantity unitCode="{{ json_decode($row->item, true)['unit_measure_id'] }}" unitCodeListID="UN/ECE rec 20">{{ $row->quantity }}</cbc:InvoicedQuantity>
+        @if ($row->item_class == 'Modules\Restaurant\Entities\RestCommand')
+            <cbc:InvoicedQuantity unitCode="NIU" unitCodeListID="UN/ECE rec 20">{{ $row->quantity }}</cbc:InvoicedQuantity>
+        @else
+            @if(json_decode($row->item)->presentation)
+                <cbc:InvoicedQuantity unitCode="{{ json_decode($row->item)->presentation->measure_id }}" unitCodeListID="UN/ECE rec 20">{{ $row->quantity }}</cbc:InvoicedQuantity>
+            @else
+                <cbc:InvoicedQuantity unitCode="{{ json_decode($row->item, true)['unit_measure_id'] }}" unitCodeListID="UN/ECE rec 20">{{ $row->quantity }}</cbc:InvoicedQuantity>
+            @endif
+        @endif
+        
         <cbc:LineExtensionAmount currencyID="{{ $document->currency_type_id }}">{{ $row->total_value }}</cbc:LineExtensionAmount>
         <cac:PricingReference>
             <cac:AlternativeConditionPrice>
@@ -450,21 +459,36 @@
             @endif
         </cac:TaxTotal>
         <cac:Item>
-            <cbc:Description><![CDATA[{{ json_decode($row->item, true)['name'] }}]]></cbc:Description>
+            @if ($row->item_class == 'Modules\Restaurant\Entities\RestCommand')
+                <cbc:Description><![CDATA[{{ json_decode($row->item, true)['description'] }}]]></cbc:Description>
+            @else
+                <cbc:Description><![CDATA[{{ json_decode($row->item, true)['name'] }}]]></cbc:Description>
+            @endif
+            
             @if(json_decode($row->item, true)['internal_id'])
             <cac:SellersItemIdentification>
                 <cbc:ID>{{ json_decode($row->item, true)['internal_id'] }}</cbc:ID>
             </cac:SellersItemIdentification>
             @endif
-            @if(json_decode($row->item, true)['item_code'])
-            <cac:CommodityClassification>
-                <cbc:ItemClassificationCode>{{ json_decode($row->item, true)['item_code'] }}</cbc:ItemClassificationCode>
-            </cac:CommodityClassification>
+            @if ($row->item_class == 'Modules\Restaurant\Entities\RestCommand')
+                
+            @else
+                @if(json_decode($row->item, true)['item_code'])
+                <cac:CommodityClassification>
+                    <cbc:ItemClassificationCode>{{ json_decode($row->item, true)['item_code'] }}</cbc:ItemClassificationCode>
+                </cac:CommodityClassification>
+                @endif
             @endif
-            @if(json_decode($row->item, true)['item_code_gs1'])
-            <cac:StandardItemIdentification>
-                <cbc:ID>{{ json_decode($row->item, true)['item_code_gs1'] }}</cbc:ID>
-            </cac:StandardItemIdentification>
+            
+            
+            @if ($row->item_class == 'Modules\Restaurant\Entities\RestCommand')
+                
+            @else
+                @if(json_decode($row->item, true)['item_code_gs1'])
+                <cac:StandardItemIdentification>
+                    <cbc:ID>{{ json_decode($row->item, true)['item_code_gs1'] }}</cbc:ID>
+                </cac:StandardItemIdentification>
+                @endif
             @endif
             @if($row->attributes)
             @foreach($row->attributes as $attr)

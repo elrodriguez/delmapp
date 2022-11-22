@@ -69,7 +69,7 @@ $colspan6 = 6;
     <?php endif; ?>
     <table class="full-width">
         <tr>
-            <?php if($company->logo): ?>
+            <?php if(!$company->logo): ?>
                 <td width="20%">
                     <div class="company_logo_box">
                         <img src="data:<?php echo e(mime_content_type(public_path("storage/{$company->logo}"))); ?>;base64, <?php echo e(base64_encode(file_get_contents(public_path("storage/{$company->logo}")))); ?>"
@@ -78,7 +78,7 @@ $colspan6 = 6;
                 </td>
             <?php else: ?>
                 <td width="20%">
-                    <img src="<?php echo e(asset('logo/logo.jpg')); ?>" class="company_logo" style="max-width: 150px">
+                    <img src="<?php echo e(asset($company->logo)); ?>" class="company_logo" style="max-width: 150px">
                 </td>
             <?php endif; ?>
             <td width="50%" class="pl-3">
@@ -365,18 +365,28 @@ $colspan6 = 6;
                         <?php endif; ?>
                     </td>
                     <td class="text-center align-top">
-                        <?php if(json_decode($row->item)->presentation): ?>
-                            <?php echo e(json_decode($row->item)->presentation->measure_id); ?>
-
+                        <?php if($row->item_class == 'Modules\Restaurant\Entities\RestCommand'): ?>
+                            NIU
                         <?php else: ?>
-                            <?php echo e(json_decode($row->item)->unit_measure_id); ?>
+                            <?php if(json_decode($row->item)->presentation): ?>
+                                <?php echo e(json_decode($row->item)->presentation->measure_id); ?>
 
+                            <?php else: ?>
+                                <?php echo e(json_decode($row->item)->unit_measure_id); ?>
+
+                            <?php endif; ?>
                         <?php endif; ?>
+                        
                         
                     </td>
                     <td class="text-left align-top">
-                        <?php echo e(json_decode($row->item)->name); ?>
+                        <?php if($row->item_class == 'Modules\Restaurant\Entities\RestCommand'): ?>
+                            <?php echo e(json_decode($row->item)->description); ?>
 
+                        <?php else: ?>
+                            <?php echo e(json_decode($row->item)->name); ?>
+
+                        <?php endif; ?>
                     </td>
                     <!--td class="text-center align-top">
                 

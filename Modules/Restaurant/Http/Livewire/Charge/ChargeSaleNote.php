@@ -836,7 +836,7 @@ class ChargeSaleNote extends Component
         $this->createPdf($sale_note, "a4");
 
         $xoto = $this->order->total;
-        if($xxto == $xoto){
+        if ($xxto == $xoto) {
             $this->order->update([
                 'state' => 'Z'
             ]);

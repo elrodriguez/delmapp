@@ -125,27 +125,31 @@ class Billing
                 //$this->saveFee($document, $inputs['fee']);
                 foreach ($inputs['items'] as $row) {
                     //dd(json_decode($row['item'])->presentation->measure_id);
-                    $presentation = json_decode($row['item'])->presentation;
-                    $quantity = $row['quantity'];
-                    if ($presentation) {
-                        $quantity = $presentation->units;
-                    }
-
                     $document->items()->create($row);
-                    InvAsset::where('item_id', $row['item_id'])
-                        ->where('location_id', $this->warehouse_id)
-                        ->decrement('stock', $quantity);
-                    InvItem::where('id', $row['item_id'])->decrement('stock', $quantity);
-                    InvKardex::create([
-                        'date_of_issue' => Carbon::now()->format('Y-m-d'),
-                        'establishment_id' => $document->establishment_id,
-                        'item_id' => $row['item_id'],
-                        'kardexable_id' => $document->id,
-                        'kardexable_type' => SalDocument::class,
-                        'location_id' => $this->warehouse_id,
-                        'quantity' => (-$quantity),
-                        'detail' => 'Venta'
-                    ]);
+
+                    if ($row['item_class'] == InvItem::class) {
+                        //dd($row);
+                        $presentation = json_decode($row['item'])->presentation;
+                        $quantity = $row['quantity'];
+                        if ($presentation) {
+                            $quantity = $presentation->units;
+                        }
+
+                        InvAsset::where('item_id', $row['item_id'])
+                            ->where('location_id', $this->warehouse_id)
+                            ->decrement('stock', $quantity);
+                        InvItem::where('id', $row['item_id'])->decrement('stock', $quantity);
+                        InvKardex::create([
+                            'date_of_issue' => Carbon::now()->format('Y-m-d'),
+                            'establishment_id' => $document->establishment_id,
+                            'item_id' => $row['item_id'],
+                            'kardexable_id' => $document->id,
+                            'kardexable_type' => SalDocument::class,
+                            'location_id' => $this->warehouse_id,
+                            'quantity' => (-$quantity),
+                            'detail' => 'Venta'
+                        ]);
+                    }
                 }
                 $this->updatePrepaymentDocuments($inputs);
                 //if($inputs['hotel']) $document->hotel()->create($inputs['hotel']);

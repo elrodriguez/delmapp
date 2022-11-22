@@ -351,15 +351,24 @@ $colspan6 = 6;
                         @endif
                     </td>
                     <td class="text-center align-top">
-                        @if(json_decode($row->item)->presentation)
-                            {{ json_decode($row->item)->presentation->measure_id }}
+                        @if ($row->item_class == 'Modules\Restaurant\Entities\RestCommand')
+                            NIU
                         @else
-                            {{ json_decode($row->item)->unit_measure_id }}
+                            @if(json_decode($row->item)->presentation)
+                                {{ json_decode($row->item)->presentation->measure_id }}
+                            @else
+                                {{ json_decode($row->item)->unit_measure_id }}
+                            @endif
                         @endif
+                        
                         
                     </td>
                     <td class="text-left align-top">
-                        {{ json_decode($row->item)->name }}
+                        @if ($row->item_class == 'Modules\Restaurant\Entities\RestCommand')
+                            {{ json_decode($row->item)->description }}
+                        @else
+                            {{ json_decode($row->item)->name }}
+                        @endif
                     </td>
                     <!--td class="text-center align-top">
                 {{-- @inject('itemLotGroup', 'App\Services\ItemLotsGroupService')

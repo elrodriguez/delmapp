@@ -360,7 +360,16 @@
     <?php $__currentLoopData = $document->items; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $row): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
     <cac:InvoiceLine>
         <cbc:ID><?php echo e($loop->iteration); ?></cbc:ID>
-        <cbc:InvoicedQuantity unitCode="<?php echo e(json_decode($row->item, true)['unit_measure_id']); ?>" unitCodeListID="UN/ECE rec 20"><?php echo e($row->quantity); ?></cbc:InvoicedQuantity>
+        <?php if($row->item_class == 'Modules\Restaurant\Entities\RestCommand'): ?>
+            <cbc:InvoicedQuantity unitCode="NIU" unitCodeListID="UN/ECE rec 20"><?php echo e($row->quantity); ?></cbc:InvoicedQuantity>
+        <?php else: ?>
+            <?php if(json_decode($row->item)->presentation): ?>
+                <cbc:InvoicedQuantity unitCode="<?php echo e(json_decode($row->item)->presentation->measure_id); ?>" unitCodeListID="UN/ECE rec 20"><?php echo e($row->quantity); ?></cbc:InvoicedQuantity>
+            <?php else: ?>
+                <cbc:InvoicedQuantity unitCode="<?php echo e(json_decode($row->item, true)['unit_measure_id']); ?>" unitCodeListID="UN/ECE rec 20"><?php echo e($row->quantity); ?></cbc:InvoicedQuantity>
+            <?php endif; ?>
+        <?php endif; ?>
+        
         <cbc:LineExtensionAmount currencyID="<?php echo e($document->currency_type_id); ?>"><?php echo e($row->total_value); ?></cbc:LineExtensionAmount>
         <cac:PricingReference>
             <cac:AlternativeConditionPrice>
@@ -451,21 +460,36 @@
             <?php endif; ?>
         </cac:TaxTotal>
         <cac:Item>
-            <cbc:Description><![CDATA[<?php echo e(json_decode($row->item, true)['name']); ?>]]></cbc:Description>
+            <?php if($row->item_class == 'Modules\Restaurant\Entities\RestCommand'): ?>
+                <cbc:Description><![CDATA[<?php echo e(json_decode($row->item, true)['description']); ?>]]></cbc:Description>
+            <?php else: ?>
+                <cbc:Description><![CDATA[<?php echo e(json_decode($row->item, true)['name']); ?>]]></cbc:Description>
+            <?php endif; ?>
+            
             <?php if(json_decode($row->item, true)['internal_id']): ?>
             <cac:SellersItemIdentification>
                 <cbc:ID><?php echo e(json_decode($row->item, true)['internal_id']); ?></cbc:ID>
             </cac:SellersItemIdentification>
             <?php endif; ?>
-            <?php if(json_decode($row->item, true)['item_code']): ?>
-            <cac:CommodityClassification>
-                <cbc:ItemClassificationCode><?php echo e(json_decode($row->item, true)['item_code']); ?></cbc:ItemClassificationCode>
-            </cac:CommodityClassification>
+            <?php if($row->item_class == 'Modules\Restaurant\Entities\RestCommand'): ?>
+                
+            <?php else: ?>
+                <?php if(json_decode($row->item, true)['item_code']): ?>
+                <cac:CommodityClassification>
+                    <cbc:ItemClassificationCode><?php echo e(json_decode($row->item, true)['item_code']); ?></cbc:ItemClassificationCode>
+                </cac:CommodityClassification>
+                <?php endif; ?>
             <?php endif; ?>
-            <?php if(json_decode($row->item, true)['item_code_gs1']): ?>
-            <cac:StandardItemIdentification>
-                <cbc:ID><?php echo e(json_decode($row->item, true)['item_code_gs1']); ?></cbc:ID>
-            </cac:StandardItemIdentification>
+            
+            
+            <?php if($row->item_class == 'Modules\Restaurant\Entities\RestCommand'): ?>
+                
+            <?php else: ?>
+                <?php if(json_decode($row->item, true)['item_code_gs1']): ?>
+                <cac:StandardItemIdentification>
+                    <cbc:ID><?php echo e(json_decode($row->item, true)['item_code_gs1']); ?></cbc:ID>
+                </cac:StandardItemIdentification>
+                <?php endif; ?>
             <?php endif; ?>
             <?php if($row->attributes): ?>
             <?php $__currentLoopData = $row->attributes; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $attr): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>

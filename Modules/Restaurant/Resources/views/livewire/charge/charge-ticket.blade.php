@@ -34,7 +34,7 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="form-row">
+                        <div class="form-row" style="display: none">
                             <div class="col-md-12 mb-3">
                                 <div wire:ignore>
                                     <label class="form-label" for="select3-ajax">
@@ -133,18 +133,28 @@
                                                     <i class="fal fa-trash-alt"></i>
                                                 </button>
                                             </td>
-                                            <td width="50%" class="align-middle">{{ json_decode($box_item['item'])->name }}</td>
+                                            <td width="50%" class="align-middle">
+                                                @if ($box_item['item_class'] == 'Modules\Inventory\Entities\InvItem')
+                                                    {{ json_decode($box_item['item'])->name }}
+                                                @else
+                                                    {{ json_decode($box_item['item'])->description }}
+                                                @endif
+                                            </td>
                                             <td class="align-middle  text-right">{{ $box_item['input_unit_price_value'] }}</td>
                                             <td width="10%" class="align-middle text-center">
-                                                @if (json_decode($box_item['item'])->item_type_id== '01')
-                                                    <input type="text" wire:model="box_items.{{ $key }}.quantity" class="form-control text-right form-control-sm" name="box_items[{{ $key }}].quantity">
-                                                    @error('box_items.'.$key.'.quantity')
-                                                    <div class="invalid-feedback-2">{{ $message }}</div>
-                                                    @enderror
+                                                {{-- @if ($box_item['item_class'] == 'Modules\Inventory\Entities\InvItem')
+                                                    @if (json_decode($box_item['item'])->item_type_id== '01')
+                                                        <input type="text" wire:model="box_items.{{ $key }}.quantity" class="form-control text-right form-control-sm" name="box_items[{{ $key }}].quantity">
+                                                        @error('box_items.'.$key.'.quantity')
+                                                        <div class="invalid-feedback-2">{{ $message }}</div>
+                                                        @enderror
+                                                    @else
+                                                        <i class="fal fa-times"></i>
+                                                    @endif
                                                 @else
                                                     <i class="fal fa-times"></i>
-                                                @endif
-
+                                                @endif --}}
+                                                {{ $box_item['quantity'] }}
                                             </td>
                                             <td class="align-middle text-right pr-3">{{ number_format($box_item['total'], 2, '.', '') }}</td>
                                         </tr>
@@ -674,7 +684,7 @@
         }
         function printPDF(format){
             let external_id = $('#document_external_id').val();
-            window.open(`print/`+external_id+`/`+format, '_blank');
+            window.open(`../../print/`+external_id+`/`+format, '_blank');
         }
         window.addEventListener('response_success_customer_store', event => {
            swalAlert(event.detail.message);

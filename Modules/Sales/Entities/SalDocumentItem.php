@@ -36,9 +36,10 @@ class SalDocumentItem extends Model
         'total',
         'attributes',
         'discounts',
-        'charges'
+        'charges',
+        'item_class'
     ];
-    
+
     protected static function newFactory()
     {
         return \Modules\Sales\Database\factories\SalDocumentItemFactory::new();
