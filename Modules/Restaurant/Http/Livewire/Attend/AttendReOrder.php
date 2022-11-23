@@ -41,6 +41,7 @@ class AttendReOrder extends Component
     public $table_orders;
     public $occupied_tables;
     public $n_tables;
+    public $first_loading=true;
 
     public function mount()
     {
@@ -56,7 +57,6 @@ class AttendReOrder extends Component
         if (count($this->table) > 0) {
             $this->xtables = RestTable::where('id', '<>', $this->table['id'])->where('occupied', false)->get();
         }
-
         $this->dispatchBrowserEvent('rest-reselect2', ['success' => true]);
         return view('restaurant::livewire.attend.attend-re-order');
     }
@@ -76,7 +76,8 @@ class AttendReOrder extends Component
     }
 
     public function retableId($id)
-    {
+    {   $this->table=[];
+        $this->first_loading=false;
         $this->order_items = [];
         $table = RestTable::find($id);
         $this->table_order = RestTableOrder::where([
@@ -107,10 +108,15 @@ class AttendReOrder extends Component
                 }
             }
 
+            if (count($this->table) > 0) {
+                $this->xtables = RestTable::where('id', '<>', $this->table['id'])->where('occupied', false)->get();
+            } // carga mesas desocupadas
+
             session(['rest_tab_id' => '#tab_default-3']);
 
             $this->dispatchBrowserEvent('restaurant-active-re-orders', ['tables_ids' => $xtable_orders]);
         }
+
     }
 
 

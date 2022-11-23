@@ -56,7 +56,7 @@
                             <span class="text-danger">*</span>
                         </label>
                         <div class="custom-control custom-checkbox">
-                            <input wire:model.defer="occupied" type="checkbox" class="custom-control-input" id="status">
+                            <input wire:model.defer="occupied" type="checkbox" class="custom-control-input" id="occupied">
                             <label class="custom-control-label" for="occupied">{{ __('labels.yes') }}</label>
                         </div>
                         @error('occupied')

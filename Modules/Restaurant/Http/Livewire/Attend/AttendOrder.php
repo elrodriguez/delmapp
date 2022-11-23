@@ -48,7 +48,6 @@ class AttendOrder extends Component
             $array_key = session('rest_table_id');
 
             $this->table = session($array_key);
-
             if (count($this->table) > 0) {
                 $this->order_items = $this->table['order'];
                 $this->xtables = RestTable::where('id', '<>', $this->table['id'])->where('occupied', false)->get();

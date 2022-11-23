@@ -620,5 +620,6 @@ return [
     'you_want_to_cancel_document' => 'You want to cancel document',
     'document_canceled_correctly' => 'Document Canceled Correctly',
     'log_in' => 'Log in',
-    'already_member' => 'Already a member?'
+    'already_member' => 'Already a member?',
+    'serie_prefix'  => 'Serie Prefix',
 ];

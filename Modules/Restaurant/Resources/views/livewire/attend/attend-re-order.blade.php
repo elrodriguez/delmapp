@@ -125,8 +125,11 @@
                         </div>
                         <div class="col-12 col-sm-8 col-md-8 col-lg-5">
                             <label>Mesas</label>
+                            @if ($first_loading)
                             <select id="retable_ids" name="retable_ids[]" multiple="multiple">
-
+                            @else
+                            <select wire:ignore id="retable_ids" name="retable_ids[]" multiple="multiple">
+                            @endif
                                 @foreach ($xtables as $xtable)
                                     <option value="{{ $xtable->id }}">{{ $xtable->name }}</option>
                                 @endforeach

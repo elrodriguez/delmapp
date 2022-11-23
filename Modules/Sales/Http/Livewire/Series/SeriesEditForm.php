@@ -39,7 +39,7 @@ class SeriesEditForm extends Component
 
     public function update(){
         $this->validate([
-            'serie' => 'required|string|unique:sal_series,id,'.$this->serie,
+            'serie' => 'required|string|min:4|max:4|unique:sal_series,id,'.$this->serie,
             'number' => 'required',
             'establishment_id' => 'required',
             'document_type_id' => 'required'

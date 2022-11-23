@@ -23,5 +23,5 @@ return  [
     'cannot_continue_process' => 'No puede continuar el proceso',
     'expenses' => 'Gastos diversos',
     'expense' => 'Gastos',
-    'add_detail' => 'Agregar Detalle'
+    'add_detail' => 'Agregar Detalle',
 ];
