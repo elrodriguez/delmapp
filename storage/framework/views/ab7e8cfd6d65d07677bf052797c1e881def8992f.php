@@ -1,7 +1,7 @@
 <div>
     <div class="card mb-g rounded-top">
         <div class="card-body">
-
+            <form wire:submit.prevent"save">
             <div class="form-row">
                 <div class="col-md-4 mb-3">
                     <label class="form-label" for="name"><?php echo app('translator')->get('setting::labels.name_short'); ?> <span
@@ -142,10 +142,14 @@ $message = $__bag->first($__errorArgs[0]); ?>
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
-                    <?php if($logo_view): ?>
-                        <img class="img-thumbnail mt-5" width="100%" src="<?php echo e(url('storage/' . $this->logo_view)); ?>">
+                    <?php if($logo && ($this->logo_view_last != $this->logo)): ?>
+                    <img class="img-thumbnail mt-5" width="100%" src="<?php echo e($this->logo->temporaryUrl()); ?>">
+                    <?php else: ?>
+                    <img class="img-thumbnail mt-5" width="100%" src="<?php echo e(url('tenancy/assets/' . $this->logo.'?'.$random)); ?>">
                     <?php endif; ?>
                 </div>
+
+
                 <div class="col-md-6 mb-3">
                     <label class="form-label" for="logo_store">Logo Documentos </label>
                     <input wire:model="logo_store" type="file" id="logo_store">
@@ -159,9 +163,11 @@ $message = $__bag->first($__errorArgs[0]); ?>
 if (isset($__messageOriginal)) { $message = $__messageOriginal; }
 endif;
 unset($__errorArgs, $__bag); ?>
-                    <?php if($logo_store_view): ?>
-                        <img class="img-thumbnail mt-5" width="100%"
-                            src="<?php echo e(url('storage/' . $this->logo_store_view)); ?>">
+                    <?php if($logo_store && ($this->logo_store_last != $this->logo_store)): ?>
+                        <img class="img-thumbnail mt-5" width="100%" src="<?php echo e($this->logo_store->temporaryUrl()); ?>">
+                    <?php else: ?>
+                    <img class="img-thumbnail mt-5" width="100%"
+                            src="<?php echo e(url('tenancy/assets/' . $this->logo_store.'?'.$random+1)); ?>">  <!-- agregando ?$random  donde random es un numero al azar se fuerza a recargar cache de la imagen -->
                     <?php endif; ?>
                 </div>
             </div>
@@ -174,6 +180,7 @@ unset($__errorArgs, $__bag); ?>
                     </div>
                 </div>
             </div>
+        </form>
         </div>
         <div class="card-footer d-flex flex-row align-items-center">
             <a href="<?php echo e(route('setting_company')); ?>" type="button"
