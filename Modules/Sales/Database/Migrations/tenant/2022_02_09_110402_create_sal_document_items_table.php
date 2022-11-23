@@ -18,7 +18,7 @@ class CreateSalDocumentItemsTable extends Migration
             $table->unsignedBigInteger('document_id');
             $table->unsignedBigInteger('item_id');
             $table->json('item');
-            $table->decimal('quantity',12,2);
+            $table->decimal('quantity', 12, 2);
             $table->decimal('unit_value', 12, 2);
 
             $table->string('affectation_igv_type_id');
@@ -50,7 +50,6 @@ class CreateSalDocumentItemsTable extends Migration
             $table->json('charges')->nullable();
 
             $table->foreign('document_id')->references('id')->on('sal_documents')->onDelete('cascade');
-            $table->foreign('item_id')->references('id')->on('inv_items');
             $table->foreign('affectation_igv_type_id')->references('id')->on('affectation_igv_types');
             $table->foreign('system_isc_type_id')->references('id')->on('system_isc_types');
             $table->foreign('price_type_id')->references('id')->on('price_types');
