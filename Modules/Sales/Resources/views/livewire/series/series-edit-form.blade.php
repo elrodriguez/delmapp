@@ -9,7 +9,7 @@
                         @foreach ($establishments as $establishment)
                         <option value="{{ $establishment->id }}">{{ $establishment->name }}</option>
                         @endforeach
-                    </select> 
+                    </select>
                     @error('establishment_id')
                     <div class="invalid-feedback-2">{{ $message }}</div>
                     @enderror
@@ -21,13 +21,13 @@
                         @foreach ($document_types as $document_type)
                         <option value="{{ $document_type->id }}">{{ $document_type->description }}</option>
                         @endforeach
-                    </select> 
+                    </select>
                     @error('document_type_id')
                     <div class="invalid-feedback-2">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label class="form-label" for="serie">@lang('labels.serie') <span class="text-danger">*</span> </label>
+                    <label class="form-label" for="serie">@lang('labels.serie_prefix') <span class="text-danger">*</span> </label>
                     <input wire:model="serie" type="text" class="form-control" id="serie" required="">
                     @error('serie')
                     <div class="invalid-feedback-2">{{ $message }}</div>

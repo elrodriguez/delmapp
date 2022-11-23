@@ -621,5 +621,6 @@ return [
     'you_want_to_cancel_document' => 'Desea anular documento',
     'document_canceled_correctly' => 'Documento Anulado Correctamente',
     'log_in' => 'Iniciar Sesión',
-    'already_member' => '¿Ya eres usuario?'
+    'already_member' => '¿Ya eres usuario?',
+    'serie_prefix'  => 'Prefijo de la serie',
 ];

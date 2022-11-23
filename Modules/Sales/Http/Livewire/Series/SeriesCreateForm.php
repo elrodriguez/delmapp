@@ -33,7 +33,7 @@ class SeriesCreateForm extends Component
 
     public function save(){
         $this->validate([
-            'serie' => 'required|string|unique:sal_series,id',
+            'serie' => 'required|string|min:4|max:4|unique:sal_series,id',
             'number' => 'required',
             'establishment_id' => 'required',
             'document_type_id' => 'required'
@@ -52,13 +52,13 @@ class SeriesCreateForm extends Component
         $this->dispatchBrowserEvent('set-serie-save', ['msg' => 'Datos guardados correctamente.']);
     }
 
-    
+
     public function clearForm(){
         $this->serie = null;
         $this->number = 1;
         $this->establishment_id = null;
         $this->document_type_id = null;
         $this->state = true;
-        
+
     }
 }
