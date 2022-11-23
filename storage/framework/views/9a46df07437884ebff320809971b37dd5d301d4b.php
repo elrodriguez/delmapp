@@ -58,15 +58,15 @@ $balance = $document->total - $total_payment - $payments->sum('change');
 
 <body>
 
-    <?php if($company->logo): ?>
+    <?php if(!$company->logo): ?>
         <div class="text-center company_logo_box pt-5">
             <img src="data:<?php echo e(mime_content_type(public_path("storage/{$company->logo}"))); ?>;base64, <?php echo e(base64_encode(file_get_contents(public_path("storage/{$company->logo}")))); ?>"
                 alt="<?php echo e($company->name); ?>" class="company_logo_ticket contain">
         </div>
-        
-        
-        
-        
+    <?php else: ?>
+        <div class="text-center company_logo_box pt-5">
+        <img src="<?php echo e(asset($company->logo)); ?>" class="company_logo_ticket contain">
+        </div>
     <?php endif; ?>
 
     <?php if($document->state_type_id == '11'): ?>
@@ -394,12 +394,16 @@ $balance = $document->total - $total_payment - $payments->sum('change');
                         <?php endif; ?>
                     </td>
                     <td class="text-center desc-9 align-top">
-                        <?php if(json_decode($row->item)->presentation): ?>
-                            <?php echo e(json_decode($row->item)->presentation->measure_id); ?>
-
+                        <?php if($row->item_class == 'Modules\Restaurant\Entities\RestCommand'): ?>
+                            NIU
                         <?php else: ?>
-                            <?php echo e(json_decode($row->item)->unit_measure_id); ?>
+                            <?php if(json_decode($row->item)->presentation): ?>
+                                <?php echo e(json_decode($row->item)->presentation->measure_id); ?>
 
+                            <?php else: ?>
+                                <?php echo e(json_decode($row->item)->unit_measure_id); ?>
+
+                            <?php endif; ?>
                         <?php endif; ?>
                     </td>
                     <td class="text-left desc-9 align-top">
@@ -407,8 +411,13 @@ $balance = $document->total - $total_payment - $payments->sum('change');
                             <?php echo $row->name_product_pdf; ?>
 
                         <?php else: ?>
-                            <?php echo e(json_decode($row->item)->name); ?>
+                            <?php if($row->item_class == 'Modules\Restaurant\Entities\RestCommand'): ?>
+                                <?php echo e(json_decode($row->item)->description); ?>
 
+                            <?php else: ?>
+                                <?php echo e(json_decode($row->item)->name); ?>
+
+                            <?php endif; ?>
                         <?php endif; ?>
 
                         <?php if(!empty($row->item->presentation)): ?>

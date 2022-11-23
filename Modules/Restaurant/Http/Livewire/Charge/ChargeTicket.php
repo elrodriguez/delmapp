@@ -399,6 +399,13 @@ class ChargeTicket extends Component
         $this->selectCorrelative($this->serie_id);
         $document_old_id = SalDocument::max('id');
 
+        $xoto = $this->order->total;
+        if ($this->total == $xoto) {
+            $this->order->update([
+                'state' => 'Z'
+            ]);
+        }
+
         $user = Auth::user();
         $activity = new Activity;
         $activity->modelOn(SalDocument::class, $document_old_id);

@@ -300,7 +300,7 @@
                     <div class="col-md-9 mb-3">
                         <div class="form-row">
                             <div class="col-md-12 mb-3">
-                                <textarea placeholder="{{ __('labels.additional_information') }}" class="form-control" id="example-textarea" rows="2" name="additional_information" wire:model.defer="additional_information"></textarea>
+                                <textarea placeholder="{{ __('labels.additional_information') }}" class="form-control" id="example-textarea" rows="3" name="additional_information" wire:model.defer="additional_information"></textarea>
                             </div>
                         </div>
                     </div>
@@ -309,6 +309,10 @@
                             <span wire:loading wire:target="validateForm" wire:loading.class="spinner-border spinner-border-sm" wire:loading.class.remove="fal fa-check" class="fal fa-check mr-2" role="status" aria-hidden="true"></span>
                             <span>{{ __('sales::labels.generate') }}</span>
                         </button>
+                        <a href="{{ route('restaurant_panels_charge') }}" type="button" class="btn btn-danger btn-block waves-effect waves-themed mt-2">
+                            <i class="fal fa-times mr-2"></i>
+                            <span>{{ __('labels.cancel') }}</span>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -684,7 +688,7 @@
         }
         function printPDF(format){
             let external_id = $('#document_external_id').val();
-            window.open(`../../print/`+external_id+`/`+format, '_blank');
+            window.open(`../../../../sales/documents/print/`+external_id+`/`+format, '_blank');
         }
         window.addEventListener('response_success_customer_store', event => {
            swalAlert(event.detail.message);
