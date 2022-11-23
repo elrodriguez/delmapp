@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Sales\Http\Livewire\Document;
+namespace Modules\Restaurant\Http\Livewire\Charge;
 
 use App\Models\CatPaymentMethodType;
 use App\Models\DocumentType;
@@ -33,10 +33,12 @@ use Illuminate\Support\Facades\DB;
 use Modules\Inventory\Entities\InvItemFile;
 use Modules\Inventory\Entities\InvItemPrice;
 use Modules\Inventory\Entities\InvLocation;
+use Modules\Restaurant\Entities\RestOrder;
+use Modules\Restaurant\Entities\RestOrderCommand;
 
-class DocumentCreateForm extends Component
+class ChargeBill extends Component
 {
-    public $document_type_id = '03';
+    public $document_type_id = '01';
     public $document_types;
     public $identity_document_types = [];
     public $series;
@@ -103,10 +105,12 @@ class DocumentCreateForm extends Component
     public $produc_price_description;
     public $btn_color_add;
     public $produc_id;
+    public $order_id;
 
-    public function mount()
+    public function mount($order_id)
     {
-
+        $this->order_id = $order_id;
+        $this->order = RestOrder::find($order_id);
         $this->value_icbper = Parameter::where('id_parameter', 'PRT006ICP')->value('value_default');
         $this->igv = (int) Parameter::where('id_parameter', 'PRT002IGV')->value('value_default');
 
@@ -147,6 +151,7 @@ class DocumentCreateForm extends Component
 
     public function render()
     {
+        $this->getSetItems();
         $this->recalculateAll();
         $this->cat_payment_method_types = CatPaymentMethodType::all();
         $billing = new Billing();
@@ -163,7 +168,7 @@ class DocumentCreateForm extends Component
                 $this->customer_id = $this->xgenerico->value;
             }
         }
-        return view('sales::livewire.document.document-create-form');
+        return view('restaurant::livewire.charge.charge-bill');
     }
 
     public function changeSeries()
@@ -394,6 +399,13 @@ class DocumentCreateForm extends Component
         $this->selectCorrelative($this->serie_id);
         $document_old_id = SalDocument::max('id');
 
+        $xoto = $this->order->total;
+        if ($this->total == $xoto) {
+            $this->order->update([
+                'state' => 'Z'
+            ]);
+        }
+
         $user = Auth::user();
         $activity = new Activity;
         $activity->modelOn(SalDocument::class, $document_old_id);
@@ -564,7 +576,6 @@ class DocumentCreateForm extends Component
                     $data = [
                         'item_id' => $item['id'],
                         'item' => json_encode($item),
-                        'item_class' => InvItem::class,
                         'currency_type_id' => $item['currency_type_id'],
                         'quantity' => $this->produc_quantity,
                         'unit_value' => 0,
@@ -677,9 +688,12 @@ class DocumentCreateForm extends Component
         }
 
         //impuesto bolsa
-        if (json_decode($data['item'])->has_plastic_bag_taxes) {
-            $data['total_plastic_bag_taxes'] = number_format($quantity * $this->value_icbper, 2, '.', '');
+        if ($data['item_class'] == InvItem::class) {
+            if (json_decode($data['item'])->has_plastic_bag_taxes) {
+                $data['total_plastic_bag_taxes'] = number_format($quantity * $this->value_icbper, 2, '.', '');
+            }
         }
+
 
         return $data;
     }
@@ -803,5 +817,77 @@ class DocumentCreateForm extends Component
         $this->item_id = $this->produc_id;
         $this->clickAddItem();
         $this->dispatchBrowserEvent('response-hide-modal-product-details', ['res' => true]);
+    }
+
+    public function getSetItems()
+    {
+        //dd($this->order_id);
+        $commands = RestOrderCommand::where('order_id', $this->order_id)->get();
+        $affectation_igv_type = AffectationIgvType::where('id', '10')->first()->toArray();
+        //dd($commands);
+        $currencyTypeIdActive = 'PEN';
+        $exchangeRateSale = 0.01;
+        $currency_type_id_old = 'PEN';
+
+        foreach ($commands as $k => $command) {
+            $unit_price = $command->price;
+            if ($currency_type_id_old === 'PEN' && $currency_type_id_old !== $currencyTypeIdActive) {
+                $unit_price = $unit_price / $exchangeRateSale;
+            }
+
+            if ($currencyTypeIdActive === 'PEN' && $currency_type_id_old !== $currencyTypeIdActive) {
+                $unit_price = $unit_price * $exchangeRateSale;
+            }
+
+            $item = $command->command_type::find($command->command_id)->toArray();
+
+            $presentation = array('presentation' => []);
+
+            if ($this->produc_price_id) {
+                $presentation['presentation'] = InvItemPrice::find($this->produc_price_id)->toArray();
+            }
+
+            $item = array_merge($item, $presentation);
+
+            $data = [
+                'item_id' => $command->command_id,
+                'item' => json_encode($item),
+                'item_class' => $command->command_type,
+                'currency_type_id' => 'PEN',
+                'quantity' => $command->quantity,
+                'unit_value' => 0,
+                'affectation_igv_type_id' => '10',
+                'affectation_igv_type' => json_encode($affectation_igv_type),
+                'total_base_igv' => 0,
+                'percentage_igv' => $this->igv,
+                'total_igv' => 0,
+                'system_isc_type_id' => null,
+                'total_base_isc' => 0,
+                'percentage_isc' => 0,
+                'total_isc' => 0,
+                'total_base_other_taxes' => 0,
+                'percentage_other_taxes' => 0,
+                'total_other_taxes' => 0,
+                'total_plastic_bag_taxes' => 0,
+                'total_taxes' => 0,
+                'price_type_id' => '01',
+                'unit_price' => $unit_price,
+                'input_unit_price_value' => $command->price,
+                'total_value' => 0,
+                'total_discount' => 0,
+                'total_charge' => 0,
+                'total' => 0
+            ];
+
+            $this->box_items[$k] = $this->calculateRowItem($data, $currencyTypeIdActive, $exchangeRateSale);
+        }
+
+        $this->payment_method_types[0] = [
+            'method' => '01',
+            'destination' => 'cash',
+            'date_of_payment' => Carbon::now()->format('d/m/Y'),
+            'reference' => null,
+            'amount' => $this->total
+        ];
     }
 }

@@ -61,8 +61,8 @@
                                                 <i class="fal fa-file mr-1"></i>Nota de Venta</a>
                                             <a href="{{ route('restaurant_panels_charge_ticket', $order->id) }}" class="dropdown-item">
                                                     <i class="fal fa-file-check mr-1"></i>Boleta Electrónica</a>
-                                                <button type="button" class="dropdown-item">
-                                                    <i class="fal fa-file-invoice-dollar mr-1"></i>Factura Electrónica</button>
+                                            <a href="{{ route('restaurant_panels_charge_bill', $order->id) }}" type="button" class="dropdown-item">
+                                                <i class="fal fa-file-invoice-dollar mr-1"></i>Factura Electrónica</a>
                                         </div>
                                     </div>
                                 </td>

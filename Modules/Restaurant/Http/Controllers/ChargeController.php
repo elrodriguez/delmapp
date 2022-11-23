@@ -38,6 +38,10 @@ class ChargeController extends Controller
     {
         return view('restaurant::charge.ticket')->with('id', $id);
     }
+    public function bill($id)
+    {
+        return view('restaurant::charge.bill')->with('id', $id);
+    }
     public function printSaleNote($external_id, $format = null)
     {
         $document = RestSaleNote::where('external_id', $external_id)->first();

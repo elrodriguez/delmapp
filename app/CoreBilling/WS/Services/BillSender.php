@@ -21,11 +21,12 @@ class BillSender extends BaseSunat
         $result = new BillResult();
 
         try {
-            $zipContent = $this->compress($filename.'.xml', $content);
+            $zipContent = $this->compress($filename . '.xml', $content);
             $params = [
-                'fileName' => $filename.'.zip',
+                'fileName' => $filename . '.zip',
                 'contentFile' => $zipContent,
             ];
+
             $response = $client->call('sendBill', ['parameters' => $params]);
             $cdrZip = $response->applicationResponse;
             $result

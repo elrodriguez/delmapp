@@ -9,7 +9,7 @@
                         <?php $__currentLoopData = $establishments; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $establishment): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <option value="<?php echo e($establishment->id); ?>"><?php echo e($establishment->name); ?></option>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    </select> 
+                    </select>
                     <?php $__errorArgs = ['establishment_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -28,7 +28,7 @@ unset($__errorArgs, $__bag); ?>
                         <?php $__currentLoopData = $document_types; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $document_type): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                         <option value="<?php echo e($document_type->id); ?>"><?php echo e($document_type->description); ?></option>
                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                    </select> 
+                    </select>
                     <?php $__errorArgs = ['document_type_id'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
 if ($__bag->has($__errorArgs[0])) :
@@ -41,7 +41,7 @@ endif;
 unset($__errorArgs, $__bag); ?>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <label class="form-label" for="serie"><?php echo app('translator')->get('labels.serie'); ?> <span class="text-danger">*</span> </label>
+                    <label class="form-label" for="serie"><?php echo app('translator')->get('labels.serie_prefix'); ?> <span class="text-danger">*</span> </label>
                     <input wire:model="serie" type="text" class="form-control" id="serie" required="">
                     <?php $__errorArgs = ['serie'];
 $__bag = $errors->getBag($__errorArgs[1] ?? 'default');
