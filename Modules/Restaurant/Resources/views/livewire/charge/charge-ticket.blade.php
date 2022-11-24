@@ -108,7 +108,7 @@
 
                     </div>
                 </div>
-                
+
             </div>
             <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0">
                 <div class="row">
@@ -174,7 +174,7 @@
 
             @if(count($payment_method_types)>0)
             <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0">
-                
+
                 <div class="row">
                     <div class="col-md-4 offset-md-8 mb-3">
                         @if($total_exportation>0)
@@ -443,8 +443,9 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Imprimir</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                    <button type="button" class="close"  aria-label="Close">
+                            <a href="{{ route('sales_document_list') }}" type="button" class="btn btn-primary"> <span aria-hidden="true">&times;</a>
+                        </span>
                     </button>
                 </div>
                 <div class="modal-body">
@@ -477,7 +478,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('labels.close') }}</button>
+                    <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ __('labels.close') }}</button> -->
                     <a href="{{ route('sales_document_list') }}" type="button" class="btn btn-primary">{{ __('labels.list') }}</a>
                 </div>
             </div>
@@ -560,7 +561,7 @@
                                     @else
                                         <tr>
                                             <td colspan="5">
-                                               <div class="alert alert-info text-center">No existen datos</div> 
+                                               <div class="alert alert-info text-center">No existen datos</div>
                                             </td>
                                         </tr>
                                     @endif
@@ -617,7 +618,7 @@
             });
 
         });
-        
+
         window.addEventListener('response-open-modal-product-details', event => {
             $('#modalPreProductDetailsAdd').modal('show');
         });

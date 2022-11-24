@@ -59,7 +59,7 @@
                                     <div class="media-body">
                                         <a wire:click="clickAddItem({{ $product['id'] }})" href="javascript:void(0)"><h5 class="mt-0">{{ $product['name'] }}</h5></a>
                                         <p class="text-info">
-                                           <b>{{ __('labels.code') }}: </b>{{ $product['patrimonial_code'] }} - <b>{{ __('labels.price') }}: </b>{{ $product['sale_price'] }} - <b>{{ __('labels.stock') }}: </b>{{ $product['stock'] }} - <b>{{ __('labels.brand') }}: </b>{{ $product['description'] }} 
+                                           <b>{{ __('labels.code') }}: </b>{{ $product['patrimonial_code'] }} - <b>{{ __('labels.price') }}: </b>{{ $product['sale_price'] }} - <b>{{ __('labels.stock') }}: </b>{{ $product['stock'] }} - <b>{{ __('labels.brand') }}: </b>{{ $product['description'] }}
                                         </p>
                                         @if(count($product['related'])>0)
                                             @foreach ($product['related'] as $k => $item)
@@ -152,7 +152,7 @@
                     <button {{ count($box_items)>0 ? '' : 'disabled' }} type="button" class="btn btn-default" data-toggle="modal" data-target="#modalPharmacyPaymentsClient"><i class="fal fa-donate mr-1"></i> Pagar</button>
                 </div>
             </div>
-            
+
         </div>
     </div>
     <!-- Modal Right -->

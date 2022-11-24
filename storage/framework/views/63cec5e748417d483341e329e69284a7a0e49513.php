@@ -44,15 +44,15 @@
     <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('setting::roles.roles-form')->html();
-} elseif ($_instance->childHasBeenRendered('JwUzejE')) {
-    $componentId = $_instance->getRenderedChildComponentId('JwUzejE');
-    $componentTag = $_instance->getRenderedChildComponentTagName('JwUzejE');
+} elseif ($_instance->childHasBeenRendered('iiUetgH')) {
+    $componentId = $_instance->getRenderedChildComponentId('iiUetgH');
+    $componentTag = $_instance->getRenderedChildComponentTagName('iiUetgH');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('JwUzejE');
+    $_instance->preserveRenderedChild('iiUetgH');
 } else {
     $response = \Livewire\Livewire::mount('setting::roles.roles-form');
     $html = $response->html();
-    $_instance->logRenderedChild('JwUzejE', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('iiUetgH', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>

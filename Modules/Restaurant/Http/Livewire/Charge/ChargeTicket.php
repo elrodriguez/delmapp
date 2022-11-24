@@ -287,6 +287,8 @@ class ChargeTicket extends Component
         } else {
             $this->dispatchBrowserEvent('response_customer_not_ruc_exists', ['message' => Lang::get('labels.msg_client_does_not_registered_ruc')]);
         }
+
+
     }
 
     public function store()

@@ -33,6 +33,7 @@ class AttendOrder extends Component
     public $table_ids;
     public $discount;
     public $total = 0;
+    public $first_loading = true;
 
     protected $listeners = ['showFormOrder' => 'tableId'];
 
@@ -86,6 +87,7 @@ class AttendOrder extends Component
             session([$array_key => $this->table]);
         }
         session(['rest_tab_id' => '#tab_default-2']);
+        $this->first_loading=false;
 
         $this->dispatchBrowserEvent('restaurant-active-orders', ['success' => true]);
     }

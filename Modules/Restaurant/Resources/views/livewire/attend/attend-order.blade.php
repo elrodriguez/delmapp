@@ -112,6 +112,16 @@
                             <label>Cliente</label>
                             <input wire:model="client" type="text" class="form-control">
                         </div>
+                        @if($first_loading)
+                        <div class="col-12 col-sm-8 col-md-8 col-lg-6">
+                            <label>Mesas</label>
+                            <select id="table_ids" name="table_ids[]" multiple="multiple">
+                                @foreach ($xtables as $xtable)
+                                    <option value="{{ $xtable->id }}">{{ $xtable->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @else
                         <div wire:ignore class="col-12 col-sm-8 col-md-8 col-lg-6">
                             <label>Mesas</label>
                             <select id="table_ids" name="table_ids[]" multiple="multiple">
@@ -120,6 +130,7 @@
                                 @endforeach
                             </select>
                         </div>
+                        @endif
                     </div>
                     <div>
                         <table class="table">

@@ -108,7 +108,7 @@
 
                     </div>
                 </div>
-                
+
             </div>
             <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0">
                 <div class="row">
@@ -174,7 +174,7 @@
 
             @if(count($payment_method_types)>0)
             <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0">
-                
+
                 <div class="row">
                     <div class="col-md-4 offset-md-8 mb-3">
                         @if($total_exportation>0)
@@ -560,7 +560,7 @@
                                     @else
                                         <tr>
                                             <td colspan="5">
-                                               <div class="alert alert-info text-center">No existen datos</div> 
+                                               <div class="alert alert-info text-center">No existen datos</div>
                                             </td>
                                         </tr>
                                     @endif
@@ -617,7 +617,7 @@
             });
 
         });
-        
+
         window.addEventListener('response-open-modal-product-details', event => {
             $('#modalPreProductDetailsAdd').modal('show');
         });
