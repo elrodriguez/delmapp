@@ -25,6 +25,7 @@ class ExtService extends BaseSunat
                 'ticket' => $ticket,
             ];
             $response = $client->call('getStatus', ['parameters' => $params]);
+            //dd($response);
             $status = $response->status;
             $code = $status->statusCode;
 
@@ -50,6 +51,7 @@ class ExtService extends BaseSunat
                 $this->loadErrorByCode($result, $code);
             }
         } catch (\SoapFault $e) {
+            //dd($e);
             $result->setError($this->getErrorFromFault($e));
         }
 
@@ -77,5 +79,9 @@ class ExtService extends BaseSunat
     private function isPending($code)
     {
         return '98' == $code;
+    }
+    public function getCustomStatusCode()
+    {
+        return (int) $this->customStatusCode;
     }
 }
