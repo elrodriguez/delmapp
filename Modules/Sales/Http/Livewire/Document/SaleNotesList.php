@@ -15,6 +15,7 @@ use Modules\Inventory\Entities\InvAsset;
 use Modules\Inventory\Entities\InvItem;
 use Modules\Inventory\Entities\InvKardex;
 use Modules\Inventory\Entities\InvLocation;
+use Modules\Restaurant\Entities\RestSaleNote;
 use Modules\Sales\Entities\SalSaleNote;
 
 class SaleNotesList extends Component
@@ -44,14 +45,15 @@ class SaleNotesList extends Component
 
 
     public function getData(){
-        return SalSaleNote::join('state_types','state_type_id','state_types.id')
+
+        $sales_notes_sales = SalSaleNote::join('state_types','state_type_id','state_types.id')
             ->leftJoin('sal_documents','document_id','sal_documents.id')
             ->select(
                 'sal_sale_notes.id',
                 'sal_sale_notes.external_id',
                 'sal_sale_notes.date_of_issue',
                 'sal_sale_notes.series',
-                'sal_sale_notes.number',
+                'sal_sale_notes.number as number',
                 'sal_sale_notes.customer',
                 'sal_sale_notes.state_type_id',
                 'state_types.description',
@@ -61,6 +63,39 @@ class SaleNotesList extends Component
             )
             ->orderBy('sal_sale_notes.number','DESC')
             ->paginate($this->show);
+
+
+            $sales_notes_restaurants = RestSaleNote::join('state_types','state_type_id','state_types.id')
+            ->leftJoin('sal_documents','document_id','sal_documents.id')
+            ->select(
+                'rest_sale_notes.id',
+                'rest_sale_notes.external_id',
+                'rest_sale_notes.date_of_issue',
+                'rest_sale_notes.series',
+                'rest_sale_notes.number as number',
+                'rest_sale_notes.customer',
+                'rest_sale_notes.state_type_id',
+                'state_types.description',
+                'rest_sale_notes.total',
+                'rest_sale_notes.paid',
+                DB::raw('CONCAT(sal_documents.series,"-",sal_documents.number) AS voucher')
+            )
+            ->orderBy('rest_sale_notes.number','DESC')
+            ->paginate($this->show);
+            $unity = null;
+            if(count($sales_notes_sales)>0 && count($sales_notes_restaurants)>0 ){
+                $unity = array_merge($sales_notes_sales, $sales_notes_restaurants);
+                //$unity = $sales_notes_restaurants->union($sales_notes_sales)->get();
+            }else{
+                if(count($sales_notes_sales)>0)$unity=$sales_notes_sales;
+                if(count($sales_notes_restaurants)>0)$unity=$sales_notes_restaurants;
+            }
+            //return $sales_notes_restaurants;
+            return $unity;
+
+           //->orderBy('sal_sale_notes.number','DESC')
+            //->paginate($this->show);
+
     }
 
     public function cancelDocument($id){

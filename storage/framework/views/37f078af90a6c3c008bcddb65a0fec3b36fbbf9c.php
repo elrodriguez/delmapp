@@ -47,15 +47,15 @@
     <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('sales::series.series-list')->html();
-} elseif ($_instance->childHasBeenRendered('QVonx95')) {
-    $componentId = $_instance->getRenderedChildComponentId('QVonx95');
-    $componentTag = $_instance->getRenderedChildComponentTagName('QVonx95');
+} elseif ($_instance->childHasBeenRendered('mNQ4iCr')) {
+    $componentId = $_instance->getRenderedChildComponentId('mNQ4iCr');
+    $componentTag = $_instance->getRenderedChildComponentTagName('mNQ4iCr');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('QVonx95');
+    $_instance->preserveRenderedChild('mNQ4iCr');
 } else {
     $response = \Livewire\Livewire::mount('sales::series.series-list');
     $html = $response->html();
-    $_instance->logRenderedChild('QVonx95', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('mNQ4iCr', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>

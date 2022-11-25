@@ -54,15 +54,15 @@
     <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('inventory::purchase.purchase-create')->html();
-} elseif ($_instance->childHasBeenRendered('4YNJOhO')) {
-    $componentId = $_instance->getRenderedChildComponentId('4YNJOhO');
-    $componentTag = $_instance->getRenderedChildComponentTagName('4YNJOhO');
+} elseif ($_instance->childHasBeenRendered('ZTR4TRy')) {
+    $componentId = $_instance->getRenderedChildComponentId('ZTR4TRy');
+    $componentTag = $_instance->getRenderedChildComponentTagName('ZTR4TRy');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('4YNJOhO');
+    $_instance->preserveRenderedChild('ZTR4TRy');
 } else {
     $response = \Livewire\Livewire::mount('inventory::purchase.purchase-create');
     $html = $response->html();
-    $_instance->logRenderedChild('4YNJOhO', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('ZTR4TRy', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>

@@ -83,14 +83,14 @@ class CompanyEdit extends Component
         $logo = $this->logo;
         $logo_store = $this->logo_store;
         //dd($this->logo);
-        if ($this->logo) {
+        if ($this->logo != $this->logo_view_last) {
 
             $logo_name = 'company' . DIRECTORY_SEPARATOR . 'logos';
             $this->logo->storeAs($logo_name, 'logo.jpg', 'public');
             $logo = $logo_name . DIRECTORY_SEPARATOR . 'logo.jpg';
         }
         //dd('fff');
-        if ($this->logo_store) {
+        if ($this->logo_store != $this->logo_store_last) {
             $logo_store_name = 'company' . DIRECTORY_SEPARATOR . 'logos';
             $this->logo_store->storeAs($logo_store_name, 'logo_store.jpg', 'public');
             $logo_store = $logo_store_name . DIRECTORY_SEPARATOR . 'logo_store.jpg';

@@ -121,7 +121,7 @@
             <div class="ml-auto">{{ $notes->links() }}</div>
         </div>
     </div>
-    
+
     <script type="text/javascript">
         function confirmCancel(id){
             initApp.playSound('{{ url("themes/smart-admin/media/sound") }}', 'bigbox')
