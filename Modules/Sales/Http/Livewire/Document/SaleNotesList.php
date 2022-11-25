@@ -28,14 +28,15 @@ class SaleNotesList extends Component
     protected $paginationTheme = 'bootstrap';
     protected $listeners = ['refreshlistSaleNotes' => 'searchSaleNote'];
 
-    public function mount(){
+    public function mount()
+    {
         $this->show = 10;
-        $this->stock_notes = (boolean) Parameter::where('id_parameter','PRT008DSN')->value('value_default');
+        $this->stock_notes = (bool) Parameter::where('id_parameter', 'PRT008DSN')->value('value_default');
     }
 
     public function render()
     {
-        return view('sales::livewire.document.sale-notes-list',['notes' => $this->getData()]);
+        return view('sales::livewire.document.sale-notes-list', ['notes' => $this->getData()]);
     }
 
     public function searchSaleNote()
@@ -44,10 +45,11 @@ class SaleNotesList extends Component
     }
 
 
-    public function getData(){
+    public function getData()
+    {
 
-        $sales_notes_sales = SalSaleNote::join('state_types','state_type_id','state_types.id')
-            ->leftJoin('sal_documents','document_id','sal_documents.id')
+        $sales_notes_sales = SalSaleNote::join('state_types', 'state_type_id', 'state_types.id')
+            ->leftJoin('sal_documents', 'document_id', 'sal_documents.id')
             ->select(
                 'sal_sale_notes.id',
                 'sal_sale_notes.external_id',
@@ -60,13 +62,11 @@ class SaleNotesList extends Component
                 'sal_sale_notes.total',
                 'sal_sale_notes.paid',
                 DB::raw('CONCAT(sal_documents.series,"-",sal_documents.number) AS voucher')
-            )
-            ->orderBy('sal_sale_notes.number','DESC')
-            ->paginate($this->show);
+            );
 
 
-            $sales_notes_restaurants = RestSaleNote::join('state_types','state_type_id','state_types.id')
-            ->leftJoin('sal_documents','document_id','sal_documents.id')
+        $sales_notes_restaurants = RestSaleNote::join('state_types', 'state_type_id', 'state_types.id')
+            ->leftJoin('sal_documents', 'document_id', 'sal_documents.id')
             ->select(
                 'rest_sale_notes.id',
                 'rest_sale_notes.external_id',
@@ -79,36 +79,23 @@ class SaleNotesList extends Component
                 'rest_sale_notes.total',
                 'rest_sale_notes.paid',
                 DB::raw('CONCAT(sal_documents.series,"-",sal_documents.number) AS voucher')
-            )
-            ->orderBy('rest_sale_notes.number','DESC')
-            ->paginate($this->show);
-            $unity = null;
-            if(count($sales_notes_sales)>0 && count($sales_notes_restaurants)>0 ){
-                $unity = array_merge($sales_notes_sales, $sales_notes_restaurants);
-                //$unity = $sales_notes_restaurants->union($sales_notes_sales)->get();
-            }else{
-                if(count($sales_notes_sales)>0)$unity=$sales_notes_sales;
-                if(count($sales_notes_restaurants)>0)$unity=$sales_notes_restaurants;
-            }
-            //return $sales_notes_restaurants;
-            return $unity;
+            );
 
-           //->orderBy('sal_sale_notes.number','DESC')
-            //->paginate($this->show);
-
+        return $sales_notes_sales->union($sales_notes_restaurants)->orderBy('number', 'DESC')->paginate();
     }
 
-    public function cancelDocument($id){
+    public function cancelDocument($id)
+    {
         $note = SalSaleNote::find($id);
         $items = $note->items;
-        $warehouse_id = InvLocation::where('establishment_id',$note->establishment_id)->first()->id;
+        $warehouse_id = InvLocation::where('establishment_id', $note->establishment_id)->first()->id;
 
-        foreach($items as $item){
-            if($this->stock_notes){
-                InvAsset::where('item_id',$item->item_id)
-                        ->where('location_id',$warehouse_id)
-                        ->increment('stock',$item->quantity);
-                InvItem::where('id',$item->item_id)->increment('stock',$item->quantity);
+        foreach ($items as $item) {
+            if ($this->stock_notes) {
+                InvAsset::where('item_id', $item->item_id)
+                    ->where('location_id', $warehouse_id)
+                    ->increment('stock', $item->quantity);
+                InvItem::where('id', $item->item_id)->increment('stock', $item->quantity);
                 InvKardex::create([
                     'date_of_issue' => Carbon::now()->format('Y-m-d'),
                     'establishment_id' => $note->establishment_id,
@@ -116,7 +103,7 @@ class SaleNotesList extends Component
                     'kardexable_id' => $note->id,
                     'kardexable_type' => SalSaleNote::class,
                     'location_id' => $warehouse_id,
-                    'quantity'=> $item->quantity,
+                    'quantity' => $item->quantity,
                     'detail' => 'Anulación de Venta'
                 ]);
             }
