@@ -1,4 +1,3 @@
-
 <?php $__env->startSection('styles'); ?>
     <link rel="stylesheet" media="screen, print" href="<?php echo e(url('themes/smart-admin/css/datagrid/datatables/datatables.bundle.css')); ?>">
     <link rel="stylesheet" media="screen, print" href="<?php echo e(url('themes/smart-admin/css/formplugins/bootstrap-datepicker/bootstrap-datepicker.css')); ?>">
@@ -50,30 +49,30 @@
     <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('sales::document.sale-notes-list')->html();
-} elseif ($_instance->childHasBeenRendered('ZoljiEw')) {
-    $componentId = $_instance->getRenderedChildComponentId('ZoljiEw');
-    $componentTag = $_instance->getRenderedChildComponentTagName('ZoljiEw');
+} elseif ($_instance->childHasBeenRendered('nD9Te7G')) {
+    $componentId = $_instance->getRenderedChildComponentId('nD9Te7G');
+    $componentTag = $_instance->getRenderedChildComponentTagName('nD9Te7G');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('ZoljiEw');
+    $_instance->preserveRenderedChild('nD9Te7G');
 } else {
     $response = \Livewire\Livewire::mount('sales::document.sale-notes-list');
     $html = $response->html();
-    $_instance->logRenderedChild('ZoljiEw', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('nD9Te7G', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>
     <?php
 if (! isset($_instance)) {
     $html = \Livewire\Livewire::mount('sales::document.sale-notes-modal-payments')->html();
-} elseif ($_instance->childHasBeenRendered('fyCJiq1')) {
-    $componentId = $_instance->getRenderedChildComponentId('fyCJiq1');
-    $componentTag = $_instance->getRenderedChildComponentTagName('fyCJiq1');
+} elseif ($_instance->childHasBeenRendered('PfLRK3g')) {
+    $componentId = $_instance->getRenderedChildComponentId('PfLRK3g');
+    $componentTag = $_instance->getRenderedChildComponentTagName('PfLRK3g');
     $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
-    $_instance->preserveRenderedChild('fyCJiq1');
+    $_instance->preserveRenderedChild('PfLRK3g');
 } else {
     $response = \Livewire\Livewire::mount('sales::document.sale-notes-modal-payments');
     $html = $response->html();
-    $_instance->logRenderedChild('fyCJiq1', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+    $_instance->logRenderedChild('PfLRK3g', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
 }
 echo $html;
 ?>

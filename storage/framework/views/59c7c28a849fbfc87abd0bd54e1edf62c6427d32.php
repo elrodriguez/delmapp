@@ -123,7 +123,7 @@
             <div class="ml-auto"><?php echo e($notes->links()); ?></div>
         </div>
     </div>
-    
+
     <script type="text/javascript">
         function confirmCancel(id){
             initApp.playSound('<?php echo e(url("themes/smart-admin/media/sound")); ?>', 'bigbox')
