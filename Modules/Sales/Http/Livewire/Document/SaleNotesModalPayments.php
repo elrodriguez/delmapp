@@ -16,10 +16,12 @@ use App\CoreBilling\Billing;
 use Illuminate\Support\Facades\Auth;
 use Modules\Setting\Entities\SetCompany;
 use Elrod\UserActivity\Activity;
+use Modules\Restaurant\Entities\RestSaleNote;
 
 class SaleNotesModalPayments extends Component
 {
-    protected $listeners = ['openModalNotePayments' => 'openModalPayments'];
+    protected $listeners = ['openModalNotePaymentsRest' => 'openModalPaymentsRest',
+                            'openModalNotePaymentsSal' => 'openModalPaymentsSal'];
 
     public $note_id;
     public $paid;
@@ -45,16 +47,27 @@ class SaleNotesModalPayments extends Component
     }
 
     public function render()
-    {   
+    {
         $this->cat_payment_method_types = CatPaymentMethodType::all();
         $this->cat_expense_method_types = $this->getPaymentDestinations();
 
         return view('sales::livewire.document.sale-notes-modal-payments');
     }
 
-    public function openModalPayments($id){
+    public function openModalPaymentsSal($id){ //ventas
         $this->note_id = $id;
         $this->note = SalSaleNote::find($this->note_id);
+        $vaucher = $this->note->series.'-'.str_pad($this->note->number, 8, "0", STR_PAD_LEFT);
+        $this->paid = $this->note->paid;
+        $this->note_number = $this->note->series.'-'.$this->note->number;
+        $this->total_note = $this->note->total;
+        $this->listPayments();
+        $this->dispatchBrowserEvent('modal-sales-note-payments', ['vaucher' => $vaucher]);
+    }
+
+    public function openModalPaymentsRest($id){ //restaurante
+        $this->note_id = $id;
+        $this->note = RestSaleNote::find($this->note_id);
         $vaucher = $this->note->series.'-'.str_pad($this->note->number, 8, "0", STR_PAD_LEFT);
         $this->paid = $this->note->paid;
         $this->note_number = $this->note->series.'-'.$this->note->number;
@@ -92,7 +105,7 @@ class SaleNotesModalPayments extends Component
     }
 
     public function getPaymentDestinations(){
-        
+
         $bank_accounts = self::getBankAccounts();
         $cash = $this->getCash();
 
@@ -232,7 +245,7 @@ class SaleNotesModalPayments extends Component
                             )
                             ->where('sale_note_id',$this->note_id)
                             ->get();
-        
+
 
         foreach($payments as $payment){
             $this->total_payments = $this->total_payments + $payment->payment;

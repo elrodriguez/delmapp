@@ -43,6 +43,11 @@ class SaleNotesController extends Controller
         return view('sales::document.sale_notes_edit')->with('id', $id);
     }
 
+    public function edit_rest($id)
+    {
+        return view('sales::document.sale_notes_edit_rest')->with('id', $id);
+    }
+
     public function toPrintInvoice($external_id, $format = null)
     {
 

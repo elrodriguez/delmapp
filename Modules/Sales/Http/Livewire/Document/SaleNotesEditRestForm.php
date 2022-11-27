@@ -39,10 +39,10 @@ use App\CoreBilling\Helpers\Storage\StorageDocument;
 use App\Models\GlobalPayment;
 use Modules\Inventory\Entities\InvAsset;
 use Modules\Inventory\Entities\InvLocation;
+use Modules\Restaurant\Entities\RestSaleNote;
 
-class SaleNotesEditForm extends Component
+class SaleNotesEditRestForm extends Component
 {
-
     use StorageDocument;
 
     public $document_type_id = '80';
@@ -625,12 +625,12 @@ class SaleNotesEditForm extends Component
             $data['unit_value'] = 0;
             $data['total'] = 0;
         }
-
-        //impuesto bolsa
+        dd($data);
+        // impuesto bolsa
         if(json_decode($data['item'])->has_plastic_bag_taxes){
             $data['total_plastic_bag_taxes'] = number_format($quantity * $this->value_icbper, 2, '.', '');
         }
-        dd($data);
+
         return $data;
     }
 
@@ -991,7 +991,7 @@ class SaleNotesEditForm extends Component
     }
 
     public function getDataSaleNote(){
-        $this->note = SalSaleNote::where('external_id',$this->external_id)->first();
+        $this->note = RestSaleNote::where('external_id',$this->external_id)->first();
         $this->note_id = $this->note->id;
         $this->value_icbper = Parameter::where('id_parameter','PRT006ICP')->value('value_default');
 

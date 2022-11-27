@@ -25,7 +25,7 @@ Route::middleware([
 
     Route::group(['prefix' => 'administration'], function() {
         Route::middleware(['middleware' => 'role_or_permission:ventas_administracion_caja_chica'])->get('cash','CashController@index')->name('sales_administration_cash');
-    
+
         Route::middleware(['middleware' => 'role_or_permission:ventas_administracion_caja_chica_cerrar'])->get('cash/close/{id}','CashController@closeCash')->name('sales_administration_cash_close');
         Route::get('cash/report/{id}','CashController@report')->name('sales_administration_cash_report_pdf');
         Route::get('cash/report_products/{id}', 'CashController@report_products')->name('sales_administration_cash_report_products_pdf');
@@ -45,9 +45,9 @@ Route::middleware([
                 return redirect()->route('sales_administration_cash');
             }
         })->name('sales_document_create');
-        
+
         Route::get('products_search', 'ItemsController@searchItems')->name('sales_products_search');
-        
+
         Route::middleware(['middleware' => 'role_or_permission:ventas_comprobante_listado'])->get('documents_list','DocumentsController@index')->name('sales_document_list');
 
         Route::get('download/{domain}/{type}/{filename}', 'DocumentsController@downloadExternal')->name('download_sale_document');
@@ -58,12 +58,13 @@ Route::middleware([
         Route::get('sale/search_customers','CustomersController@searchCustomers')->name('sales_customers_search');
 
         Route::get('print/{external_id}/{format?}', 'DocumentsController@toPrintInvoice');
-    
+
         Route::middleware(['middleware' => 'role_or_permission:ventas_nota_venta'])->get('notes', 'SaleNotesController@index')->name('sales_documents_sale_notes');
         Route::middleware(['middleware' => 'role_or_permission:ventas_nota_venta_nuevo'])->get('notes/create', 'SaleNotesController@create')->name('sales_documents_sale_notes_create');
         Route::middleware(['middleware' => 'role_or_permission:ventas_nota_venta_editar'])->get('notes/edit/{id}', 'SaleNotesController@edit')->name('sales_documents_sale_notes_edit');
+        Route::middleware(['middleware' => 'role_or_permission:ventas_nota_venta_editar'])->get('notes_rest/edit/{id}', 'SaleNotesController@edit_rest')->name('sales_documents_sale_notes_edit_rest');
         Route::get('notes/print/{external_id}/{format?}', 'SaleNotesController@toPrintInvoice');
-    
+
     });
 
     Route::group(['prefix' => 'expenses'], function() {

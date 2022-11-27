@@ -205,7 +205,10 @@ class ChargeSaleNote extends Component
 
     public function getSetItems()
     {
-        $commands = RestOrderCommand::where('order_id', $this->order_id)->get();
+        $commands = RestOrderCommand::where('order_id', $this->order_id)
+        ->select(DB::raw('* , 0 as has_plastic_bag_taxes , description as name'))
+        ->get();
+/////////////////////////////////////////////////////////////////// aqui agregúe  2 items mas pero no funciona al final
         $affectation_igv_type = AffectationIgvType::where('id', '10')->first()->toArray();
 
         $currencyTypeIdActive = 'PEN';
@@ -800,6 +803,7 @@ class ChargeSaleNote extends Component
                 'total_discount' => $row['total_discount'],
                 'total' => $row['total']
             ]);
+
 
             if ($row['item_class'] == 'Modules\Inventory\Entities\InvItem') {
                 if ($this->stock_notes) {

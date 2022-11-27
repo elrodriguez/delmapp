@@ -61,7 +61,7 @@ class SaleNotesList extends Component
                 'state_types.description',
                 'sal_sale_notes.total',
                 'sal_sale_notes.paid',
-                DB::raw('2 AS module'),
+                DB::raw('1 AS module'),
                 DB::raw('CONCAT(sal_documents.series,"-",sal_documents.number) AS voucher')
             );
 
