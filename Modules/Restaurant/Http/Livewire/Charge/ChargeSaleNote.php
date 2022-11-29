@@ -205,10 +205,7 @@ class ChargeSaleNote extends Component
 
     public function getSetItems()
     {
-        $commands = RestOrderCommand::where('order_id', $this->order_id)
-        ->select(DB::raw('* , 0 as has_plastic_bag_taxes , description as name'))
-        ->get();
-/////////////////////////////////////////////////////////////////// aqui agregúe  2 items mas pero no funciona al final
+        $commands = RestOrderCommand::where('order_id', $this->order_id)->get();
         $affectation_igv_type = AffectationIgvType::where('id', '10')->first()->toArray();
 
         $currencyTypeIdActive = 'PEN';
@@ -255,6 +252,7 @@ class ChargeSaleNote extends Component
             ];
 
             $this->box_items[$k] = $this->calculateRowItem($data, $currencyTypeIdActive, $exchangeRateSale);
+            //dd($this->box_items[$k] );
         }
         $this->payment_method_types[0] = [
             'method' => '01',
@@ -317,6 +315,8 @@ class ChargeSaleNote extends Component
         $data['total_igv'] =  number_format($total_igv, 2, '.', '');
         $data['total_taxes'] = number_format($total_taxes, 2, '.', '');
         $data['total'] = number_format($total, 2, '.', '');
+
+
 
         if (json_decode($data['affectation_igv_type'])->free) {
             $data['price_type_id'] = '02';
@@ -772,7 +772,8 @@ class ChargeSaleNote extends Component
             'legends' => $legends,
             'total_canceled' => true,
             'paid' => ($paid == $this->total ? true : false),
-            'observation' => $this->additional_information
+            'observation' => $this->additional_information,
+            'order_note_id' => $this->order_id
         ]);
         $xxto = 0;
         foreach ($this->box_items as $row) {

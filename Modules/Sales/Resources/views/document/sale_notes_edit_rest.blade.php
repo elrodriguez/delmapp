@@ -21,7 +21,7 @@
     </div>
 @endsection
 @section('content')
-    @livewire('sales::document.sale-notes-edit-rest-form',['note_id' => $id])
+    @livewire('sales::document.sale-notes-edit-rest-form',['external_id' => $id])
 @endsection
 @section('script')
     <script src="{{ url('themes/smart-admin/js/formplugins/inputmask/inputmask.bundle.js') }}"></script>

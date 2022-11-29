@@ -630,7 +630,6 @@ class SaleNotesEditForm extends Component
         if(json_decode($data['item'])->has_plastic_bag_taxes){
             $data['total_plastic_bag_taxes'] = number_format($quantity * $this->value_icbper, 2, '.', '');
         }
-        dd($data);
         return $data;
     }
 
